@@ -1,35 +1,10 @@
 <template>
-  <div @click="clickHandle">
-
-    <div class="userinfo" @click="bindViewTap">
-      <img class="userinfo-avatar" v-if="userInfo.avatarUrl" :src="userInfo.avatarUrl" background-size="cover" />
-      <img class="userinfo-avatar" src="/static/images/user.png" background-size="cover" />
-
-      <div class="userinfo-nickname">
-        <card :text="userInfo.nickName"></card>
-      </div>
-    </div>
-
-    <div class="usermotto">
-      <div class="user-motto">
-        <card :text="motto"></card>
-      </div>
-    </div>
-
-    <form class="form-container">
-      <input type="text" class="form-control" :value="motto" placeholder="v-model" />
-      <input type="text" class="form-control" v-model="motto" placeholder="v-model" />
-      <input type="text" class="form-control" v-model.lazy="motto" placeholder="v-model.lazy" />
-    </form>
-
-    <a href="/pages/counter/main" class="counter">去往Vuex示例页面</a>
-
-    <div class="all">
-        <div class="left">
-        </div>
-        <div class="right">
-        </div>
-    </div>
+  <div>
+    <i-panel>
+      <i-input icon="search" type="text" placeholder="请在这里搜索" mode="wrapped">
+      </i-input>
+    </i-panel>
+    <i-button type="success">这是一个按钮</i-button>
   </div>
 </template>
 
@@ -39,11 +14,7 @@ import card from '@/components/card'
 export default {
   data () {
     return {
-      motto: 'Hello miniprograme',
-      userInfo: {
-        nickName: 'mpvue',
-        avatarUrl: 'http://mpvue.com/assets/logo.png'
-      }
+      
     }
   },
 
@@ -73,6 +44,15 @@ export default {
 </script>
 
 <style scoped>
+.head {
+  background-color: #5ccca8;
+  height: 60px;
+},
+.panel {
+  display: flex;
+  align-items: center;
+  flex-direction: row;
+},
 .userinfo {
   display: flex;
   flex-direction: column;
