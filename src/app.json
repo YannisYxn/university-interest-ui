@@ -1,14 +1,16 @@
 {
   "pages": [
     "pages/index/main",
+    "pages/cityUniversityList/main",
+    "pages/createGroup/main",
     "pages/logs/main",
     "pages/counter/main"
   ],
   "window": {
     "backgroundTextStyle": "light",
-    "navigationBarBackgroundColor": "#fff",
-    "navigationBarTitleText": "WeChat",
-    "navigationBarTextStyle": "black"
+    "navigationBarBackgroundColor": "#14d0b6",
+    "navigationBarTitleText": "校 趣",
+    "navigationBarTextStyle": "white"
   },
   "tabBar": {
     "color": "#999",
