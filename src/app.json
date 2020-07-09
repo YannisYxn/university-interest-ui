@@ -3,6 +3,9 @@
     "pages/index/main",
     "pages/cityUniversityList/main",
     "pages/createGroup/main",
+    "pages/exchange/main",
+    "pages/my/main",
+    "pages/exchangeRecord/main",
     "pages/logs/main",
     "pages/counter/main"
   ],

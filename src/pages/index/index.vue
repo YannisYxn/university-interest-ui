@@ -3,8 +3,8 @@
     <div class="head">
       <i-input placeholder="请在这里搜索" mode="wrapped" />
       <i-icon type="mobilephone" size="30" color="#ffffff"/>
-      <i-icon type="mine" size="30" color="#ffffff"/>
-      <i-icon type="coupons" size="30" color="#ffffff"/>
+      <i-icon type="mine" size="30" color="#ffffff" @click="handleMy"/>
+      <i-icon type="coupons" size="30" color="#ffffff" @click="handleExchange"/>
     </div>
     <div style="margin-top:10px;margin-left:10px;display:flex;align-items:center;">
       <i-card title="本校兴趣组" thumb="../../../static/images/benxiao.png" >
@@ -50,20 +50,62 @@
         </i-cell>
       </i-cell-group>
     </div>
+
+    
+    <i-modal title="提示" :visible="visible2" @ok="handleClose2" @cancel="handleClose2">
+      <p style="font-size:15px;line-height:20px;margin:0 20px;">请简单完善个人资料后，再建组，发帖，回复等操作。谢谢。</p>
+      <div style="display:flex;align-items:center;margin-left:20px;">
+        性别：
+        <i-radio-group :current="current" @change="handleGenderChange">
+          <i-radio v-for="item in gender" :key="item.name" :value="item.name">
+          </i-radio>
+        </i-radio-group>
+      </div>
+      <div style="display:flex;align-items:center;margin-left:20px;">
+        昵称：
+        <i-input mode="wrapped" placeholder="原微信昵称" />
+      </div>
+      <div style="display:flex;align-items:center;margin-left:20px;">
+        简介：
+        <div style="width:82%">
+          <i-input type="textarea" mode="wrapped" placeholder="限25个字" maxlength="25"/>
+        </div>
+      </div>
+      <div style="display:flex;align-items:center;margin-left:20px;">
+        <i-avatar>头</i-avatar>
+        <span style="line-height:20px;">（可修改,上传不雅头像,会被封号）</span>
+      </div>
+    </i-modal>
+    <i-modal title="提示" :visible="visible3" @ok="handleClose3" @cancel="handleClose3">
+      <p style="font-size:15px;line-height:20px;margin:0 20px;">请您再本校地理范围登录校趣！</p>
+      <p style="font-size:15px;line-height:20px;margin:0 20px;">或</p>
+      <span style="font-size:15px;line-height:20px;margin:0 20px;">输入邀请码：</span>
+      <i-input mode="wrapped" placeholder="请在这里输入" />
+    </i-modal>
+    <i-modal title="欢迎进入校趣" :visible="visible1" @ok="handleClose1" @cancel="handleClose1">
+      <p style="font-size:15px;line-height:20px;margin:0 20px;">您是厦门大学思明校区的学生吗？不是的话，请在本校校区时登录校趣。谢谢。</p>
+      <p style="font-size:10px;">提示：冒用ta人校区，被举报，会封号。</p>
+    </i-modal>
   </div>
 </template>
 
 <script>
-import card from '@/components/card'
 
 export default {
   data () {
     return {
+      visible1: true,
+      visible2: true,
+      visible3: true,
+      current: null,
+      gender: [{
+        id: 1,
+        name: '男'
+      },{
+        id: 2,
+        name: '女'
+      }]
     }
-  },
-
-  components: {
-    card
   },
 
   methods: {
@@ -76,6 +118,28 @@ export default {
       wx.navigateTo({
         url: "../createGroup/main"
       });
+    },
+    handleExchange() {
+      wx.navigateTo({
+        url: "../exchange/main"
+      });
+    },
+    handleMy() {
+      wx.navigateTo({
+        url: "../my/main"
+      });
+    },
+    handleClose1() {
+      this.visible1 = false;
+    },
+    handleClose2() {
+      this.visible2 = false;
+    },
+    handleClose3() {
+      this.visible3 = false;
+    },
+    handleGenderChange(current) {
+      this.current = current.target.value;
     }
   },
 

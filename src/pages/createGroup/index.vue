@@ -14,6 +14,9 @@
       <p class="font" style="font-size:11px;">2.管理兴趣组，左滑自创兴趣组里面的帖子，右侧有【删帖】【删+拉黑发帖人】2个按钮，
         右上角【加号+】，有解散此组按钮。</p>
     </div>
+    <div style="margin:20px;">
+      <i-button type="primary">创建此组</i-button>
+    </div>
   </div>
 </template>
 

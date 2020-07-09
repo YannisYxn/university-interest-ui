@@ -1,5 +1,5 @@
 {
-  "navigationBarTitleText": "校 趣",
+  "navigationBarTitleText": "兑 换 记 录",
   "usingComponents": {
     "i-button": "../../../static/iView/button/index",
     "i-input": "../../../static/iView/input/index",
@@ -14,6 +14,7 @@
     "i-badge": "../../../static/iView/badge/index",
     "i-modal": "../../../static/iView/modal/index",
     "i-radio-group": "../../../static/iView/radio-group/index",
-    "i-radio": "../../../static/iView/radio/index"
+    "i-radio": "../../../static/iView/radio/index",
+    "exchange-cell": "../../../static/iView/exchangeRecord/index"
   }
 }
