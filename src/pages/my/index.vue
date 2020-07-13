@@ -18,7 +18,7 @@
           <i-col span="9">
             <p style="fong-size:15px;color:white;">ID:345637</p>
             <p style="font-size:12px;color:white;line-height:25px;">积分:3000</p>
-            <i-icon type="brush" size="25" color="white" />
+            <i-icon type="brush" size="25" color="white" @click="handleModify"/>
           </i-col>
         </i-row>
       </div>
@@ -30,7 +30,7 @@
           <i-col span="8">
             <i-card>
               <view slot="content">
-                <p style="font-size:25px;">9999</p>
+                <p style="font-size:20px;">9999</p>
                 <i-icon type="emoji" size="20" />
                 上周兴趣组收益
               </view>
@@ -39,7 +39,7 @@
           <i-col span="8">
             <i-card>
               <view slot="content">
-                <p style="font-size:25px;">9999</p>
+                <p style="font-size:20px;">9999</p>
                 <i-icon type="emoji" size="20" />
                 上周发帖收益
               </view>
@@ -48,7 +48,7 @@
           <i-col span="8">
             <i-card>
               <view slot="content">
-                <p style="font-size:25px;">9999</p>
+                <p style="font-size:20px;">9999</p>
                 <i-icon type="emoji" size="20" />
                 上周分享收益
               </view>
@@ -60,17 +60,17 @@
 
     <div style="margin-top:5px;">
       <i-cell-group>
-        <i-cell title="积分动态" is-link>
+        <i-cell title="积分动态" is-link url="../integralRecord/main">
         </i-cell>
         <i-cell title="兑换记录" is-link url="../exchangeRecord/main">
         </i-cell>
         <i-cell title="我的发帖" is-link>
         </i-cell>
-        <i-cell title="分享记录" is-link>
+        <i-cell title="分享记录" is-link url="../shareRecord/main">
         </i-cell>
         <i-cell title="分享链接" is-link>
         </i-cell>
-        <i-cell title="诉求" is-link>
+        <i-cell title="诉求" is-link url="../asking/main">
         </i-cell>
         <i-cell title="校趣规则" is-link>
         </i-cell>
@@ -78,6 +78,23 @@
     </div>
   </div>
 </template>
+
+<script>
+export default {
+  data() {
+    return {
+
+    }
+  },
+  methods: {
+    handleModify() {
+      wx.navigateTo({
+        url: "../modify/main"
+      });
+    }
+  }
+}
+</script>
 
 <style>
 .head {

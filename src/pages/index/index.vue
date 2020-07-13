@@ -82,7 +82,7 @@
       <span style="font-size:15px;line-height:20px;margin:0 20px;">输入邀请码：</span>
       <i-input mode="wrapped" placeholder="请在这里输入" />
     </i-modal>
-    <i-modal title="欢迎进入校趣" :visible="visible1" @ok="handleClose1" @cancel="handleClose1">
+    <i-modal title="欢迎首次进入校趣" :visible="visible1" @ok="handleClose1" @cancel="handleClose1">
       <p style="font-size:15px;line-height:20px;margin:0 20px;">您是厦门大学思明校区的学生吗？不是的话，请在本校校区时登录校趣。谢谢。</p>
       <p style="font-size:10px;">提示：冒用ta人校区，被举报，会封号。</p>
     </i-modal>

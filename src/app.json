@@ -6,6 +6,10 @@
     "pages/exchange/main",
     "pages/my/main",
     "pages/exchangeRecord/main",
+    "pages/shareRecord/main",
+    "pages/integralRecord/main",
+    "pages/asking/main",
+    "pages/modify/main",
     "pages/logs/main",
     "pages/counter/main"
   ],

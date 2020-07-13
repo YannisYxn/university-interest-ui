@@ -38,6 +38,9 @@ Component({
         },
         maxlength: {
             type: Number
+        },
+        asking: {
+            type: Boolean
         }
     },
 

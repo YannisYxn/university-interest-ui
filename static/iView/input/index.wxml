@@ -2,13 +2,12 @@
     <view wx:if="{{ title }}" class="i-cell-hd i-input-title">{{ title }}</view>
     <textarea
         wx:if="{{ type === 'textarea' }}"
-        auto-height
         disabled="{{ disabled }}"
         focus="{{ autofocus }}"
         value="{{ value }}"
         placeholder="{{ placeholder }}"
         maxlength="{{ maxlength }}"
-        class="i-input-input i-cell-bd {{ right ? 'i-input-input-right' : '' }}"
+        class="i-input-input i-cell-bd {{ right ? 'i-input-input-right' : '' }} {{ asking ? 'i-input-textarea' : '' }}"
         placeholder-class="i-input-placeholder"
         bindinput="handleInputChange"
         bindfocus="handleInputFocus"
