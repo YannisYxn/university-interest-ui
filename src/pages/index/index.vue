@@ -1,10 +1,7 @@
 <template>
   <div>
     <div class="head">
-      <i-input placeholder="请在这里搜索" mode="wrapped" />
-      <i-icon type="mobilephone" size="30" color="#ffffff"/>
-      <i-icon type="mine" size="30" color="#ffffff" @click="handleMy"/>
-      <i-icon type="coupons" size="30" color="#ffffff" @click="handleExchange"/>
+      <i-input placeholder="请在这里搜索" mode="wrapped" style="width:100%;"/>
     </div>
     <div style="margin-top:10px;margin-left:10px;display:flex;align-items:center;">
       <i-card title="本校兴趣组" thumb="../../../static/images/benxiao.png" >
@@ -117,16 +114,6 @@ export default {
     handleCreateGroup() {
       wx.navigateTo({
         url: "../createGroup/main"
-      });
-    },
-    handleExchange() {
-      wx.navigateTo({
-        url: "../exchange/main"
-      });
-    },
-    handleMy() {
-      wx.navigateTo({
-        url: "../my/main"
       });
     },
     handleClose1() {

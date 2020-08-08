@@ -11,7 +11,8 @@
     "pages/asking/main",
     "pages/modify/main",
     "pages/logs/main",
-    "pages/counter/main"
+    "pages/counter/main",
+    "pages/post/main"
   ],
   "window": {
     "backgroundTextStyle": "light",
@@ -26,15 +27,20 @@
     "borderStyle": "white",
 
     "list": [{
-      "text": "首页",
+      "text": "校趣",
       "pagePath": "pages/index/main",
-      "iconPath": "static/tabs/home.png",
-      "selectedIconPath": "static/tabs/home-active.png"
+      "iconPath": "static/tabs/university.png",
+      "selectedIconPath": "static/tabs/university-active.png"
     }, {
-      "text": "订单",
-      "pagePath": "pages/logs/main",
-      "iconPath": "static/tabs/orders.png",
-      "selectedIconPath": "static/tabs/orders-active.png"
+      "text": "兑换",
+      "pagePath": "pages/exchange/main",
+      "iconPath": "static/tabs/corpus.png",
+      "selectedIconPath": "static/tabs/corpus-active.png"
+    }, {
+      "text": "我的",
+      "pagePath": "pages/my/main",
+      "iconPath": "static/tabs/my.png",
+      "selectedIconPath": "static/tabs/my-active.png"
     }],
 
     "items": [{
