@@ -12,7 +12,8 @@
     "pages/modify/main",
     "pages/logs/main",
     "pages/counter/main",
-    "pages/post/main"
+    "pages/post/main",
+    "pages/rule/main"
   ],
   "window": {
     "backgroundTextStyle": "light",

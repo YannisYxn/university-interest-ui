@@ -117,7 +117,7 @@
             />
           </view>
         </i-cell>
-        <i-cell title="校趣规则" is-link>
+        <i-cell title="校趣规则" is-link url="../rule/main">
           <view slot="icon">
             <i-avatar
               size="small"
