@@ -3,8 +3,8 @@
     <div class="head">
       <i-input placeholder="请在这里搜索" mode="wrapped" style="width:100%;"/>
     </div>
-    <div style="margin-top:10px;margin-left:10px;display:flex;align-items:center;">
-      <i-card title="本校兴趣组" thumb="../../../static/images/benxiao.png" >
+    <div style="margin-top:10px;margin-left:5px;display:flex;align-items:center;">
+      <i-card title="本校兴趣组" thumb="../../../static/images/benxiao.png" @click="handleSelfUniversityInterestGroup">
         <view slot="footer">距离近 都是同校</view>
       </i-card>
       <i-card @click="handleToCityUniversity" title="同城高校兴趣组" thumb="../../../static/images/tongcheng.png">
@@ -21,28 +21,37 @@
     </div>
     <div style="margin-top:5px;">
       <i-cell-group>
-        <i-cell title="篮球狂人" is-link>
+        <i-cell title="篮球狂人" @click="handleInterestGroup">
           <view slot="icon">
-            <i-avatar size="small">篮</i-avatar>
+            <i-avatar src="../../../static/images/basketball.png"></i-avatar>
           </view>
           <view slot="badge">
-            <i-badge count="3" />
+            <i-badge count="1" overflow-count="1" style="margin-right:10px;"/>
+          </view>
+          <view slot="footer">
+            <i-icon type="setup_fill" size="25" color="#67ddd3"/>
           </view>
         </i-cell>
-        <i-cell title="我们爱说唱" is-link>
+        <i-cell title="我们爱说唱">
           <view slot="icon">
-            <i-avatar size="small">唱</i-avatar>
+            <i-avatar src="../../../static/images/basketball.png"></i-avatar>
           </view>
           <view slot="badge">
-            <i-badge count="53" />
+            <i-badge count="2" overflow-count="1" style="margin-right:10px;"/>
+          </view>
+          <view slot="footer">
+            <i-icon type="setup_fill" size="25" color="#67ddd3"/>
           </view>
         </i-cell>
-        <i-cell title="英语口语下线talk" is-link>
+        <i-cell title="英语口语下线talk">
           <view slot="icon">
-            <i-avatar size="small">英</i-avatar>
+            <i-avatar src="../../../static/images/basketball.png"></i-avatar>
           </view>
           <view slot="badge">
-            <i-badge count="103" overflow-count="100" />
+            <i-badge count="2" overflow-count="1" style="margin-right:10px;"/>
+          </view>
+          <view slot="footer">
+            <i-icon type="setup_fill" size="25" color="white"/>
           </view>
         </i-cell>
       </i-cell-group>
@@ -114,6 +123,16 @@ export default {
     handleCreateGroup() {
       wx.navigateTo({
         url: "../createGroup/main"
+      });
+    },
+    handleSelfUniversityInterestGroup() {
+      wx.navigateTo({
+        url: "../selfUniversityInterestGroup/main"
+      });
+    },
+    handleInterestGroup() {
+      wx.navigateTo({
+        url: "../interestGroup/main"
       });
     },
     handleClose1() {

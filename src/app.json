@@ -13,7 +13,9 @@
     "pages/logs/main",
     "pages/counter/main",
     "pages/post/main",
-    "pages/rule/main"
+    "pages/rule/main",
+    "pages/selfUniversityInterestGroup/main",
+    "pages/interestGroup/main"
   ],
   "window": {
     "backgroundTextStyle": "light",
@@ -47,13 +49,13 @@
     "items": [{
       "name": "首页",
       "pagePath": "pages/index/main",
-      "icon": "static/tabs/home.png",
-      "activeIcon": "static/tabs/home-active.png"
+      "icon": "static/tabs/university.png",
+      "activeIcon": "static/tabs/university-active.png"
     }, {
       "name": "订单",
       "pagePath": "pages/logs/main",
-      "icon": "static/tabs/orders.png",
-      "activeIcon": "static/tabs/orders-active.png"
+      "icon": "static/tabs/my.png",
+      "activeIcon": "static/tabs/my-active.png"
     }],
     "position": "bottom"
   }
