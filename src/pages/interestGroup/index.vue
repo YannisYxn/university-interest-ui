@@ -47,7 +47,56 @@
         </view>
       </i-card>
     </div>
+    <div style="margin-top:15px;">
+      <i-card title="高小白" extra="2019-12-12 10:24" thumb="../../../static/images/avatar.png">
+        <view slot="content">
+          <span>耐克zoom，799有人喜欢吗？</span>
+          <div style="display:flex;height:100px;width:120px;">
+            <image :src="imageUrl" style="padding:5px;max-width:100%;max-height:100%;" />
+          </div>
+        </view>
+        <view slot="footer">
+          <div style="text-align:center;margin-top:10px;">
+            <i-row>
+              <i-col span="12">
+                <i-icon size="30" type="message" />
+                <span style="font-size=50px;">5566</span>
+              </i-col>
+              <i-col span="12">
+                <i-icon size="30" type="dislike" />
+                <span style="font-size=50px;">5566</span>
+              </i-col>
+            </i-row>
+          </div>
+        </view>
+      </i-card>
+    </div>
+    <div style="margin-top:15px;">
+      <i-card title="高小白" extra="2019-12-12 10:24" thumb="../../../static/images/avatar.png">
+        <view slot="content">
+          <span>耐克zoom，799有人喜欢吗？</span>
+          <div style="display:flex;height:100px;width:120px;">
+            <image :src="imageUrl" style="padding:5px;max-width:100%;max-height:100%;" />
+          </div>
+        </view>
+        <view slot="footer">
+          <div style="text-align:center;margin-top:10px;">
+            <i-row>
+              <i-col span="12">
+                <i-icon size="30" type="message" />
+                <span style="font-size=50px;">5566</span>
+              </i-col>
+              <i-col span="12">
+                <i-icon size="30" type="dislike" />
+                <span style="font-size=50px;">5566</span>
+              </i-col>
+            </i-row>
+          </div>
+        </view>
+      </i-card>
+    </div>
 
+    <i-button type="primary" shape="circle" style="position:fixed;bottom:0;right:0;">发帖</i-button>
   </div>
 </template>
 
