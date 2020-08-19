@@ -15,7 +15,9 @@
     "pages/post/main",
     "pages/rule/main",
     "pages/selfUniversityInterestGroup/main",
-    "pages/interestGroup/main"
+    "pages/interestGroup/main",
+    "pages/comment/main",
+    "pages/messageBox/main"
   ],
   "window": {
     "backgroundTextStyle": "light",
@@ -35,6 +37,11 @@
       "iconPath": "static/tabs/university.png",
       "selectedIconPath": "static/tabs/university-active.png"
     }, {
+      "text": "有信",
+      "pagePath": "pages/messageBox/main",
+      "iconPath": "static/tabs/message.png",
+      "selectedIconPath": "static/tabs/message-active.png"
+    },{
       "text": "兑换",
       "pagePath": "pages/exchange/main",
       "iconPath": "static/tabs/corpus.png",

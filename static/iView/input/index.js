@@ -16,6 +16,10 @@ Component({
             type: Boolean,
             value: false
         },
+        comment: {
+            type: Boolean,
+            value: false
+        },
         placeholder: {
             type: String,
             value: ''

@@ -10,6 +10,10 @@ Component({
             type: Boolean,
             value: false
         },
+        post: {
+            type: Boolean,
+            value: false
+        },
         thumb: {
             type: String,
             value: ''
@@ -18,7 +22,15 @@ Component({
             type: String,
             value: ''
         },
+        postTitle: {
+            type: String,
+            value: ''
+        },
         extra: {
+            type: String,
+            value: ''
+        },
+        time: {
             type: String,
             value: ''
         }

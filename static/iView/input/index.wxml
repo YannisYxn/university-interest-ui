@@ -1,4 +1,4 @@
-<view class="i-class i-cell i-input {{ error ? 'i-input-error' : '' }} {{ mode === 'wrapped' ? 'i-input-wrapped' : '' }}">
+<view class="i-class i-cell i-input {{ error ? 'i-input-error' : '' }} {{ mode === 'wrapped' ? 'i-input-wrapped' : '' }}{{ comment ? 'i-input-comment' : '' }}">
     <view wx:if="{{ title }}" class="i-cell-hd i-input-title">{{ title }}</view>
     <textarea
         wx:if="{{ type === 'textarea' }}"

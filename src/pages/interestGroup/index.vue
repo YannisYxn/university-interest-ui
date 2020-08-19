@@ -24,7 +24,7 @@
     </div>
 
     <div style="margin-top:15px;">
-      <i-card title="高小白" extra="2019-12-12 10:24" thumb="../../../static/images/avatar.png">
+      <i-card post postTitle="高小白" time="2019-12-12 10:24" thumb="../../../static/images/avatar.png">
         <view slot="content">
           <span>耐克zoom，799有人喜欢吗？</span>
           <div style="display:flex;height:100px;width:120px;">
@@ -35,8 +35,10 @@
           <div style="text-align:center;margin-top:10px;">
             <i-row>
               <i-col span="12">
-                <i-icon size="30" type="message" />
-                <span style="font-size=50px;">5566</span>
+                <div @click="handleComment">
+                  <i-icon size="30" type="message" />
+                  <span style="font-size=50px;">5566</span>
+                </div>
               </i-col>
               <i-col span="12">
                 <i-icon size="30" type="dislike" />
@@ -48,7 +50,7 @@
       </i-card>
     </div>
     <div style="margin-top:15px;">
-      <i-card title="高小白" extra="2019-12-12 10:24" thumb="../../../static/images/avatar.png">
+      <i-card post postTitle="高小白" time="2019-12-12 10:24" thumb="../../../static/images/avatar.png">
         <view slot="content">
           <span>耐克zoom，799有人喜欢吗？</span>
           <div style="display:flex;height:100px;width:120px;">
@@ -59,8 +61,10 @@
           <div style="text-align:center;margin-top:10px;">
             <i-row>
               <i-col span="12">
-                <i-icon size="30" type="message" />
-                <span style="font-size=50px;">5566</span>
+                <div @click="handleComment">
+                  <i-icon size="30" type="message" />
+                  <span style="font-size=50px;">5566</span>
+                </div>
               </i-col>
               <i-col span="12">
                 <i-icon size="30" type="dislike" />
@@ -72,7 +76,7 @@
       </i-card>
     </div>
     <div style="margin-top:15px;">
-      <i-card title="高小白" extra="2019-12-12 10:24" thumb="../../../static/images/avatar.png">
+      <i-card post postTitle="高小白" time="2019-12-12 10:24" thumb="../../../static/images/avatar.png">
         <view slot="content">
           <span>耐克zoom，799有人喜欢吗？</span>
           <div style="display:flex;height:100px;width:120px;">
@@ -83,8 +87,10 @@
           <div style="text-align:center;margin-top:10px;">
             <i-row>
               <i-col span="12">
-                <i-icon size="30" type="message" />
-                <span style="font-size=50px;">5566</span>
+                <div @click="handleComment">
+                  <i-icon size="30" type="message" />
+                  <span style="font-size=50px;">5566</span>
+                </div>
               </i-col>
               <i-col span="12">
                 <i-icon size="30" type="dislike" />
@@ -106,6 +112,13 @@ export default {
   data() {
     return {
       imageUrl: img
+    }
+  },
+  methods: {
+    handleComment() {
+      wx.navigateTo({
+        url: "../comment/main"
+      });
     }
   }
 }
