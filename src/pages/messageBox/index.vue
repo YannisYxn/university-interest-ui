@@ -2,40 +2,16 @@
   <div style="background-color:#f3f4f5;">
     <i-notice-bar icon="systemprompt" loop>麦麦在帖子 “想找人一起跑步” 回复你 “一起跑”</i-notice-bar>
     <i-cell-group>
-      <i-swipeout i-class="i-swipeout-demo-item" :operateWidth="70">
-        <view slot="content">
-          <i-comment-cell
-            title="ZC"
-            label="厦大思明"
-            time="2km 2019-12-12 10:22"
-            content="好久不见，我去你学校找你玩亚"
-          >
-            <view slot="icon">
-              <i-avatar src="../../../static/images/comment-avatar.png" style="margin-right:10px;" />
-            </view>
-          </i-comment-cell>
+      <i-comment-cell title="ZC" label="厦大思明" time="2km 2019-12-12 10:22" content="好久不见，我去你学校找你玩亚" @click="handleChat">
+        <view slot="icon">
+          <i-avatar src="../../../static/images/comment-avatar.png" style="margin-right:10px;" />
         </view>
-        <view slot="button" class="i-swipeout-demo-button-group">
-          <view class="i-swipeout-demo-button">删除</view>
+      </i-comment-cell>
+      <i-comment-cell title="ZC" label="厦大思明" time="2km 2019-12-12 10:22" content="好久不见，我去你学校找你玩亚">
+        <view slot="icon">
+          <i-avatar src="../../../static/images/comment-avatar.png" style="margin-right:10px;" />
         </view>
-      </i-swipeout>
-      <i-swipeout i-class="i-swipeout-demo-item" :operateWidth="70">
-        <view slot="content">
-          <i-comment-cell
-            title="ZC"
-            label="厦大思明"
-            time="2km 2019-12-12 10:22"
-            content="好久不见，我去你学校找你玩亚"
-          >
-            <view slot="icon">
-              <i-avatar src="../../../static/images/comment-avatar.png" style="margin-right:10px;" />
-            </view>
-          </i-comment-cell>
-        </view>
-        <view slot="button" class="i-swipeout-demo-button-group">
-          <view class="i-swipeout-demo-button">删除</view>
-        </view>
-      </i-swipeout>
+      </i-comment-cell>
     </i-cell-group>
   </div>
 </template>
@@ -43,10 +19,16 @@
 <script>
 export default {
   data() {
-    return {
+    return {};
+  },
+  methods: {
+    handleChat() {
+      wx.navigateTo({
+        url: "../chat/main"
+      });
     }
   }
-}
+};
 </script>
 
 <style>

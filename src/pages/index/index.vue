@@ -29,7 +29,7 @@
             <i-badge count="1" overflow-count="1" style="margin-right:10px;"/>
           </view>
           <view slot="footer">
-            <i-icon type="setup_fill" size="25" color="#67ddd3"/>
+            <i-icon type="setup_fill" size="25" color="#67ddd3" @click="handleManageInterestGroup"/>
           </view>
         </i-cell>
         <i-cell title="我们爱说唱">
@@ -40,7 +40,7 @@
             <i-badge count="2" overflow-count="1" style="margin-right:10px;"/>
           </view>
           <view slot="footer">
-            <i-icon type="setup_fill" size="25" color="#67ddd3"/>
+            <i-icon type="setup_fill" size="25" color="#67ddd3" @click="handleManageInterestGroup"/>
           </view>
         </i-cell>
         <i-cell title="英语口语下线talk">
@@ -133,6 +133,11 @@ export default {
     handleInterestGroup() {
       wx.navigateTo({
         url: "../interestGroup/main"
+      });
+    },
+    handleManageInterestGroup() {
+      wx.navigateTo({
+        url: "../manageInterestGroup/main"
       });
     },
     handleClose1() {

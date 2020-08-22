@@ -13,6 +13,7 @@
         收益每周一通过微信发放。具体收益明细，请查看【我的】里的【兴趣组收益】。</p>
       <p class="font" style="font-size:11px;">2.管理兴趣组，左滑自创兴趣组里面的帖子，右侧有【删帖】【删+拉黑发帖人】2个按钮，
         右上角【加号+】，有解散此组按钮。</p>
+      <p class="font" style="font-size:11px;">3.请勿发政治宗教人肉及商品买卖等不适宜话题，被举报，封号处理</p>
     </div>
     <div style="margin:20px;">
       <i-button type="primary">创建此组</i-button>

@@ -17,7 +17,10 @@
     "pages/selfUniversityInterestGroup/main",
     "pages/interestGroup/main",
     "pages/comment/main",
-    "pages/messageBox/main"
+    "pages/messageBox/main",
+    "pages/chat/main",
+    "pages/createPost/main",
+    "pages/manageInterestGroup/main"
   ],
   "window": {
     "backgroundTextStyle": "light",

@@ -24,7 +24,12 @@
     </div>
 
     <div style="margin-top:15px;">
-      <i-card post postTitle="高小白" time="2019-12-12 10:24" thumb="../../../static/images/avatar.png">
+      <i-card
+        post
+        postTitle="高小白"
+        time="2019-12-12 10:24"
+        thumb="../../../static/images/avatar.png"
+      >
         <view slot="content">
           <span>耐克zoom，799有人喜欢吗？</span>
           <div style="display:flex;height:100px;width:120px;">
@@ -50,7 +55,12 @@
       </i-card>
     </div>
     <div style="margin-top:15px;">
-      <i-card post postTitle="高小白" time="2019-12-12 10:24" thumb="../../../static/images/avatar.png">
+      <i-card
+        post
+        postTitle="高小白"
+        time="2019-12-12 10:24"
+        thumb="../../../static/images/avatar.png"
+      >
         <view slot="content">
           <span>耐克zoom，799有人喜欢吗？</span>
           <div style="display:flex;height:100px;width:120px;">
@@ -76,7 +86,12 @@
       </i-card>
     </div>
     <div style="margin-top:15px;">
-      <i-card post postTitle="高小白" time="2019-12-12 10:24" thumb="../../../static/images/avatar.png">
+      <i-card
+        post
+        postTitle="高小白"
+        time="2019-12-12 10:24"
+        thumb="../../../static/images/avatar.png"
+      >
         <view slot="content">
           <span>耐克zoom，799有人喜欢吗？</span>
           <div style="display:flex;height:100px;width:120px;">
@@ -102,7 +117,12 @@
       </i-card>
     </div>
 
-    <i-button type="primary" shape="circle" style="position:fixed;bottom:0;right:0;">发帖</i-button>
+    <i-button
+      type="primary"
+      shape="circle"
+      style="position:fixed;bottom:0;right:0;"
+      @click="handlePost"
+    >发帖</i-button>
   </div>
 </template>
 
@@ -112,16 +132,21 @@ export default {
   data() {
     return {
       imageUrl: img
-    }
+    };
   },
   methods: {
     handleComment() {
       wx.navigateTo({
         url: "../comment/main"
       });
+    },
+    handlePost() {
+      wx.navigateTo({
+        url: "../createPost/main"
+      });
     }
   }
-}
+};
 </script>
 
 <style scoped>
