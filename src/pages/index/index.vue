@@ -149,11 +149,6 @@ export default {
             url: "/user/login?code=" + res.code,
           }).then(resp => {
             that.userInfo.userId = resp.data.id;
-            if(resp.data.isPerfectInfo === 0){
-              // 未完善个人信息需要完善个人信息
-              console.log("test")
-              
-            }
             if(resp.data.isFirstLogin === 1){
               //首次登录校趣，输入校区，授权信息，并完善个人信息
               that.visible2 = true;

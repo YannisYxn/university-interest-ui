@@ -45,6 +45,9 @@ Component({
         },
         asking: {
             type: Boolean
+        },
+        high: {
+            type: Boolean   //兴趣组介绍高度
         }
     },
 
