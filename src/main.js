@@ -1,7 +1,9 @@
 import Vue from 'vue'
 import App from './App'
-import store from '../static/store';
-Vue.prototype.$store = store
+import WXrequest from './utils/wx-request';
+
+Vue.prototype.$wxhttp = WXrequest
+
 Vue.config.productionTip = false
 App.mpType = 'app'
 

@@ -12,6 +12,10 @@ Component({
             type: String,
             value: ''
         },
+        label: {
+            type: String,
+            value: ''
+        },
         checked: {
             type: Boolean,
             value: false

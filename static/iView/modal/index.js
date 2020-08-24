@@ -35,6 +35,10 @@ Component({
         actionMode: {
             type: String,
             value: 'horizontal'
+        },
+        openType: {
+            type: String,
+            value: ''
         }
     },
 
@@ -49,6 +53,9 @@ Component({
         },
         handleClickCancel () {
             this.triggerEvent('cancel');
+        },
+        handleGetUserInfo () {
+            this.triggerEvent('getUserInfo');
         }
     }
 });

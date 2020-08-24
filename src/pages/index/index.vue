@@ -65,26 +65,26 @@
       </i-cell-group>
     </div>
 
-    <i-modal title="提示" :visible="visible2" @ok="handleClose2" @cancel="handleClose2">
+    <i-modal title="提示" :visible="visible2" @ok="handleUserInfo" @cancel="handleClose2">
       <p style="font-size:15px;line-height:20px;margin:0 20px;">请简单完善个人资料后，再建组，发帖，回复等操作。谢谢。</p>
       <div style="display:flex;align-items:center;margin-left:20px;">
         性别：
-        <i-radio-group :current="current" @change="handleGenderChange">
-          <i-radio v-for="item in gender" :key="item.name" :value="item.name"></i-radio>
+        <i-radio-group :current="userInfo.gender" @change="handleGenderChange">
+          <i-radio v-for="item in gender" :key="item.id" :value="item.id" :label="item.name"></i-radio>
         </i-radio-group>
       </div>
       <div style="display:flex;align-items:center;margin-left:20px;">
         昵称：
-        <i-input mode="wrapped" placeholder="原微信昵称" />
+        <i-input v-model="userInfo.nickName" mode="wrapped" placeholder="原微信昵称" />
       </div>
       <div style="display:flex;align-items:center;margin-left:20px;">
         简介：
         <div style="width:82%">
-          <i-input type="textarea" mode="wrapped" placeholder="限25个字" maxlength="25" />
+          <i-input v-model="userInfo.introduction" type="textarea" mode="wrapped" placeholder="限25个字" maxlength="25" />
         </div>
       </div>
       <div style="display:flex;align-items:center;margin-left:20px;">
-        <i-avatar>头</i-avatar>
+        <i-avatar :src="userInfo.avatarUrl">头</i-avatar>
         <span style="line-height:20px;">（可修改,上传不雅头像,会被封号）</span>
       </div>
     </i-modal>
@@ -98,7 +98,14 @@
       <p style="font-size:15px;line-height:20px;margin:0 20px;">您是厦门大学思明校区的学生吗？不是的话，请在本校校区时登录校趣。谢谢。</p>
       <p style="font-size:10px;">提示：冒用ta人校区，被举报，会封号。</p>
     </i-modal>
-    <i-modal title="请输入就读高校" :visible="visible4" @ok="handleGetUserInfo" @cancel="handleClose4">
+    <i-modal
+      title="请输入就读高校"
+      :visible="visible4"
+      @ok="handleGetUserInfo"
+      @cancel="handleClose4"
+      openType="getUserInfo"
+      @getUserInfo="getUserInfo"
+    >
       <i-input v-model="university" maxlength="10" placeholder="学校名称" />
     </i-modal>
   </div>
@@ -113,7 +120,13 @@ export default {
       visible3: false,
       visible4: false,
       university: "", //输入高校名称
-      current: null,
+      userInfo: { //用户信息
+        userId: "",
+        avatarUrl: "",
+        gender: undefined,
+        nickName: "",
+        introduction: ""
+      },
       gender: [
         {
           id: 1,
@@ -127,16 +140,23 @@ export default {
     };
   },
   mounted() {
-    var BASE_LINE = this.$store.state.BASE_LINE;
     var that = this;
     wx.login({
       success(res) {
         if (res.code) {
           //发起网络请求
-          wx.request({
-            url: BASE_LINE + "/user/login?code=" + res.code,
-            method: "POST",
-            success(res) {
+          that.$wxhttp.post({
+            url: "/user/login?code=" + res.code,
+          }).then(resp => {
+            that.userInfo.userId = resp.data.id;
+            if(resp.data.isPerfectInfo === 0){
+              // 未完善个人信息需要完善个人信息
+              console.log("test")
+              
+            }
+            if(resp.data.isFirstLogin === 1){
+              //首次登录校趣，输入校区，授权信息，并完善个人信息
+              that.visible2 = true;
               that.visible4 = true;
             }
           });
@@ -187,14 +207,27 @@ export default {
     },
     handleGetUserInfo() {
       this.visible4 = false;
+    },
+    getUserInfo(detail) {
+      var that = this;
       wx.getUserInfo({
         success(res) {
-          console.log(res.userInfo);
+          console.log(res.userInfo)
+          that.userInfo = {
+            ...that.userInfo,
+            avatarUrl: res.userInfo.avatarUrl,
+            gender: res.userInfo.gender,
+            nickName: res.userInfo.nickName
+          };
         }
-      })
+      });
     },
     handleGenderChange(current) {
-      this.current = current.target.value;
+      this.userInfo.gender = current.target.value;
+    },
+    handleUserInfo() {
+      //完善个人信息
+
     }
   },
 
