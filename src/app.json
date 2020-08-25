@@ -68,5 +68,10 @@
       "activeIcon": "static/tabs/my-active.png"
     }],
     "position": "bottom"
+  },
+  "permission": {
+    "scope.userLocation": {
+      "desc": "位置信息将用于与其他用户距离展示"
+    }
   }
 }

@@ -80,7 +80,13 @@
       <div style="display:flex;align-items:center;margin-left:20px;">
         简介：
         <div style="width:82%">
-          <i-input v-model="userInfo.introduction" type="textarea" mode="wrapped" placeholder="限25个字" maxlength="25" />
+          <i-input
+            v-model="userInfo.introduction"
+            type="textarea"
+            mode="wrapped"
+            placeholder="限25个字"
+            maxlength="25"
+          />
         </div>
       </div>
       <div style="display:flex;align-items:center;margin-left:20px;">
@@ -101,12 +107,15 @@
     <i-modal
       title="请输入就读高校"
       :visible="visible4"
-      @ok="handleGetUserInfo"
+      @ok="handleOnUniversity"
       @cancel="handleClose4"
       openType="getUserInfo"
       @getUserInfo="getUserInfo"
     >
       <i-input v-model="university" maxlength="10" placeholder="学校名称" />
+    </i-modal>
+    <i-modal :visible="visible5" @ok="handleClose5" @cancel="handleClose5">
+      <view>学校不存在</view>
     </i-modal>
   </div>
 </template>
@@ -119,6 +128,7 @@ export default {
       visible2: false,
       visible3: false,
       visible4: false,
+      visible5: false,
       university: "", //输入高校名称
       userInfo: { //用户信息
         userId: "",
@@ -127,6 +137,8 @@ export default {
         nickName: "",
         introduction: ""
       },
+      latitude: undefined, //纬度，范围为 -90~90，负数表示南纬
+      longitude: undefined,  //经度，范围为 -180~180，负数表示西经
       gender: [
         {
           id: 1,
@@ -149,9 +161,8 @@ export default {
             url: "/user/login?code=" + res.code,
           }).then(resp => {
             that.userInfo.userId = resp.data.id;
-            if(resp.data.isFirstLogin === 1){
+            if(resp.data.isCheckUniversity === 0){
               //首次登录校趣，输入校区，授权信息，并完善个人信息
-              that.visible2 = true;
               that.visible4 = true;
             }
           });
@@ -200,8 +211,8 @@ export default {
       this.visible4 = false;
       this.visible1 = true;
     },
-    handleGetUserInfo() {
-      this.visible4 = false;
+    handleClose5() {
+      this.visible5 = false;
     },
     getUserInfo(detail) {
       var that = this;
@@ -217,12 +228,62 @@ export default {
         }
       });
     },
+    handleOnUniversity() {
+      // 查找是否授权地理位置，未授权则要求用户授权地理位置
+      var that = this;
+      wx.getSetting({
+        success(res) {
+          if (!res.authSetting['scope.userLocation']) {
+            wx.authorize({
+              scope: 'scope.userLocation',
+              success () {
+                // 用户已经同意小程序使用定位功能，后续调用 wx.getLocation 接口不会弹窗询问
+                wx.getLocation({
+                  type: 'wgs84',
+                  success (res) {
+                    that.isOnUniversity(res.latitude,res.longitude);
+                  }
+                });
+              }
+            })
+          }else{
+            // 用户已经同意小程序使用定位功能，后续调用 wx.getLocation 接口不会弹窗询问
+            wx.getLocation({
+              type: 'wgs84',
+              success (res) {
+                that.isOnUniversity(res.latitude,res.longitude);
+              }
+            });
+          }
+        }
+      });
+    },
     handleGenderChange(current) {
       this.userInfo.gender = current.target.value;
     },
     handleUserInfo() {
       //完善个人信息
 
+    },
+    isOnUniversity(latitude,longitude) {
+      // 判断当前位置是否处于校内
+      var that = this;
+      this.$wxhttp.post({
+        url: "/user/onUniversity",
+        data: {
+          latitude: latitude,
+          longitude: longitude,
+          universityName: that.university,
+          userId: this.userInfo.userId
+        }
+      }).then(resp => {
+        console.log(resp);
+        if(resp.code === 3){
+          //学校不存在
+          this.visible5 = true;
+        }
+      });
+      console.log(this.$refs.university)
     }
   },
 
