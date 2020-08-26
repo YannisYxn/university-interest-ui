@@ -29,6 +29,23 @@
     </div>
     <div style="margin-top:5px;">
       <i-cell-group>
+        <i-cell
+          v-for="group in groupList"
+          v-show="group.status === 0 || (group.userId === userInfo.userId && [-1,3].includes(group.status))"
+          :key="group.id"
+          :title="group.name"
+          @click="handleInterestGroup"
+        >
+          <view slot="icon">
+            <i-avatar :src="group.logo"></i-avatar>
+          </view>
+          <view slot="badge">
+            <i-badge :count="group.postCount" overflow-count="100" style="margin-right:10px;" />
+          </view>
+          <view slot="footer">
+            <i-icon type="setup_fill" size="25" color="#67ddd3" @click="handleManageInterestGroup" />
+          </view>
+        </i-cell>
         <i-cell title="篮球狂人" @click="handleInterestGroup">
           <view slot="icon">
             <i-avatar src="../../../static/images/basketball.png"></i-avatar>
@@ -95,7 +112,7 @@
       </div>
     </i-modal>
     <i-modal title="提示" :visible="visible3" @ok="handleClose3" @cancel="handleClose3">
-      <p style="font-size:15px;line-height:20px;margin:0 20px;">请您再本校地理范围登录校趣！</p>
+      <p style="font-size:15px;line-height:20px;margin:0 20px;">请您在本校地理范围登录校趣！</p>
       <p style="font-size:15px;line-height:20px;margin:0 20px;">或</p>
       <span style="font-size:15px;line-height:20px;margin:0 20px;">输入邀请码：</span>
       <i-input mode="wrapped" placeholder="请在这里输入" />
@@ -112,10 +129,18 @@
       openType="getUserInfo"
       @getUserInfo="getUserInfo"
     >
-      <i-input v-model="university" maxlength="10" placeholder="学校名称" />
+      <i-input
+        v-model="university"
+        maxlength="10"
+        placeholder="学校名称"
+        @change="handleUniversityChange"
+      />
     </i-modal>
     <i-modal :visible="visible5" @ok="handleClose5" @cancel="handleClose5">
       <view>学校不存在</view>
+    </i-modal>
+    <i-modal :visible="visible6" @ok="handleClose6" @cancel="handleClose6">
+      <view>未确认校区不可创建兴趣组</view>
     </i-modal>
   </div>
 </template>
@@ -129,9 +154,11 @@ export default {
       visible3: false,
       visible4: false,
       visible5: false,
+      visible6: false,
       university: "", //输入高校名称
       userInfo: { //用户信息
         userId: "",
+        isCheckUniversity: "",  //是否确认过学校
         avatarUrl: "",
         gender: undefined,
         nickName: "",
@@ -139,6 +166,7 @@ export default {
       },
       latitude: undefined, //纬度，范围为 -90~90，负数表示南纬
       longitude: undefined,  //经度，范围为 -180~180，负数表示西经
+      groupList: [],  //兴趣组列表
       gender: [
         {
           id: 1,
@@ -161,6 +189,7 @@ export default {
             url: "/user/login?code=" + res.code,
           }).then(resp => {
             that.userInfo.userId = resp.data.id;
+            // that.userInfo.isCheckUniversity = resp.data.isCheckUniversity;
             if(resp.data.isCheckUniversity === 0){
               //首次登录校趣，输入校区，授权信息，并完善个人信息
               that.visible4 = true;
@@ -179,9 +208,15 @@ export default {
       });
     },
     handleCreateGroup() {
-      wx.navigateTo({
-        url: "../createGroup/main"
-      });
+      // if(this.userInfo.isCheckUniversity === 0){
+      //   //未确认过学校不可创建兴趣组
+      //   this.visible6 = true;
+      // }else{
+      //   //确认过学校跳转创建兴趣组页面
+        wx.navigateTo({
+          url: "../createGroup/main"
+        });
+      // }
     },
     handleSelfUniversityInterestGroup() {
       wx.navigateTo({
@@ -209,10 +244,13 @@ export default {
     },
     handleClose4() {
       this.visible4 = false;
-      this.visible1 = true;
+      this.visible3 = true;
     },
     handleClose5() {
       this.visible5 = false;
+    },
+    handleClose6() {
+      this.visible6 = false;
     },
     getUserInfo(detail) {
       var that = this;
@@ -268,22 +306,41 @@ export default {
     isOnUniversity(latitude,longitude) {
       // 判断当前位置是否处于校内
       var that = this;
+      console.log(this)
       this.$wxhttp.post({
         url: "/user/onUniversity",
         data: {
           latitude: latitude,
           longitude: longitude,
-          universityName: that.university,
+          universityName: this.university,
           userId: this.userInfo.userId
         }
       }).then(resp => {
-        console.log(resp);
         if(resp.code === 3){
           //学校不存在
           this.visible5 = true;
+        }else if(resp.code === 4){
+          //不在学校范围内
+          this.visible4 = false;
+          this.visible1 = true;
+        }else if(resp.code === 0){
+          //成功在校内登录
+          this.userInfo.isCheckUniversity = 1;
+          this.getGroupList();
         }
       });
-      console.log(this.$refs.university)
+    },
+    handleUniversityChange(event){
+      this.university = event.mp.detail.detail.value;
+    },
+    getGroupList() {
+      this.$wxhttp.post({
+        url: "/group/listMyGroups?userId=" + this.userInfo.userId,
+      }).then(resp => {
+        if(resp.code === 0){
+          this.groupList = resp.data;
+        }
+      });
     }
   },
 

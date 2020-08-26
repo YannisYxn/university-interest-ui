@@ -2,8 +2,9 @@
   <div>
     <div style="margin:5px;">
       <i-panel>
-        <i-input title="兴趣组名称" maxlength="12" right mode="wrapped" placeholder="请在这里输入,本校内名称唯一" />
+        <i-input v-model="name" title="兴趣组名称" maxlength="12" right mode="wrapped" placeholder="请在这里输入,本校内名称唯一" @change="handleNameChange"/>
         <i-input
+          v-model="introduction"
           style="height:100px;"
           title="兴趣组介绍"
           right
@@ -14,6 +15,7 @@
           maxlength="25"
         />
         <div class="add" @click="handleChooseImage">
+          <i-avatar :src="tempFilePath">L</i-avatar>
           <i-icon type="add" size="25"/>
           <span>添加兴趣组logo</span>
         </div>
@@ -33,7 +35,7 @@
       <p class="font" style="font-size:11px;">3.请勿发政治宗教人肉及商品买卖等不适宜话题，被举报，封号处理</p>
     </div>
     <div style="margin:20px;">
-      <i-button type="primary">创建此组</i-button>
+      <i-button type="primary" @click="handleCreateGroup">创建此组</i-button>
     </div>
   </div>
 </template>
@@ -42,19 +44,63 @@
 export default {
   data() {
     return {
-
+      name: "", //兴趣组名字
+      introduction: "", //兴趣组介绍
+      tempFilePath: "",  //logo路径
     }
   },
   methods: {
     handleChooseImage() {
+      var that = this;
       wx.chooseImage({
         count: 1, //最多上传1张照片
         sizeType: ['compressed'], //压缩图
         sourceType: ['album','camera'], //指定来源，相册和相机都可
         success(res) {
-          const tempFilePaths = res.tempFilePaths;
+          that.tempFilePath = res.tempFilePaths[0];
         }
       })
+    },
+    handleCreateGroup() {
+      console.log(this.name)
+      console.log(this.tempFilePath)
+      if(this.name!=="" && this.tempFilePath!==""){
+        // this.$wxhttp.post({
+        //   url: "/image/uploadLogo",
+        //   data: this.tempFilePath,
+        //   headers: {
+        //     'content-type': "multipart/form-data" // 默认值
+        //   },
+        // }).then(resp => {
+        //   if(resp.code === 0){
+        //     wx.navigateTo({
+        //       url: "../index/main"
+        //     });
+        //   }
+        // });
+        var that = this;
+        console.log(that.tempFilePath)
+        wx.uploadFile({
+          url: "http://116.62.239.164:8080/xiaoqu/image/uploadLogo",
+          filePath: that.tempFilePath,
+          name: "image",
+          header: { "Content-Type": "multipart/form-data" },
+          success(res) {
+            console.log(res)
+          }
+        })
+      }else{
+        wx.showToast({
+          title: '必须完善名称与Logo',
+          icon: 'success'
+        });
+      }
+    },
+    handleNameChange(event) {
+      this.name = event.mp.detail.detail.value;
+    },
+    handleIntroductionChange(event) {
+      this.introduction = event.mp.detail.detail.value;
     }
   }
 };
