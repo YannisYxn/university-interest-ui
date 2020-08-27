@@ -1,5 +1,6 @@
 
 const host = 'http://116.62.239.164:8080/xiaoqu'
+const hostForFile = 'http://116.62.239.164:8080/home'
  
 function request (url, method, data, header = {}) {
   wx.showLoading({
@@ -40,5 +41,6 @@ export default {
   request,
   get,
   post,
-  host
+  host,
+  hostForFile
 }

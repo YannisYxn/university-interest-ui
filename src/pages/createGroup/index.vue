@@ -16,8 +16,8 @@
         />
         <div class="add" @click="handleChooseImage">
           <i-avatar :src="tempFilePath">L</i-avatar>
-          <i-icon type="add" size="25"/>
-          <span>添加兴趣组logo</span>
+          <i-icon v-if="tempFilePath == ''" type="add" size="25"/>
+          <span v-if="tempFilePath == ''">添加兴趣组logo</span>
         </div>
       </i-panel>
     </div>
@@ -41,13 +41,30 @@
 </template>
 
 <script>
+import getQuery from '../../utils/getPage';
+
 export default {
   data() {
     return {
       name: "", //兴趣组名字
       introduction: "", //兴趣组介绍
       tempFilePath: "",  //logo路径
+      latitude: undefined,
+      longitude: undefined,
+      userId: undefined
     }
+  },
+  mounted() {
+    // 获取当前的地理位置
+    this.userId = getQuery.getQuery().userId;
+    var that = this;
+    wx.getLocation({
+      type: 'wgs84',
+      success (res) {
+        that.latitude = res.latitude
+        that.longitude = res.longitude
+      }
+    });
   },
   methods: {
     handleChooseImage() {
@@ -62,37 +79,51 @@ export default {
       })
     },
     handleCreateGroup() {
-      console.log(this.name)
-      console.log(this.tempFilePath)
       if(this.name!=="" && this.tempFilePath!==""){
-        // this.$wxhttp.post({
-        //   url: "/image/uploadLogo",
-        //   data: this.tempFilePath,
-        //   headers: {
-        //     'content-type': "multipart/form-data" // 默认值
-        //   },
-        // }).then(resp => {
-        //   if(resp.code === 0){
-        //     wx.navigateTo({
-        //       url: "../index/main"
-        //     });
-        //   }
-        // });
         var that = this;
-        console.log(that.tempFilePath)
         wx.uploadFile({
           url: "http://116.62.239.164:8080/xiaoqu/image/uploadLogo",
           filePath: that.tempFilePath,
           name: "image",
           header: { "Content-Type": "multipart/form-data" },
           success(res) {
-            console.log(res)
+            // 上传logo成功后获取返回路径再请求创建兴趣组接口
+            that.$wxhttp.post({
+              url: "/group",
+              data: {
+                createTime: new Date(),
+                description: that.introduction,
+                // latitude: that.latitude,
+                // longitude: that.longitude,
+                latitude: 24.442994,
+                longitude: 118.103852,
+                logo: that.$wxhttp.hostForFile + String(JSON.parse(res.data).data),
+                name: that.name,
+                userId: that.userId
+              }
+            }).then(resp => {
+              console.log(resp);
+              if(resp.code === 0){
+                wx.showToast({
+                  title: '创建成功',
+                  icon: 'success'
+                });
+                wx.reLaunch({
+                  url: "../index/main"
+                });
+              }else{
+                wx.showToast({
+                  title: resp.msg,
+                  icon: 'none'
+                });
+              }
+            })
           }
         })
       }else{
         wx.showToast({
-          title: '必须完善名称与Logo',
-          icon: 'success'
+          title: '请完善名称与Logo',
+          icon: 'none'
         });
       }
     },
