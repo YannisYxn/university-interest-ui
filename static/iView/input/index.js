@@ -48,6 +48,10 @@ Component({
         },
         high: {
             type: Boolean   //兴趣组介绍高度
+        },
+        confirmType: {
+            type: String,   //拉起键盘后右下角按钮文字
+            value: 'done'
         }
     },
 
@@ -66,6 +70,9 @@ Component({
 
         handleInputBlur(event) {
             this.triggerEvent('blur', event);
+        },
+        handleConfirm(event) {
+            this.triggerEvent('confirm', event);
         }
     }
 });

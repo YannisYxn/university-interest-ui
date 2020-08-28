@@ -1,7 +1,17 @@
 <template>
   <div>
     <div class="head">
-      <i-input placeholder="请在这里搜索" mode="wrapped" style="width:100%;" />
+      <i-input
+        v-model="searchKey"
+        placeholder="请在这里搜索"
+        maxlength="50"
+        confirmType="search"
+        mode="wrapped"
+        style="width:100%;"
+        @confirm="handleSearch"
+        @change="handleSearchChange"
+      />
+      <i-icon type="delete_fill" size="25" style="margin-right:5px;" color="#ececec" @click="handleClearSearch"/>
     </div>
     <div style="margin-top:10px;margin-left:5px;display:flex;align-items:center;">
       <i-card
@@ -25,8 +35,10 @@
       </i-card>
     </div>
     <div class="label">
-      <span style="margin:5px;color:#ffffff">我创建及加入的兴趣组</span>
+      <span style="margin:5px;color:#ffffff">{{ barTitle }}</span>
     </div>
+
+    <!-- 兴趣组列表 -->
     <div style="margin-top:5px;">
       <i-cell-group>
         <i-cell
@@ -43,12 +55,46 @@
             <i-badge :count="group.postCount" overflow-count="100" style="margin-right:10px;" />
           </view>
           <view slot="footer">
-            <i-icon type="setup_fill" size="25" color="#67ddd3" @click="handleManageInterestGroup" />
+            <i-icon v-if="group.userId === userInfo.userId" type="setup_fill" size="25" color="#67ddd3" @click="handleManageInterestGroup" />
           </view>
         </i-cell>
       </i-cell-group>
     </div>
 
+    <!-- 帖子列表 -->
+    <div v-for="post in postList" :key="post.id" style="margin-top:15px;">
+      <i-card
+        post
+        :postTitle="post.userName"
+        :time="post.createTime"
+        :thumb="post.userPhtot"
+      >
+        <view slot="content">
+          <span>{{ post.content }}</span>
+          <div style="display:flex;height:100px;width:120px;">
+            <image :src="post.img" style="padding:5px;max-width:100%;max-height:100%;" />
+          </div>
+        </view>
+        <view slot="footer">
+          <div style="text-align:center;margin-top:10px;">
+            <i-row>
+              <i-col span="24">
+                <div @click="handleComment">
+                  <i-icon size="30" type="message" />
+                  <span style="font-size=50px;">{{ post.commentCount }}</span>
+                </div>
+              </i-col>
+              <!-- <i-col span="12">
+                <i-icon size="30" type="dislike" />
+                <span style="font-size=50px;">5566</span>
+              </i-col> -->
+            </i-row>
+          </div>
+        </view>
+      </i-card>
+    </div>
+
+    <!-- 弹窗列表 -->
     <i-modal title="提示" :visible="visible2" @ok="handleUserInfo" @cancel="handleClose2">
       <p style="font-size:15px;line-height:20px;margin:0 20px;">请简单完善个人资料后，再建组，发帖，回复等操作。谢谢。</p>
       <div style="display:flex;align-items:center;margin-left:20px;">
@@ -109,8 +155,6 @@
     <i-modal :visible="visible6" @ok="handleClose6" @cancel="handleClose6">
       <view>未确认校区不可创建兴趣组</view>
     </i-modal>
-
-    <i-avatar :src="temp">L</i-avatar>
   </div>
 </template>
 
@@ -131,11 +175,14 @@ export default {
         avatarUrl: "",
         gender: undefined,
         nickName: "",
-        introduction: ""
+        introduction: "",
+        universityId: undefined,  //认证学校id
+        universityCampusId: undefined //认证校区id
       },
       latitude: undefined, //纬度，范围为 -90~90，负数表示南纬
       longitude: undefined,  //经度，范围为 -180~180，负数表示西经
       groupList: [],  //兴趣组列表
+      postList: [], //帖子列表
       gender: [
         {
           id: 1,
@@ -146,7 +193,8 @@ export default {
           name: "女"
         }
       ],
-      temp: "http://116.62.239.164/file/image/group_logo/1598528501448-wxa00ab72695500f14.o6zAJs4iE5Rc83U9VTKhqcqavujU.mSei6jDQIChD59168a6c4b7b6985b21ab9fae9822ab3.jpg"
+      searchKey: "", //搜索框内容
+      barTitle: "我创建及加入的兴趣组"
     };
   },
   mounted() {
@@ -158,15 +206,25 @@ export default {
           that.$wxhttp.post({
             url: "/user/login?code=" + res.code,
           }).then(resp => {
-            that.userInfo.userId = resp.data.id;
-            that.userInfo.isCheckUniversity = resp.data.isCheckUniversity;
-            if(resp.data.isCheckUniversity === 0){
-              //首次登录校趣，输入校区，授权信息，并完善个人信息
-              that.visible4 = true;
+            if(resp.code === 0){
+              that.userInfo.userId = resp.data.id;
+              that.userInfo.isCheckUniversity = resp.data.isCheckUniversity;
+              that.userInfo.universityId = resp.data.universityId;
+              that.userInfo.universityCampusId = resp.data.universityCampusId;
+              if(resp.data.isCheckUniversity === 0){
+                //首次登录校趣，输入校区，授权信息，并完善个人信息
+                that.visible4 = true;
+              }else{
+                //不是首次登录，获取兴趣组列表
+                that.getGroupList();
+              }
             }else{
-              //不是首次登录，获取兴趣组列表
-              that.getGroupList();
+              wx.showToast({
+                title: resp.msg,
+                icon: 'none'
+              })
             }
+            
           });
         } else {
           console.log("登录失败！" + res.errMsg);
@@ -185,19 +243,19 @@ export default {
       });
     },
     handleCreateGroup() {
-      // if(this.userInfo.isCheckUniversity === 0){
-      //   //未确认过学校不可创建兴趣组
-      //   this.visible6 = true;
-      // }else{
-      //   //确认过学校跳转创建兴趣组页面
+      if(this.userInfo.isCheckUniversity === 0){
+        //未确认过学校不可创建兴趣组
+        this.visible6 = true;
+      }else{
+        //确认过学校跳转创建兴趣组页面
         wx.navigateTo({
           url: "../createGroup/main?userId=" + this.userInfo.userId
         });
-      // }
+      }
     },
     handleSelfUniversityInterestGroup() {
       wx.navigateTo({
-        url: "../selfUniversityInterestGroup/main"
+        url: "../selfUniversityInterestGroup/main?userId=" + this.userInfo.userId + "&universityId=" + this.userInfo.universityId
       });
     },
     handleInterestGroup() {
@@ -310,6 +368,9 @@ export default {
     handleUniversityChange(event){
       this.university = event.mp.detail.detail.value;
     },
+    handleSearchChange(event){
+      this.searchKey = event.mp.detail.detail.value;
+    },
     getGroupList() {
       this.$wxhttp.post({
         url: "/group/listMyGroups?userId=" + this.userInfo.userId,
@@ -318,7 +379,46 @@ export default {
           this.groupList = resp.data;
         }
       });
-    }
+    },
+    handleSearch() {
+      //首页搜索框，搜索兴趣组与相关帖子
+      if(this.searchKey === ""){
+        //未输入搜索内容
+        wx.showToast({
+          title: '搜索内容为空',
+          icon: 'none'
+        });
+      }else{
+        this.$wxhttp.post({
+          url: "/group/search",
+          data: {
+            searchKey: this.searchKey,
+            universityCampusId: this.userInfo.universityCampusId
+          }
+        }).then(resp => {
+          if(resp.code === 0){
+            this.barTitle = "与" + this.searchKey + "相关的兴趣组与帖子";
+            this.groupList = resp.data.groupList;
+            this.postList = resp.data.postList;
+          }else{
+            wx.showToast({
+              title: resp.msg,
+              icon: 'none'
+            })
+          }
+        });
+      }
+    },
+    handleClearSearch() {
+      this.getGroupList();
+      this.searchKey = "";
+      this.barTitle = "我创建及加入的兴趣组"
+    },
+    handleComment() {
+      wx.navigateTo({
+        url: "../comment/main"
+      });
+    },
   },
 
   created() {

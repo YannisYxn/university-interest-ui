@@ -82,7 +82,7 @@ export default {
       if(this.name!=="" && this.tempFilePath!==""){
         var that = this;
         wx.uploadFile({
-          url: "http://116.62.239.164:8080/xiaoqu/image/uploadLogo",
+          url: that.$wxhttp.host + "/image/uploadLogo",
           filePath: that.tempFilePath,
           name: "image",
           header: { "Content-Type": "multipart/form-data" },
@@ -93,16 +93,15 @@ export default {
               data: {
                 createTime: new Date(),
                 description: that.introduction,
-                // latitude: that.latitude,
-                // longitude: that.longitude,
-                latitude: 24.442994,
-                longitude: 118.103852,
+                latitude: that.latitude,
+                longitude: that.longitude,
+                // latitude: 24.442994,
+                // longitude: 118.103852,
                 logo: that.$wxhttp.hostForFile + String(JSON.parse(res.data).data),
                 name: that.name,
                 userId: that.userId
               }
             }).then(resp => {
-              console.log(resp);
               if(resp.code === 0){
                 wx.showToast({
                   title: '创建成功',
