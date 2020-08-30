@@ -4,22 +4,25 @@
       <div style="margin:0 10px;">
         <i-row>
           <i-col span="6">
-            <i-avatar size="avatar" src="../../../static/images/shoe.png" />
+            <i-avatar size="avatar" :src="groupDetail.logo" />
           </i-col>
           <i-col span="9">
-            <p style="fong-size:15px;color:white;">球鞋狂人</p>
-            <p style="font-size:10px;color:white;line-height:25px;">333个组员</p>
-            <span style="font-size:11px;color:white;">2020-02-26(加入)</span>
+            <p style="fong-size:15px;color:white;">{{ groupDetail.name }}</p>
+            <p style="font-size:10px;color:white;line-height:25px;">{{ groupDetail.memberCount }}个组员</p>
           </i-col>
           <i-col span="9">
             <i-icon type="add" size="25" color="red" style="float:right;" />
-            <span style="font-size:10px;color:white;">创建者：小火柴</span>
-            <p style="font-size:10px;color:white;line-height:25px;">2010-11-25(建组)</p>
+            <span style="font-size:10px;color:white;">创建者：{{ groupDetail.createUser }}</span>
+            <p
+              style="font-size:10px;color:white;line-height:25px;"
+            >{{ groupDetail.createTime }}(建组)</p>
           </i-col>
         </i-row>
       </div>
       <div style="margin:10px;">
-        <p style="font-size:12px;color:white;">介绍：为喜欢球鞋的同学，提供沟通交流！希望大家喜欢！</p>
+        <p
+          style="font-size:12px;color:white;"
+        >简介：{{ groupDetail.description ? groupDetail.description : "无简介" }}</p>
       </div>
     </div>
 
@@ -128,11 +131,60 @@
 
 <script>
 import img from "../../../static/images/shoe.png";
+import getQuery from '../../utils/getPage';
+
 export default {
   data() {
     return {
-      imageUrl: img
+      imageUrl: img,
+      groupId: undefined,
+      userId: undefined,
+      groupDetail: {
+        createTime: "",
+        createUser: "",
+        createUserId: undefined,
+        description: "",
+        id: undefined,
+        isCreate: undefined,
+        isJoin: undefined,
+        logo: "",
+        memberCount: undefined,
+        name: "",
+        postCount: undefined,
+        status: undefined,
+        universityId: undefined
+      },
+      postList: []
     };
+  },
+  mounted() {
+    this.groupId = getQuery.getQuery().groupId;
+    this.userId = getQuery.getQuery().userId;
+
+    //请求兴趣组基本信息
+    this.$wxhttp.get({
+      url: 
+        "/group/id?groupId=" + 
+        getQuery.getQuery().groupId + 
+        "&queryUserId=" + 
+        getQuery.getQuery().userId
+    }).then(resp => {
+      if(resp.code === 0){
+        this.groupDetail = resp.data;
+        this.groupDetail.createTime = this.$moment.unix(this.groupDetail.createTime).format("YYYY-MM-DD");
+      }else{
+        wx.showToast({
+          title: resp.msg
+        })
+      }
+    });
+
+    //请求小组底下所有帖子
+    this.$wxhttp.get({
+      url: "/post/listGroupPost?groupId=" + this.groupId
+    }).then(resp => {
+      
+    })
   },
   methods: {
     handleComment() {

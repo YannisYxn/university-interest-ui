@@ -16,7 +16,7 @@
         </view>
         <view slot="footer">
           <i-icon
-            v-if="group.userId === userId"
+            v-if="group.userId == userId"
             type="setup_fill"
             size="25"
             color="#67ddd3"
@@ -40,8 +40,10 @@ export default {
     }
   },
   mounted() {
+    wx.setNavigationBarTitle({
+      title: getQuery.getQuery().universityName + "兴趣组"
+    });
     this.userId = getQuery.getQuery().userId;
-    console.log(this.userId)
     this.universityId = getQuery.getQuery().universityId;
     //获取本校兴趣组列表
     this.$wxhttp.get({

@@ -11,7 +11,13 @@
         @confirm="handleSearch"
         @change="handleSearchChange"
       />
-      <i-icon type="delete_fill" size="25" style="margin-right:5px;" color="#ececec" @click="handleClearSearch"/>
+      <i-icon
+        type="delete_fill"
+        size="25"
+        style="margin-right:5px;"
+        color="#ececec"
+        @click="handleClearSearch"
+      />
     </div>
     <div style="margin-top:10px;margin-left:5px;display:flex;align-items:center;">
       <i-card
@@ -46,7 +52,7 @@
           v-show="group.status === 0 || (group.userId === userInfo.userId && [-1,3].includes(group.status))"
           :key="group.id"
           :title="group.name"
-          @click="handleInterestGroup"
+          @click="handleInterestGroup(group.id)"
         >
           <view slot="icon">
             <i-avatar :src="group.logo"></i-avatar>
@@ -55,7 +61,13 @@
             <i-badge :count="group.postCount" overflow-count="100" style="margin-right:10px;" />
           </view>
           <view slot="footer">
-            <i-icon v-if="group.userId === userInfo.userId" type="setup_fill" size="25" color="#67ddd3" @click="handleManageInterestGroup" />
+            <i-icon
+              v-if="group.userId === userInfo.userId"
+              type="setup_fill"
+              size="25"
+              color="#67ddd3"
+              @click="handleManageInterestGroup"
+            />
           </view>
         </i-cell>
       </i-cell-group>
@@ -63,12 +75,7 @@
 
     <!-- 帖子列表 -->
     <div v-for="post in postList" :key="post.id" style="margin-top:15px;">
-      <i-card
-        post
-        :postTitle="post.userName"
-        :time="post.createTime"
-        :thumb="post.userPhtot"
-      >
+      <i-card post :postTitle="post.userName" :time="post.createTime" :thumb="post.userPhtot">
         <view slot="content">
           <span>{{ post.content }}</span>
           <div style="display:flex;height:100px;width:120px;">
@@ -87,7 +94,7 @@
               <!-- <i-col span="12">
                 <i-icon size="30" type="dislike" />
                 <span style="font-size=50px;">5566</span>
-              </i-col> -->
+              </i-col>-->
             </i-row>
           </div>
         </view>
@@ -149,12 +156,6 @@
         @change="handleUniversityChange"
       />
     </i-modal>
-    <i-modal :visible="visible5" @ok="handleClose5" @cancel="handleClose5">
-      <view>学校不存在</view>
-    </i-modal>
-    <i-modal :visible="visible6" @ok="handleClose6" @cancel="handleClose6">
-      <view>未确认校区不可创建兴趣组</view>
-    </i-modal>
   </div>
 </template>
 
@@ -166,8 +167,6 @@ export default {
       visible2: false,
       visible3: false,
       visible4: false,
-      visible5: false,
-      visible6: false,
       university: "", //输入高校名称
       userInfo: { //用户信息
         userId: "",
@@ -177,6 +176,7 @@ export default {
         nickName: "",
         introduction: "",
         universityId: undefined,  //认证学校id
+        universityName: "",
         universityCampusId: undefined //认证校区id
       },
       latitude: undefined, //纬度，范围为 -90~90，负数表示南纬
@@ -210,6 +210,7 @@ export default {
               that.userInfo.userId = resp.data.id;
               that.userInfo.isCheckUniversity = resp.data.isCheckUniversity;
               that.userInfo.universityId = resp.data.universityId;
+              that.userInfo.universityName = resp.data.universityName;
               that.userInfo.universityCampusId = resp.data.universityCampusId;
               if(resp.data.isCheckUniversity === 0){
                 //首次登录校趣，输入校区，授权信息，并完善个人信息
@@ -239,13 +240,15 @@ export default {
   methods: {
     handleToCityUniversity() {
       wx.navigateTo({
-        url: "../cityUniversityList/main"
+        url: "../cityUniversityList/main?userId=" + this.userInfo.userId
       });
     },
     handleCreateGroup() {
       if(this.userInfo.isCheckUniversity === 0){
         //未确认过学校不可创建兴趣组
-        this.visible6 = true;
+        wx.showToast({
+          title: '未认证学校不可创建兴趣组'
+        });
       }else{
         //确认过学校跳转创建兴趣组页面
         wx.navigateTo({
@@ -255,12 +258,18 @@ export default {
     },
     handleSelfUniversityInterestGroup() {
       wx.navigateTo({
-        url: "../selfUniversityInterestGroup/main?userId=" + this.userInfo.userId + "&universityId=" + this.userInfo.universityId
+        url: 
+          "../selfUniversityInterestGroup/main?userId=" + 
+          this.userInfo.userId + 
+          "&universityId=" + 
+          this.userInfo.universityId + 
+          "&universityName=" + 
+          this.userInfo.universityName
       });
     },
-    handleInterestGroup() {
+    handleInterestGroup(groupId) {
       wx.navigateTo({
-        url: "../interestGroup/main"
+        url: "../interestGroup/main?groupId=" + groupId + "&userId=" + this.userInfo.userId
       });
     },
     handleManageInterestGroup() {
@@ -280,12 +289,6 @@ export default {
     handleClose4() {
       this.visible4 = false;
       this.visible3 = true;
-    },
-    handleClose5() {
-      this.visible5 = false;
-    },
-    handleClose6() {
-      this.visible6 = false;
     },
     getUserInfo(detail) {
       var that = this;
@@ -336,12 +339,40 @@ export default {
     },
     handleUserInfo() {
       //完善个人信息
-
+      if(this.userInfo.gender === undefined){
+        wx.showToast({
+          title: "性别不可为空"
+        });
+      }else if(this.userInfo.nickName === ""){
+        wx.showToast({
+          title: "昵称不可为空"
+        });
+      }else if(this.userInfo.avatarUrl === ""){
+        wx.showToast({
+          title: "请上传头像"
+        });
+      }else{
+        this.$wxhttp.post({
+          url: "/user/firstUploadUserInfo",
+          data: {
+            id: this.userInfo.userId,
+            name: this.userInfo.nickName,
+            photo: this.userInfo.avatarUrl,
+            sex: this.userInfo.gender,
+            description: this.userInfo.introduction
+          }
+        }).then(resp => {
+          if(resp.code !== 0){
+            wx.showToast({
+              title: resp.msg
+            });
+          }
+        })
+      }
     },
     isOnUniversity(latitude,longitude) {
       // 判断当前位置是否处于校内
       var that = this;
-      console.log(this)
       this.$wxhttp.post({
         url: "/user/onUniversity",
         data: {
@@ -353,7 +384,9 @@ export default {
       }).then(resp => {
         if(resp.code === 3){
           //学校不存在
-          this.visible5 = true;
+          wx.showToast({
+            title: '学校不存在'
+          });
         }else if(resp.code === 4){
           //不在学校范围内
           this.visible4 = false;

@@ -1,5 +1,8 @@
 import Vue from 'vue'
 import App from './index'
+import moment from 'moment'
+
+Vue.prototype.$moment = moment;
 
 // add this to handle exception
 Vue.config.errorHandler = function (err) {

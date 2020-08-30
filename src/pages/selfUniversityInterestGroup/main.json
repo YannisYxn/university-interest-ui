@@ -1,5 +1,5 @@
 {
-  "navigationBarTitleText": "集美大学兴趣组",
+  "navigationBarTitleText": "兴趣组",
   "usingComponents": {
     "i-button": "../../../static/iView/button/index",
     "i-input": "../../../static/iView/input/index",
