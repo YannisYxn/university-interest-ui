@@ -93,10 +93,10 @@ export default {
               data: {
                 createTime: new Date(),
                 description: that.introduction,
-                latitude: that.latitude,
-                longitude: that.longitude,
-                // latitude: 24.442994,
-                // longitude: 118.103852,
+                // latitude: that.latitude,
+                // longitude: that.longitude,
+                latitude: 24.442994,
+                longitude: 118.103852,
                 logo: that.$wxhttp.hostForFile + String(JSON.parse(res.data).data),
                 name: that.name,
                 userId: that.userId
@@ -107,7 +107,7 @@ export default {
                   title: '创建成功',
                   icon: 'success'
                 });
-                wx.reLaunch({
+                wx.navigateTo({
                   url: "../index/main"
                 });
               }else{

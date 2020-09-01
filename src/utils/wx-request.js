@@ -1,6 +1,6 @@
 
 const host = 'http://116.62.239.164:8080/xiaoqu'
-// const host = 'http://2559jc4123.wicp.vip:41613/xiaoqu'
+// const host = 'http://2559jc4123.wicp.vip:41613'
 const hostForFile = 'http://116.62.239.164:5001'
  
 function request (url, method, data, header = {}) {
@@ -37,11 +37,16 @@ function get (obj) {
 function post (obj) {
   return request(obj.url, 'POST', obj.data)
 }
+
+function deleteRequest (obj) {
+  return request(obj.url, 'DELETE', obj.data)
+}
  
 export default {
   request,
   get,
   post,
+  deleteRequest,
   host,
   hostForFile
 }

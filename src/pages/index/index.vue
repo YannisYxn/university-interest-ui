@@ -58,7 +58,21 @@
             <i-avatar :src="group.logo"></i-avatar>
           </view>
           <view slot="badge">
-            <i-badge :count="group.postCount" overflow-count="100" style="margin-right:10px;" />
+            <i-icon
+              v-if="(group.userId === userInfo.userId && group.status === -1)"
+              type="warning_fill"
+              size="25"
+              color="#67ddd3"
+              @click="showToast(msg)"
+            />
+            <i-icon
+              v-else-if="(group.userId === userInfo.userId && group.status === 3)"
+              type="lock_fill"
+              size="25"
+              color="#67ddd3"
+              @click="showToast(msg)"
+            />
+            <i-badge v-else :count="group.postCount" overflow-count="100" style="margin-right:10px;" />
           </view>
           <view slot="footer">
             <i-icon
@@ -197,7 +211,7 @@ export default {
       barTitle: "我创建及加入的兴趣组"
     };
   },
-  mounted() {
+  onShow() {
     var that = this;
     wx.login({
       success(res) {
@@ -452,6 +466,12 @@ export default {
         url: "../comment/main"
       });
     },
+    showToast(msg) {
+      wx.showToast({
+        title: msg,
+        icon: "none"
+      });
+    }
   },
 
   created() {

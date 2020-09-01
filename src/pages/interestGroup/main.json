@@ -17,6 +17,7 @@
     "i-radio": "../../../static/iView/radio/index",
     "i-divider": "../../../static/iView/divider/index",
     "i-sticky": "../../../static/iView/sticky/index",
-    "i-sticky-item": "../../../static/iView/sticky-item/index"
+    "i-sticky-item": "../../../static/iView/sticky-item/index",
+    "i-action-sheet": "../../../static/iView/action-sheet/index"
   }
 }

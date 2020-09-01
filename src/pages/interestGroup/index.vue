@@ -11,11 +11,15 @@
             <p style="font-size:10px;color:white;line-height:25px;">{{ groupDetail.memberCount }}个组员</p>
           </i-col>
           <i-col span="9">
-            <i-icon type="add" size="25" color="red" style="float:right;" />
+            <i-icon
+              type="add"
+              size="25"
+              color="red"
+              style="float:right;"
+              @click="() => interestGroupVisible = true"
+            />
             <span style="font-size:10px;color:white;">创建者：{{ groupDetail.createUser }}</span>
-            <p
-              style="font-size:10px;color:white;line-height:25px;"
-            >{{ groupDetail.createTime }}(建组)</p>
+            <p style="font-size:10px;color:white;line-height:25px;">{{ groupDetail.createTime }}(建组)</p>
           </i-col>
         </i-row>
       </div>
@@ -121,11 +125,21 @@
     </div>
 
     <i-button
+      v-if="groupDetail.isJoin === 1 && groupDetail.status === 0"
       type="primary"
       shape="circle"
       style="position:fixed;bottom:0;right:0;"
       @click="handlePost"
     >发帖</i-button>
+
+    <!-- 兴趣组操作列表 -->
+    <i-action-sheet
+      :visible="interestGroupVisible"
+      :actions="interestGroupAction"
+      show-cancel
+      @cancel="() => interestGroupVisible = false"
+      @iclick="handleClickItem"
+    />
   </div>
 </template>
 
@@ -154,39 +168,90 @@ export default {
         status: undefined,
         universityId: undefined
       },
-      postList: []
+      postList: [],
+      interestGroupVisible: false,
+      interestGroupAction: [
+        {
+          name: '分享此组',
+          icon: 'share',
+          openType: 'share'
+        }
+      ],
     };
   },
   mounted() {
     this.groupId = getQuery.getQuery().groupId;
     this.userId = getQuery.getQuery().userId;
 
-    //请求兴趣组基本信息
-    this.$wxhttp.get({
-      url: 
-        "/group/id?groupId=" + 
-        getQuery.getQuery().groupId + 
-        "&queryUserId=" + 
-        getQuery.getQuery().userId
-    }).then(resp => {
-      if(resp.code === 0){
-        this.groupDetail = resp.data;
-        this.groupDetail.createTime = this.$moment.unix(this.groupDetail.createTime).format("YYYY-MM-DD");
-      }else{
-        wx.showToast({
-          title: resp.msg
-        })
-      }
-    });
+    this.getGroupInfo();
 
     //请求小组底下所有帖子
     this.$wxhttp.get({
       url: "/post/listGroupPost?groupId=" + this.groupId
     }).then(resp => {
-      
+      wx.navigateTo({
+        url: "../cityUniversityList/main?userId=" + this.userInfo.userId
+      });
     })
   },
   methods: {
+    getGroupInfo(){
+      //重置操作列表
+      this.interestGroupAction = [
+        {
+          name: '分享此组',
+          icon: 'share',
+          openType: 'share'
+        }
+      ];
+
+      //请求兴趣组基本信息
+      this.$wxhttp.get({
+        url: 
+          "/group/id?groupId=" + 
+          getQuery.getQuery().groupId + 
+          "&queryUserId=" + 
+          getQuery.getQuery().userId
+      }).then(resp => {
+        if(resp.code === 0){
+          this.groupDetail = resp.data;
+          this.groupDetail.createTime = this.$moment.unix(this.groupDetail.createTime).format("YYYY-MM-DD");
+          if(this.groupDetail.isCreate === 1){
+            if(this.groupDetail.status !== 3){
+              this.interestGroupAction.unshift({
+                name: "冻结此组"
+              },{
+                name: "解散此组"
+              });
+            }else{
+              this.interestGroupAction.unshift({
+                name: "解冻此组"
+              },{
+                name: "解散此组"
+              });
+            }
+          }else{
+            this.interestGroupAction.unshift({
+              name: "举报此组"
+            });
+            if(this.groupDetail.isJoin === 1){
+              this.interestGroupAction.unshift({
+                name: "退出此组"
+              });
+            }else{
+              this.interestGroupAction.unshift({
+                name: "加入此组"
+              });
+            }
+          }
+        }else{
+          wx.showToast({
+            title: resp.msg,
+            icon: "none"
+          })
+        }
+      });
+    },
     handleComment() {
       wx.navigateTo({
         url: "../comment/main"
@@ -196,7 +261,112 @@ export default {
       wx.navigateTo({
         url: "../createPost/main"
       });
-    }
+    },
+    handleClickItem (detail) {
+      const index = detail.mp.detail.index;
+      if(this.groupDetail.isCreate === 0 && this.groupDetail.isJoin === 0 && index === 0){
+        //加入此组
+        this.$wxhttp.post({
+          url: "/group/join?userId=" + this.userId + "&groupId=" + this.groupId,
+        }).then(resp => {
+          if(resp.code === 0){
+            //加入成功
+            this.getGroupInfo();
+            wx.showToast({
+              title: "加入成功",
+              icon: "success"
+            });
+          }else{
+            wx.showToast({
+              title: resp.msg,
+              icon: "none"
+            });
+          }
+        });
+      }else if(this.groupDetail.isCreate === 0 && this.groupDetail.isJoin === 1 && index === 0){
+        //退出此组
+        this.$wxhttp.deleteRequest({
+          url: "/group/out?userId=" + this.userId + "&groupId=" + this.groupId
+        }).then(resp => {
+          if(resp.code === 0){
+            //退出成功
+            this.getGroupInfo();
+            wx.showToast({
+              title: "退出成功",
+              icon: "success"
+            });
+          }else{
+            wx.showToast({
+              title: resp.msg,
+              icon: "none"
+            });
+          }
+        });
+      }else if(this.groupDetail.isCreate === 0 && index === 1){
+        //举报此组
+        
+      }else if(this.groupDetail.isCreate === 1 && this.groupDetail.status === 0 && index === 0){
+        //冻结此组
+        this.$wxhttp.post({
+          url: "/group/frozenGroup?userId=" + this.userId + "&groupId=" + this.groupId
+        }).then(resp => {
+          if(resp.code === 0){
+            //冻结成功
+            this.getGroupInfo();
+            wx.showToast({
+              title: "冻结成功",
+              icon: "success"
+            });
+          }else{
+            wx.showToast({
+              title: resp.msg,
+              icon: "none"
+            });
+          }
+        });
+      }else if(this.groupDetail.isCreate === 1 && this.groupDetail.status === 3 && index === 0){
+        //解冻此组
+        this.$wxhttp.post({
+          url: "/group/thawGroup?userId=" + this.userId + "&groupId=" + this.groupId
+        }).then(resp => {
+          if(resp.code === 0){
+            //解冻成功
+            this.getGroupInfo();
+            wx.showToast({
+              title: "解冻成功",
+              icon: "success"
+            });
+          }else{
+            wx.showToast({
+              title: resp.msg,
+              icon: "none"
+            });
+          }
+        });
+      }else if(this.groupDetail.isCreate === 1 && index === 1){
+        //解散此组
+        this.$wxhttp.deleteRequest({
+          url: "/group/id?userId=" + this.userId + "&groupId=" + this.groupId
+        }).then(resp => {
+          if(resp.code === 0){
+            //解散成功
+            wx.showToast({
+              title: "解散成功",
+              icon: "success"
+            });
+            wx.navigateTo({
+              url: "../index/main"
+            });
+          }else{
+            wx.showToast({
+              title: resp.msg,
+              icon: "none"
+            });
+          }
+        });
+      }
+      this.interestGroupVisible = false;
+    },
   }
 };
 </script>

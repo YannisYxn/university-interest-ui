@@ -3,10 +3,10 @@
     <i-cell-group>
       <i-cell
         v-for="group in groupList"
-        v-show="group.status === 0 || (group.userId === userInfo.userId && [-1,3].includes(group.status))"
+        v-show="group.status === 0 || (group.userId === userId && [-1,3].includes(group.status))"
         :key="group.id"
         :title="group.name"
-        @click="handleInterestGroup"
+        @click="handleInterestGroup(group.id)"
       >
         <view slot="icon">
           <i-avatar :src="group.logo"></i-avatar>
@@ -39,7 +39,7 @@ export default {
       groupList: []
     }
   },
-  mounted() {
+  onShow() {
     wx.setNavigationBarTitle({
       title: getQuery.getQuery().universityName + "兴趣组"
     });
@@ -60,9 +60,9 @@ export default {
     })
   },
   methods: {
-    handleInterestGroup() {
+    handleInterestGroup(groupId) {
       wx.navigateTo({
-        url: "../interestGroup/main"
+        url: "../interestGroup/main?userId=" + this.userId + "&groupId=" + groupId
       });
     },
     handleManageInterestGroup() {
