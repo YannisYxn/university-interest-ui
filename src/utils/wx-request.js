@@ -41,12 +41,17 @@ function post (obj) {
 function deleteRequest (obj) {
   return request(obj.url, 'DELETE', obj.data)
 }
+
+function put (obj) {
+  return request(obj.url, 'PUT', obj.data)
+}
  
 export default {
   request,
   get,
   post,
   deleteRequest,
+  put,
   host,
   hostForFile
 }

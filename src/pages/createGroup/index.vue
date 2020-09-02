@@ -2,7 +2,15 @@
   <div>
     <div style="margin:5px;">
       <i-panel>
-        <i-input v-model="name" title="兴趣组名称" maxlength="12" right mode="wrapped" placeholder="请在这里输入,本校内名称唯一" @change="handleNameChange"/>
+        <i-input
+          v-model="name"
+          title="兴趣组名称"
+          maxlength="12"
+          right
+          mode="wrapped"
+          placeholder="请在这里输入,本校内名称唯一"
+          @change="handleNameChange"
+        />
         <i-input
           v-model="introduction"
           style="height:100px;"
@@ -13,10 +21,11 @@
           mode="wrapped"
           placeholder="限25个字"
           maxlength="25"
+          @change="handleIntroductionChange"
         />
         <div class="add" @click="handleChooseImage">
           <i-avatar :src="tempFilePath">L</i-avatar>
-          <i-icon v-if="tempFilePath == ''" type="add" size="25"/>
+          <i-icon v-if="tempFilePath == ''" type="add" size="25" />
           <span v-if="tempFilePath == ''">添加兴趣组logo</span>
         </div>
       </i-panel>
@@ -79,7 +88,7 @@ export default {
       })
     },
     handleCreateGroup() {
-      if(this.name!=="" && this.tempFilePath!==""){
+      if(this.name!=="" && this.introduction !== "" && this.tempFilePath!==""){
         var that = this;
         wx.uploadFile({
           url: that.$wxhttp.host + "/image/uploadLogo",
@@ -107,7 +116,7 @@ export default {
                   title: '创建成功',
                   icon: 'success'
                 });
-                wx.navigateTo({
+                wx.reLaunch({
                   url: "../index/main"
                 });
               }else{
@@ -120,8 +129,9 @@ export default {
           }
         })
       }else{
+        console.log(this.introduction)
         wx.showToast({
-          title: '请完善名称与Logo',
+          title: '请完善名称、简介与Logo',
           icon: 'none'
         });
       }

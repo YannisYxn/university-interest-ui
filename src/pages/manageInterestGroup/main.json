@@ -19,6 +19,7 @@
     "i-sticky": "../../../static/iView/sticky/index",
     "i-sticky-item": "../../../static/iView/sticky-item/index",
     "i-tabs": "../../../static/iView/tabs/index",
-    "i-tab": "../../../static/iView/tab/index"
+    "i-tab": "../../../static/iView/tab/index",
+    "i-action-sheet": "../../../static/iView/action-sheet/index"
   }
 }

@@ -19,7 +19,8 @@
     "pages/messageBox/main",
     "pages/chat/main",
     "pages/createPost/main",
-    "pages/manageInterestGroup/main"
+    "pages/manageInterestGroup/main",
+    "pages/modifyGroup/main"
   ],
   "window": {
     "backgroundTextStyle": "light",

@@ -192,7 +192,7 @@ export default {
       wx.navigateTo({
         url: "../cityUniversityList/main?userId=" + this.userInfo.userId
       });
-    })
+    });
   },
   methods: {
     getGroupInfo(){
@@ -354,7 +354,7 @@ export default {
               title: "解散成功",
               icon: "success"
             });
-            wx.navigateTo({
+            wx.switchTab({
               url: "../index/main"
             });
           }else{
