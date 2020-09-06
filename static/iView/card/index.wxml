@@ -1,12 +1,17 @@
 <view class="i-class i-card {{ full ? 'i-card-full' : '' }} {{ post ? 'i-card-post' : '' }}">
     <view class="i-class i-card-header">
         <view class="i-card-header-content">
-            <image class="i-card-header-thumb" src="{{ thumb }}" mode="aspectFit" wx:if="{{ thumb }}" />
+            <image class="i-card-header-thumb" src="{{ thumb }}" mode="aspectFit" wx:if="{{ thumb && !post }}" />
+            <image class="i-card-header-post-thumb" src="{{ thumb }}" mode="aspectFit" wx:if="{{ thumb && post }}" />
             {{ title }}
             <span class="i-card-post-title">{{ postTitle }}</span>
         </view>
         <view class="i-card-header-extra" wx:if="{{ extra }}">{{ extra }}</view>
         <view class="i-card-header-time" wx:if="{{ time }}">{{ time }}</view>
+        <slot name="operation"></slot>
+    </view>
+    <view class="i-card-header">
+        <view class="i-card-header-post-university" wx:if="{{ university }}">{{ university }}</view>
     </view>
     <view class="i-class i-card-body"><slot name="content"></slot></view>
     <view class="i-class i-card-footer"><slot name="footer"></slot></view>

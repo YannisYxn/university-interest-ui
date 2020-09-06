@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div style="background-color:#f3f4f5;">
     <div class="head">
       <div style="margin:0 10px;">
         <i-row>
@@ -30,98 +30,54 @@
       </div>
     </div>
 
-    <div style="margin-top:15px;">
+    <div v-for="post in postList" :key="post.id" style="margin-top:15px;">
       <i-card
         post
-        postTitle="高小白"
-        time="2019-12-12 10:24"
-        thumb="../../../static/images/avatar.png"
+        :postTitle="post.userName"
+        :time="post.createTime"
+        :thumb="post.userPhoto"
+        :university="post.universityCampusName"
       >
+        <view slot="operation">
+          <i-icon
+            type="add"
+            size="15"
+            color="red"
+            style="margin-left:5px;vertical-align:center;"
+            @click="handleOperatePost(post.userId,post.id)"
+          />
+        </view>
         <view slot="content">
-          <span>耐克zoom，799有人喜欢吗？</span>
-          <div style="display:flex;height:100px;width:120px;">
-            <image :src="imageUrl" style="padding:5px;max-width:100%;max-height:100%;" />
+          <span style="font-size:large;line-height:1.5;">{{ post.content }}</span>
+          <div style="display:flex;width:240px;text-align:center;">
+            <image :src="post.img" mode="widthFix" style="max-width:100%;" />
           </div>
         </view>
         <view slot="footer">
           <div style="text-align:center;margin-top:10px;">
             <i-row>
-              <i-col span="12">
-                <div @click="handleComment">
+              <i-col span="24">
+                <div @click="handleComment(post.id)">
                   <i-icon size="30" type="message" />
-                  <span style="font-size=50px;">5566</span>
+                  <span
+                    v-if="post.commentCount"
+                    style="font-size:15px;vertical-align:middle;"
+                  >{{ post.commentCount }}</span>
                 </div>
               </i-col>
-              <i-col span="12">
+              <!-- <i-col span="12">
                 <i-icon size="30" type="dislike" />
                 <span style="font-size=50px;">5566</span>
-              </i-col>
+              </i-col>-->
             </i-row>
           </div>
         </view>
       </i-card>
     </div>
-    <div style="margin-top:15px;">
-      <i-card
-        post
-        postTitle="高小白"
-        time="2019-12-12 10:24"
-        thumb="../../../static/images/avatar.png"
-      >
-        <view slot="content">
-          <span>耐克zoom，799有人喜欢吗？</span>
-          <div style="display:flex;height:100px;width:120px;">
-            <image :src="imageUrl" style="padding:5px;max-width:100%;max-height:100%;" />
-          </div>
-        </view>
-        <view slot="footer">
-          <div style="text-align:center;margin-top:10px;">
-            <i-row>
-              <i-col span="12">
-                <div @click="handleComment">
-                  <i-icon size="30" type="message" />
-                  <span style="font-size=50px;">5566</span>
-                </div>
-              </i-col>
-              <i-col span="12">
-                <i-icon size="30" type="dislike" />
-                <span style="font-size=50px;">5566</span>
-              </i-col>
-            </i-row>
-          </div>
-        </view>
-      </i-card>
-    </div>
-    <div style="margin-top:15px;">
-      <i-card
-        post
-        postTitle="高小白"
-        time="2019-12-12 10:24"
-        thumb="../../../static/images/avatar.png"
-      >
-        <view slot="content">
-          <span>耐克zoom，799有人喜欢吗？</span>
-          <div style="display:flex;height:100px;width:120px;">
-            <image :src="imageUrl" style="padding:5px;max-width:100%;max-height:100%;" />
-          </div>
-        </view>
-        <view slot="footer">
-          <div style="text-align:center;margin-top:10px;">
-            <i-row>
-              <i-col span="12">
-                <div @click="handleComment">
-                  <i-icon size="30" type="message" />
-                  <span style="font-size=50px;">5566</span>
-                </div>
-              </i-col>
-              <i-col span="12">
-                <i-icon size="30" type="dislike" />
-                <span style="font-size=50px;">5566</span>
-              </i-col>
-            </i-row>
-          </div>
-        </view>
-      </i-card>
+
+    <div style="margin-top:25px;">
+      <i-load-more v-if="postList.length === 0" tip="该兴趣组当前无帖子" :loading="false" />
+      <i-load-more v-else :loading="false" />
     </div>
 
     <i-button
@@ -139,6 +95,15 @@
       show-cancel
       @cancel="() => interestGroupVisible = false"
       @iclick="handleClickItem"
+    />
+
+    <!-- 帖子操作列表 -->
+    <i-action-sheet
+      :visible="postVisible"
+      :actions="postAction"
+      show-cancel
+      @cancel="() => postVisible = false"
+      @iclick="handleClickItem4post"
     />
   </div>
 </template>
@@ -177,24 +142,40 @@ export default {
           openType: 'share'
         }
       ],
+      postVisible: false,
+      postAction: [],
+      currentOperatedPostId: undefined
     };
   },
-  mounted() {
+  onShow() {
     this.groupId = getQuery.getQuery().groupId;
     this.userId = getQuery.getQuery().userId;
 
     this.getGroupInfo();
 
-    //请求小组底下所有帖子
-    this.$wxhttp.get({
-      url: "/post/listGroupPost?groupId=" + this.groupId
-    }).then(resp => {
-      wx.navigateTo({
-        url: "../cityUniversityList/main?userId=" + this.userInfo.userId
-      });
-    });
+    this.getPostList();
   },
   methods: {
+    getPostList() {
+      //请求小组底下所有帖子
+      this.$wxhttp.get({
+        url: "/post/listGroupPost?groupId=" + this.groupId
+      }).then(resp => {
+        if(resp.code === 0){
+          this.postList = resp.data.map(item => {
+            return {
+              ...item,
+              createTime: this.$moment.unix(item.createTime).format("YYYY-MM-DD HH:mm:SS")
+            }
+          });
+        }else{
+          wx.showToast({
+            title: resp.msg,
+            icon: "none"
+          });
+        }
+      });
+    },
     getGroupInfo(){
       //重置操作列表
       this.interestGroupAction = [
@@ -252,14 +233,15 @@ export default {
         }
       });
     },
-    handleComment() {
+    handleComment(postId) {
+      var userId = this.userId;
       wx.navigateTo({
-        url: "../comment/main"
+        url: "../comment/main?postId=" + postId + "&userId=" + userId
       });
     },
     handlePost() {
       wx.navigateTo({
-        url: "../createPost/main"
+        url: "../createPost/main?userId=" + this.userId + "&groupId=" + this.groupId
       });
     },
     handleClickItem (detail) {
@@ -367,6 +349,41 @@ export default {
       }
       this.interestGroupVisible = false;
     },
+    handleOperatePost(postUserId,postId){
+      if(postUserId == this.userId){
+        this.postAction = [{
+          name: "删除帖子"
+        }];
+      }else{
+        this.postAction = [{
+          name: "举报帖子"
+        }];
+      }
+      this.currentOperatedPostId = postId;
+      this.postVisible = true;
+    },
+    handleClickItem4post() {
+      if(this.postAction[0].name === "删除帖子"){
+        this.$wxhttp.deleteRequest({
+          url: "/post/id?postId=" + this.currentOperatedPostId + "&optUserId=" + this.userId
+        }).then(resp => {
+          if(resp.code === 0){
+            wx.showToast({
+              title: "删除成功"
+            });
+            this.getPostList();
+          }else{
+            wx.showToast({
+              title: resp.msg,
+              icon: "none"
+            })
+          }
+        })
+      }else{
+        //举报帖子
+      }
+      this.postVisible = false;
+    }
   }
 };
 </script>

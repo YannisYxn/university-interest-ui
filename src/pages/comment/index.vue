@@ -1,30 +1,30 @@
 <template>
-  <div>
+  <div style="background-color:#f3f4f5;">
     <div style="margin-top:15px;">
       <i-card
         post
-        postTitle="高小白"
-        time="2019-12-12 10:24"
-        thumb="../../../static/images/avatar.png"
+        :postTitle="post.userName"
+        :time="post.createTime"
+        :thumb="post.userPhoto"
+        :university="post.universityCampusName"
       >
         <view slot="content">
-          <span>耐克zoom，799有人喜欢吗？</span>
-          <div style="display:flex;height:100px;width:120px;">
-            <image :src="imageUrl" style="padding:5px;max-width:100%;max-height:100%;" />
+          <span style="font-size:large;line-height:1.5;">{{ post.content }}</span>
+          <div style="display:flex;width:240px;text-align:center;">
+            <image :src="post.img" mode="widthFix" style="max-width:100%;" />
           </div>
         </view>
         <view slot="footer">
           <div style="text-align:center;margin-top:10px;">
             <i-row>
-              <i-col span="12">
-                <div @click="handleComment">
+              <i-col span="24">
+                <div>
                   <i-icon size="30" type="message" />
-                  <span style="font-size=50px;">5566</span>
+                  <span
+                    v-if="post.commentCount"
+                    style="font-size:15px;vertical-align:middle;"
+                  >{{ post.commentCount }}</span>
                 </div>
-              </i-col>
-              <i-col span="12">
-                <i-icon size="30" type="dislike" />
-                <span style="font-size=50px;">5566</span>
               </i-col>
             </i-row>
           </div>
@@ -37,53 +37,233 @@
     <div>
       <i-cell-group>
         <i-comment-cell
-          title="ZC"
-          label="厦大思明"
-          time="2km 2019-12-12 10:22"
-          content="好久不见，我去你学校找你玩亚"
+          v-for="comment in post.commentDetailDTOList"
+          :key="comment.id"
+          :title="comment.userName"
+          :label="comment.universityCampusName"
+          :time="comment.createTime"
+          :content="comment.content"
         >
           <view slot="icon">
-            <i-avatar src="../../../static/images/comment-avatar.png" style="margin-right:10px;" />
+            <i-avatar :src="comment.userPhoto" style="margin-right:10px;" />
           </view>
           <view slot="footer">
-            <i-icon type="add" color="red" size="15" />
-          </view>
-        </i-comment-cell>
-        <i-comment-cell
-          title="ZC"
-          label="厦大思明"
-          time="2km 2019-12-12 10:22"
-          content="好久不见，我去你学校找你玩亚"
-        >
-          <view slot="icon">
-            <i-avatar src="../../../static/images/comment-avatar.png" style="margin-right:10px;" />
-          </view>
-          <view slot="footer">
-            <i-icon type="add" color="red" size="15" />
+            <i-icon
+              type="add"
+              color="red"
+              size="15"
+              @click="handleOperate(comment.userId,comment.id)"
+            />
           </view>
         </i-comment-cell>
       </i-cell-group>
     </div>
 
-    <div style="position:absolute;bottom:0;width:100%">
-      <i-row>
-        <i-col span="18">
-          <i-input placeholder="评论" :maxlength="33" comment />
-        </i-col>
-        <i-col span="6">
-          <i-button size="small" type="primary" shape="circle">发送</i-button>
-        </i-col>
-      </i-row>
+    <div style="margin-top:25px;">
+      <i-load-more v-if="post.commentDetailDTOList.length === 0" tip="该帖子当前无评论" :loading="false" />
+      <i-load-more v-else :loading="false" />
     </div>
+
+    <div style="position:fixed;bottom:0;width:100%">
+      <i-input
+        v-model="comment"
+        placeholder="评论"
+        :maxlength="99"
+        confirmType="send"
+        @confirm="handleComment"
+        comment
+        @change="handleCommentChange"
+      />
+    </div>
+
+    <!-- 评论用户操作列表 -->
+    <i-action-sheet
+      :visible="userVisible"
+      :actions="userAction"
+      show-cancel
+      @cancel="() => userVisible = false"
+      @iclick="handleClickItem"
+    />
   </div>
 </template>
 
 <script>
-import img from "../../../static/images/shoe.png";
+import getQuery from '../../utils/getPage';
+
 export default {
   data() {
     return {
-      imageUrl: img
+      userId: undefined,
+      postId: undefined,
+      post: {
+        commentCount: undefined,
+        commentDetailDTOList: [],
+        content: "",
+        createTime: "",
+        groupId: undefined,
+        groupName: "",
+        id: undefined,
+        img: "",
+        universityCampusName: "",
+        userId: undefined,
+        userName: "",
+        userPhoto: ""
+      },
+      comment: "",
+      userVisible: false,
+      userAction: [],
+      currentOperatedCommentId: undefined,
+      latitude: undefined,
+      longitude: undefined
+    }
+  },
+  mounted() {
+    this.userId = getQuery.getQuery().userId;
+    this.postId = getQuery.getQuery().postId;
+    //获取经纬度
+    var that = this;
+    wx.getSetting({
+      success(res) {
+        if (!res.authSetting['scope.userLocation']) {
+          wx.authorize({
+            scope: 'scope.userLocation',
+            success () {
+              // 用户已经同意小程序使用定位功能，后续调用 wx.getLocation 接口不会弹窗询问
+              wx.getLocation({
+                type: 'wgs84',
+                success (res) {
+                  that.latitude = res.latitude;
+                  that.longitude = res.longitude;
+                }
+              });
+            }
+          })
+        }else{
+          // 用户已经同意小程序使用定位功能，后续调用 wx.getLocation 接口不会弹窗询问
+          wx.getLocation({
+            type: 'wgs84',
+            success (res) {
+              that.latitude = res.latitude;
+              that.longitude = res.longitude;
+            }
+          });
+        }
+      }
+    });
+    //获取兴趣组
+    this.$wxhttp.get({
+      url: "/post/getPostById?postId=" + this.postId
+    }).then(resp => {
+      if(resp.code === 0){
+        this.post = resp.data;
+        this.post.createTime = this.$moment.unix(this.post.createTime).format("YYYY-MM-DD HH:mm:SS");
+        this.post.commentDetailDTOList = resp.data.commentDetailDTOList.map(item => {
+          return {
+            ...item,
+            createTime: this.$moment.unix(item.createTime).format("YYYY-MM-DD HH:mm:SS")
+          }
+        });
+      }else{
+        wx.showToast({
+          title: resp.msg,
+          icon: "none"
+        });
+        wx.navigateBack({
+          delta: 1
+        });
+      }
+    });
+  },
+  methods: {
+    getCommentList() {
+      this.$wxhttp.get({
+        url: "/comment?postId=" + this.postId
+      }).then(resp => {
+        if(resp.code === 0){
+          this.post.commentDetailDTOList = resp.data.map(item => {
+            console.log(this.$moment.unix(this.post.createTime).format("YYYY-MM-DD HH:mm:SS"))
+            return {
+              ...item,
+              createTime: this.$moment.unix(item.createTime).format("YYYY-MM-DD HH:mm:SS")
+            }
+          });
+        }else{
+          wx.showToast({
+            title: resp.msg,
+            icon: "none"
+          });
+        }
+      })
+    },
+    handleComment() {
+      this.$wxhttp.post({
+        url: "/comment",
+        data: {
+          content: this.comment,
+          groupId: this.post.groupId,
+          latitude: this.latitude,
+          longitude: this.longitude,
+          postId: this.postId,
+          userId: this.userId
+        }
+      }).then(resp => {
+        if(resp.code === 0){
+          this.comment = "";
+          wx.showToast({
+            title: "发表成功"
+          });
+          this.getCommentList();
+        }else{
+          wx.showToast({
+            title: resp.msg,
+            icon: "none"
+          });
+        }
+      })
+    },
+    handleCommentChange(event){
+      this.comment = event.mp.detail.detail.value;
+    },
+    handleOperate(commentUserId,commentId){
+      console.log(commentUserId,this.userId)
+      if(commentUserId == this.userId){
+        this.userAction = [
+          {
+            name: "删除评论"
+          }
+        ];
+      }else{
+        this.userAction = [
+          {
+            name: "举报评论"
+          }
+        ];
+      }
+      this.currentOperatedCommentId = commentId;
+      this.userVisible = true;
+    },
+    handleClickItem (detail) {
+      const index = detail.mp.detail.index;
+      this.userVisible = false;
+      if(this.userAction[0].name === "删除评论"){
+        this.$wxhttp.deleteRequest({
+          url: "/comment/ID?commentId=" + this.currentOperatedCommentId + "&userId=" + this.userId
+        }).then(resp => {
+          if(resp.code === 0){
+            wx.showToast({
+              title: "删除成功"
+            });
+            this.getCommentList();
+          }else{
+            wx.showToast({
+              title: resp.msg,
+              icon: "none"
+            })
+          }
+        });
+      }else if(this.userAction[0].name === "举报评论"){
+        // 举报
+      }
     }
   }
 }

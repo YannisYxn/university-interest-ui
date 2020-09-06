@@ -33,6 +33,10 @@ Component({
         time: {
             type: String,
             value: ''
+        },
+        university: {
+            type: String,
+            value: ''
         }
     }
 });

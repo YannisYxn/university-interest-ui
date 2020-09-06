@@ -12,7 +12,10 @@
     </view>
     <view class="i-cell-content-part">
         <view wx:if="{{ time }}" class="i-cell-time">{{ time }}</view>
-        <view wx:if="{{ content }}" class="i-cell-content">{{ content }}</view>
+        <view wx:if="{{ content }}" class="i-cell-content">
+            <textarea value="{{ content }}" auto-height style="width:auto;"></textarea>
+            <!-- {{ content }} -->
+        </view>
         <slot></slot>
     </view>
     <view catchtap="navigateTo" class="i-cell-ft {{ add ? 'i-cell-add' : ''}} {{ minus ? 'i-cell-minus' : ''}}">

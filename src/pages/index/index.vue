@@ -308,7 +308,6 @@ export default {
       var that = this;
       wx.getUserInfo({
         success(res) {
-          console.log(res.userInfo)
           that.userInfo = {
             ...that.userInfo,
             avatarUrl: res.userInfo.avatarUrl,
@@ -408,7 +407,26 @@ export default {
         }else if(resp.code === 0){
           //成功在校内登录
           this.userInfo.isCheckUniversity = 1;
-          this.getGroupList();
+          // 首次上传用户信息
+          this.$wxhttp.post({
+            url: "/user/firstUploadUserInfo",
+            data: {
+              description: this.userInfo.introduction,
+              id: this.userInfo.userId,
+              name: this.userInfo.nickName,
+              photo: this.userInfo.avatarUrl,
+              sex: this.userInfo.gender
+            }
+          }).then(resp => {
+            if(resp.code === 0){
+              this.getGroupList();
+            }else{
+              wx.showToast({
+                title: resp.msg,
+                icon: "none"
+              });
+            }
+          });
         }
       });
     },

@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div style="background-color:#f3f4f5;">
     <div class="head">
       <div style="margin:0 10px;">
         <i-row>
@@ -38,123 +38,59 @@
     </div>
 
     <div v-if="current === 'post'" style="background-color:#f3f4f5">
-      <div style="margin-top:10px;">
+      <div v-for="post in postList" :key="post.id" style="margin-top:15px;">
         <i-card
           post
-          postTitle="高小白"
-          time="2019-12-12 10:24"
-          thumb="../../../static/images/avatar.png"
+          :postTitle="post.userName"
+          :time="post.createTime"
+          :thumb="post.userPhoto"
+          :university="post.universityCampusName"
         >
           <view slot="content">
-            <span>耐克zoom，799有人喜欢吗？</span>
-            <div style="display:flex;height:100px;width:120px;">
-              <image :src="imageUrl" style="padding:5px;max-width:100%;max-height:100%;" />
+            <span style="font-size:large;line-height:1.5;">{{ post.content }}</span>
+            <div style="display:flex;width:240px;text-align:center;">
+              <image :src="post.img" mode="widthFix" style="max-width:100%;" />
             </div>
           </view>
           <view slot="footer">
             <div style="text-align:center;margin-top:10px;">
               <i-row>
-                <i-col span="12">
-                  <div @click="handleComment">
+                <i-col span="24">
+                  <div @click="handleComment(post.id)">
                     <i-icon size="30" type="message" />
-                    <span style="font-size=50px;">5566</span>
+                    <span
+                      v-if="post.commentCount"
+                      style="font-size:15px;vertical-align:middle;"
+                    >{{ post.commentCount }}</span>
                   </div>
                 </i-col>
-                <i-col span="12">
+                <!-- <i-col span="12">
                   <i-icon size="30" type="dislike" />
                   <span style="font-size=50px;">5566</span>
-                </i-col>
+                </i-col>-->
               </i-row>
             </div>
           </view>
         </i-card>
       </div>
-      <div style="margin-top:10px;">
-        <i-card
-          post
-          postTitle="高小白"
-          time="2019-12-12 10:24"
-          thumb="../../../static/images/avatar.png"
-        >
-          <view slot="content">
-            <span>耐克zoom，799有人喜欢吗？</span>
-            <div style="display:flex;height:100px;width:120px;">
-              <image :src="imageUrl" style="padding:5px;max-width:100%;max-height:100%;" />
-            </div>
-          </view>
-          <view slot="footer">
-            <div style="text-align:center;margin-top:10px;">
-              <i-row>
-                <i-col span="12">
-                  <div @click="handleComment">
-                    <i-icon size="30" type="message" />
-                    <span style="font-size=50px;">5566</span>
-                  </div>
-                </i-col>
-                <i-col span="12">
-                  <i-icon size="30" type="dislike" />
-                  <span style="font-size=50px;">5566</span>
-                </i-col>
-              </i-row>
-            </div>
-          </view>
-        </i-card>
-      </div>
-      <div style="margin-top:10px;">
-        <i-card
-          post
-          postTitle="高小白"
-          time="2019-12-12 10:24"
-          thumb="../../../static/images/avatar.png"
-        >
-          <view slot="content">
-            <span>耐克zoom，799有人喜欢吗？</span>
-            <div style="display:flex;height:100px;width:120px;">
-              <image :src="imageUrl" style="padding:5px;max-width:100%;max-height:100%;" />
-            </div>
-          </view>
-          <view slot="footer">
-            <div style="text-align:center;margin-top:10px;">
-              <i-row>
-                <i-col span="12">
-                  <div @click="handleComment">
-                    <i-icon size="30" type="message" />
-                    <span style="font-size=50px;">5566</span>
-                  </div>
-                </i-col>
-                <i-col span="12">
-                  <i-icon size="30" type="dislike" />
-                  <span style="font-size=50px;">5566</span>
-                </i-col>
-              </i-row>
-            </div>
-          </view>
-        </i-card>
+
+      <div style="margin-top:25px;">
+        <i-load-more v-if="postList.length === 0" tip="该兴趣组当前无帖子" :loading="false" />
+        <i-load-more v-else :loading="false" />
       </div>
     </div>
 
     <div style="margin-top:5px;" v-if="current === 'member'">
       <i-cell-group>
-        <i-cell title="ZC">
+        <i-cell v-for="member in memberList" :key="member.id" :title="member.name">
           <view slot="icon">
-            <i-avatar src="../../../static/images/comment-avatar.png" style="margin-right:10px;" />
+            <i-avatar :src="member.photo" style="margin-right:10px;" />
           </view>
           <view slot="badge">
             <div style="margin-top:4%;">
-              <span style="color:#9d9d9d;font-size:11px;">厦大思明 2019-12-12(加入)</span>
-            </div>
-          </view>
-          <view slot="footer">
-            <i-icon color="red" size="20" type="add" />
-          </view>
-        </i-cell>
-        <i-cell title="花花">
-          <view slot="icon">
-            <i-avatar src="../../../static/images/comment-avatar.png" style="margin-right:10px;" />
-          </view>
-          <view slot="badge">
-            <div style="margin-top:4%;">
-              <span style="color:#9d9d9d;font-size:11px;">厦大思明 2019-12-12(加入)</span>
+              <span
+                style="color:#9d9d9d;font-size:11px;"
+              >{{ member.universityCampusName + " " }} {{ " " + member.createTime}}(加入)</span>
             </div>
           </view>
           <view slot="footer">
@@ -162,6 +98,11 @@
           </view>
         </i-cell>
       </i-cell-group>
+
+      <div style="margin-top:25px;">
+        <i-load-more v-if="memberList.length === 0" tip="该兴趣组当前无其他组员" :loading="false" />
+        <i-load-more v-else :loading="false" />
+      </div>
     </div>
 
     <i-button
@@ -210,6 +151,7 @@ export default {
         universityId: undefined
       },
       postList: [],
+      memberList: [],
       interestGroupVisible: false,
       interestGroupAction: [
         {
@@ -223,20 +165,15 @@ export default {
       ],
     };
   },
-  mounted() {
+  onShow() {
     this.groupId = getQuery.getQuery().groupId;
     this.userId = getQuery.getQuery().userId;
 
     this.getGroupInfo();
 
-    //请求小组底下所有帖子
-    this.$wxhttp.get({
-      url: "/post/listGroupPost?groupId=" + this.groupId
-    }).then(resp => {
-      wx.navigateTo({
-        url: "../cityUniversityList/main?userId=" + this.userInfo.userId
-      });
-    });
+    this.getMemberList();
+
+    this.getPostList();
   },
   methods: {
     getGroupInfo(){
@@ -284,9 +221,48 @@ export default {
         }
       });
     },
+    getMemberList() {
+      this.$wxhttp.post({
+        url: "/group/listGroupMember?groupId=" + this.groupId
+      }).then(resp => {
+        if(resp.code === 0){
+          this.memberList = resp.data.map(item => {
+            return {
+              ...item,
+              createTime: this.$moment.unix(item.createTime).format("YYYY-MM-DD")
+            }
+          });
+        }else{
+          wx.showToast({
+            title: resp.msg,
+            icon: "none"
+          });
+        }
+      });
+    },
+    getPostList() {
+      this.$wxhttp.get({
+        url: "/post/listGroupPost?groupId=" + this.groupId
+      }).then(resp => {
+        if(resp.code === 0){
+          this.postList = resp.data.map(item => {
+            return {
+              ...item,
+              createTime: this.$moment.unix(item.createTime).format("YYYY-MM-DD HH:mm:SS")
+            }
+          });
+        }else{
+          wx.showToast({
+            title: resp.msg,
+            icon: "none"
+          });
+        }
+      });
+    },
     handleComment() {
+      var userId = this.userId;
       wx.navigateTo({
-        url: "../comment/main"
+        url: "../comment/main?postId=" + postId + "&userId=" + userId
       });
     },
     handlePost() {
