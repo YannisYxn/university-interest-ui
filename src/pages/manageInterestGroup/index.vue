@@ -46,6 +46,15 @@
           :thumb="post.userPhoto"
           :university="post.universityCampusName"
         >
+          <view slot="operation">
+            <i-icon
+              type="add"
+              size="15"
+              color="red"
+              style="margin-left:5px;vertical-align:center;"
+              @click="handleOperatePost(post.userId,post.id)"
+            />
+          </view>
           <view slot="content">
             <span style="font-size:large;line-height:1.5;">{{ post.content }}</span>
             <div style="display:flex;width:240px;text-align:center;">
@@ -121,6 +130,14 @@
       @cancel="() => interestGroupVisible = false"
       @iclick="handleClickItem"
     />
+
+    <i-action-sheet
+      :visible="postVisible"
+      :actions="postAction"
+      show-cancel
+      @cancel="() => postVisible = false"
+      @iclick="handleClickItem4post"
+    />
   </div>
 </template>
 
@@ -163,6 +180,9 @@ export default {
           openType: 'share'
         }
       ],
+      postVisible: false,
+      postAction: [],
+      currentOperatedPostId: undefined
     };
   },
   onShow() {
@@ -341,6 +361,41 @@ export default {
         });
       }
       this.interestGroupVisible = false;
+    },
+    handleClickItem4post() {
+      if(this.postAction[0].name === "删除帖子"){
+        this.$wxhttp.deleteRequest({
+          url: "/post/id?postId=" + this.currentOperatedPostId + "&optUserId=" + this.userId
+        }).then(resp => {
+          if(resp.code === 0){
+            wx.showToast({
+              title: "删除成功"
+            });
+            this.getPostList();
+          }else{
+            wx.showToast({
+              title: resp.msg,
+              icon: "none"
+            })
+          }
+        })
+      }else{
+        //举报帖子
+      }
+      this.postVisible = false;
+    },
+    handleOperatePost(postUserId,postId){
+      if(postUserId == this.userId){
+        this.postAction = [{
+          name: "删除帖子"
+        }];
+      }else{
+        this.postAction = [{
+          name: "举报帖子"
+        }];
+      }
+      this.currentOperatedPostId = postId;
+      this.postVisible = true;
     },
   }
 };

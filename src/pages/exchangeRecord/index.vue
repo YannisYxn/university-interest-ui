@@ -2,21 +2,54 @@
   <div>
     <div style="margin-top:5px;">
       <i-cell-group>
-        <exchange-cell style="margin-top:5px;font-size:10px;" title="2020-2-5 19:27 安踏天猫直减圈" value="兑换码：A7M6N5">
-        </exchange-cell>
-        <exchange-cell style="margin-top:5px;font-size:10px;" title="2020-2-4 9:36 NIKE湖里万达直减圈" value="兑换码：R46N97">
-        </exchange-cell>
+        <exchange-cell
+          v-for="record in records"
+          :key="record.id"
+          style="margin-top:5px;font-size:10px;"
+          :title="record.createTime + '  ' + record.ticketName"
+          :value="'兑换码：' + record.code"
+        ></exchange-cell>
       </i-cell-group>
+    </div>
+
+    <div style="margin-top:25px;">
+      <i-load-more v-if="records.length === 0" tip="用户当前无兑换记录" :loading="false" />
+      <i-load-more v-else :loading="false" />
     </div>
   </div>
 </template>
 
 <script>
+import getQuery from '../../utils/getPage';
+
 export default {
-  
+  data() {
+    return {
+      records: []
+    }
+  },
+  mounted() {
+    //获取兑换记录
+    this.$wxhttp.get({
+      url: "/ticket/exchangeLog?userId=" + getQuery.getQuery().userId
+    }).then(resp => {
+      if(resp.code === 0){
+        this.records = resp.data.map(item => {
+          return {
+            ...item,
+            createTime: this.$moment.unix(item.createTime).format("YYYY-MM-DD HH:mm:SS")
+          }
+        });
+      }else{
+        wx.showToast({
+          title: resp.msg,
+          icon: "none"
+        })
+      }
+    })
+  },
 }
 </script>
 
 <style>
-
 </style>

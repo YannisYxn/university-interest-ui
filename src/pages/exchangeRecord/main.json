@@ -15,6 +15,7 @@
     "i-modal": "../../../static/iView/modal/index",
     "i-radio-group": "../../../static/iView/radio-group/index",
     "i-radio": "../../../static/iView/radio/index",
-    "exchange-cell": "../../../static/iView/exchangeRecord/index"
+    "exchange-cell": "../../../static/iView/exchangeRecord/index",
+    "i-load-more": "../../../static/iView/load-more/index"
   }
 }

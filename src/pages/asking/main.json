@@ -14,6 +14,7 @@
     "i-badge": "../../../static/iView/badge/index",
     "i-modal": "../../../static/iView/modal/index",
     "i-radio-group": "../../../static/iView/radio-group/index",
-    "i-radio": "../../../static/iView/radio/index"
+    "i-radio": "../../../static/iView/radio/index",
+    "i-load-more": "../../../static/iView/load-more/index"
   }
 }
