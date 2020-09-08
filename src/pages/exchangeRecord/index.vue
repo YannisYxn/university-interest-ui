@@ -6,7 +6,8 @@
           v-for="record in records"
           :key="record.id"
           style="margin-top:5px;font-size:10px;"
-          :title="record.createTime + '  ' + record.ticketName"
+          :title="record.ticketName"
+          :label="record.createTime"
           :value="'兑换码：' + record.code"
         ></exchange-cell>
       </i-cell-group>
@@ -37,7 +38,7 @@ export default {
         this.records = resp.data.map(item => {
           return {
             ...item,
-            createTime: this.$moment.unix(item.createTime).format("YYYY-MM-DD HH:mm:SS")
+            createTime: this.$moment.unix(item.createTime).format("YYYY-MM-DD HH:mm")
           }
         });
       }else{

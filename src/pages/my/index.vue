@@ -13,14 +13,14 @@
               <i-tag style="color:#07a68e;">升学</i-tag>
             </p>
             <span style="font-size:11px;color:white;">{{ createTime }}(加入)</span>
-            <i-tag class="i-tags" type="border" color="green">校内登录{{ inCampusCount }}次</i-tag>
           </i-col>
           <i-col span="9">
-            <p style="fong-size:15px;color:white;">ID:</p>
-            <p style="fong-size:15px;color:white;">{{ userId }}</p>
+            <p style="fong-size:12px;color:white;">ID:</p>
+            <p style="fong-size:12px;color:white;">{{ userId }}</p>
             <p style="font-size:12px;color:white;line-height:25px;">积分:{{ credit }}</p>
             <i-icon type="brush" size="15" color="white" @click="handleModify" />
             <br />
+            <i-tag class="i-tags" type="border" color="green">校内登录{{ inCampusCount }}次</i-tag>
             <i-tag class="i-tags" type="border" color="red">校外登录{{ outCampusCount }}次</i-tag>
           </i-col>
         </i-row>
@@ -157,7 +157,7 @@ export default {
       visible: false
     }
   },
-  mounted() {
+  onShow() {
     var that = this;
     wx.login({
       success(res) {
@@ -225,7 +225,7 @@ export default {
     },
     handleModify() {
       wx.navigateTo({
-        url: "../modify/main"
+        url: "../modify/main?userId=" + this.userId
       });
     }
   }

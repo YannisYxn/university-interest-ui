@@ -3,21 +3,133 @@
     <div style="margin:5px;">
       <i-panel>
         <div style="display:flex;margin:5px;margin-left:150px;">
-          <i-avatar size="large" shape="square">头</i-avatar>
+          <i-avatar size="large" shape="square" :src="tempFilePath || avatarUrl" @click="handleChooseImage">头</i-avatar>
         </div>
-        <i-input title="昵称" right mode="wrapped" placeholder="高小白" />
-        <i-input title="介绍" right type="textarea" mode="wrapped" placeholder="大家好，我是高小白。" maxlength="25"/>
+        <i-input v-model="name" title="昵称" right mode="wrapped" placeholder="名称" maxlength="12" @change="handleNameChange"/>
+        <i-input v-model="introduction" title="简介" right type="textarea" mode="wrapped" placeholder="简介" maxlength="99" @change="handleIntroductionChange"/>
       </i-panel>
     </div>
     <div style="margin-top:25px;">
-      <i-button type="primary" shape="circle">确认</i-button>
+      <i-button type="primary" shape="circle" @click="handleModify">确认</i-button>
     </div>
   </div>
 </template>
 
 <script>
+import getQuery from '../../utils/getPage';
+
 export default {
-  
+  data() {
+    return {
+      avatarUrl: "",
+      name: "",
+      introduction: "",
+      tempFilePath: ""
+    }
+  },
+  onShow() {
+    //获取信息
+    this.$wxhttp.get({
+      url: "/user/getUserDetailById?userId=" + getQuery.getQuery().userId
+    }).then(resp => {
+      if(resp.code === 0){
+        this.avatarUrl = resp.data.photo;
+        this.name = resp.data.name;
+        this.introduction = resp.data.description;
+      }else{
+        wx.showToast({
+          title: resp.msg,
+          icon: "none"
+        });
+      }
+    });
+  },
+  methods: {
+    handleNameChange(event){
+      this.name = event.mp.detail.detail.value;
+    },
+    handleIntroductionChange(event){
+      this.introduction = event.mp.detail.detail.value;
+    },
+    handleModify() {
+      if(this.name!=="" && this.introduction !== "" && (this.tempFilePath!=="" || this.avatarUrl !== "")){
+        if(this.tempFilePath){
+          var that = this;
+          wx.uploadFile({
+            url: that.$wxhttp.host + "/image/uploadLogo",
+            filePath: that.tempFilePath,
+            name: "image",
+            header: { "Content-Type": "multipart/form-data" },
+            success(res) {
+              that.$wxhttp.put({
+                url: "/user",
+                data: {
+                  description: that.introduction,
+                  id: getQuery.getQuery().userId,
+                  name: that.name,
+                  photo: that.tempFilePath
+                }
+              }).then(resp => {
+                if(resp.code === 0){
+                  wx.showToast({
+                    title: "更改成功"
+                  });
+                  wx.navigateBack({
+                    delta: 1
+                  });
+                }else{
+                  wx.showToast({
+                    title: resp.msg,
+                    icon: "none"
+                  });
+                }
+              });
+            }
+          });
+        }else{
+          this.$wxhttp.put({
+            url: "/user",
+            data: {
+              description: this.introduction,
+              id: getQuery.getQuery().userId,
+              name: this.name,
+              photo: this.avatarUrl
+            }
+          }).then(resp => {
+            if(resp.code === 0){
+              wx.showToast({
+                title: "更改成功"
+              });
+              wx.navigateBack({
+                delta: 1
+              });
+            }else{
+              wx.showToast({
+                title: resp.msg,
+                icon: "none"
+              });
+            }
+          });
+        }
+      }else{
+        wx.showToast({
+          title: '请完善名称、简介与Logo',
+          icon: 'none'
+        });
+      }
+    },
+    handleChooseImage() {
+      var that = this;
+      wx.chooseImage({
+        count: 1, //最多上传1张照片
+        sizeType: ['original','compressed'], //压缩图
+        sourceType: ['album','camera'], //指定来源，相册和相机都可
+        success(res) {
+          that.tempFilePath = res.tempFilePaths[0];
+        }
+      })
+    },
+  }
 }
 </script>
 
