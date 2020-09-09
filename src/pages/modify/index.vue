@@ -67,7 +67,7 @@ export default {
                   description: that.introduction,
                   id: getQuery.getQuery().userId,
                   name: that.name,
-                  photo: that.tempFilePath
+                  photo: that.$wxhttp.hostForFile + String(JSON.parse(res.data).data)
                 }
               }).then(resp => {
                 if(resp.code === 0){

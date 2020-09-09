@@ -82,7 +82,7 @@
             />
           </view>
         </i-cell>
-        <i-cell title="我的发帖" is-link url="../post/main">
+        <i-cell title="我的发帖" is-link :url="'../post/main?userId=' + userId + '&selfUserId=' + userId">
           <view slot="icon">
             <i-avatar
               size="small"
@@ -200,7 +200,7 @@ export default {
         url: "/user/getUserDetailById?userId=" + this.userId
       }).then(resp => {
         if(resp.code === 0){
-          this.createTime = this.$moment.unix(resp.data.createTime).format("YYYY-MM-DD");
+          this.createTime = this.$moment(resp.data.createTime).format("YYYY-MM-DD");
           this.credit = resp.data.credit;
           this.description = resp.data.description;
           this.inCampusCount = resp.data.inCampusCount;
@@ -221,7 +221,7 @@ export default {
             icon: "none"
           });
         }
-      })
+      });
     },
     handleModify() {
       wx.navigateTo({

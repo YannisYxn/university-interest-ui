@@ -16,6 +16,7 @@
     "i-radio-group": "../../../static/iView/radio-group/index",
     "i-radio": "../../../static/iView/radio/index",
     "i-tag": "../../../static/iView/tag/index",
-    "i-action-sheet": "../../../static/iView/action-sheet/index"
+    "i-action-sheet": "../../../static/iView/action-sheet/index",
+    "i-load-more": "../../../static/iView/load-more/index"
   }
 }
