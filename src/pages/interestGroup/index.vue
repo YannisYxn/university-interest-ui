@@ -144,7 +144,8 @@ export default {
       ],
       postVisible: false,
       postAction: [],
-      currentOperatedPostId: undefined
+      currentOperatedPostId: undefined,
+      currentOperatedPostUserId: undefined
     };
   },
   onShow() {
@@ -241,7 +242,7 @@ export default {
     },
     handlePost() {
       wx.navigateTo({
-        url: "../createPost/main?userId=" + this.userId + "&groupId=" + this.groupId
+        url: "../createPost/main?userId=" + this.userId + "&relatedId=" + this.groupId
       });
     },
     handleClickItem (detail) {
@@ -286,7 +287,10 @@ export default {
         });
       }else if(this.groupDetail.isCreate === 0 && index === 1){
         //举报此组
-        
+        var that = this;
+        wx.navigateTo({
+          url: "../tip/main?type=1&userId=" + that.userId + "&relatedId=" + that.groupId
+        });
       }else if(this.groupDetail.isCreate === 1 && this.groupDetail.status === 0 && index === 0){
         //冻结此组
         this.$wxhttp.post({
@@ -360,6 +364,7 @@ export default {
         }];
       }
       this.currentOperatedPostId = postId;
+      this.currentOperatedPostUserId = postUserId;
       this.postVisible = true;
     },
     handleClickItem4post() {
@@ -381,6 +386,12 @@ export default {
         })
       }else{
         //举报帖子
+        var that = this;
+        wx.navigateTo({
+          url: "../tip/main?type=3&userId=" + that.userId + 
+          "&relatedId=" + that.currentOperatedPostId + 
+          "&reportedUserId=" + that.currentOperatedPostUserId
+        });
       }
       this.postVisible = false;
     }

@@ -20,7 +20,8 @@
     "pages/chat/main",
     "pages/createPost/main",
     "pages/manageInterestGroup/main",
-    "pages/modifyGroup/main"
+    "pages/modifyGroup/main",
+    "pages/tip/main"
   ],
   "window": {
     "backgroundTextStyle": "light",

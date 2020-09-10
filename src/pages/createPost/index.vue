@@ -92,7 +92,6 @@ export default {
   },
   methods: {
     handleChooseImage() {
-      console.log("test")
       var that = this;
       wx.chooseImage({
         count: 1, //最多上传1张照片

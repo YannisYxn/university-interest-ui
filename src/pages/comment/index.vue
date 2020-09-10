@@ -113,6 +113,7 @@ export default {
       userVisible: false,
       userAction: [],
       currentOperatedCommentId: undefined,
+      currentOperatedCommentUserId: undefined,
       latitude: undefined,
       longitude: undefined
     }
@@ -240,6 +241,7 @@ export default {
         ];
       }
       this.currentOperatedCommentId = commentId;
+      this.currentOperatedCommentUserId = commentUserId;
       this.userVisible = true;
     },
     handleClickItem (detail) {
@@ -263,6 +265,12 @@ export default {
         });
       }else if(this.userAction[0].name === "举报评论"){
         // 举报
+        var that = this;
+        wx.navigateTo({
+          url: "../tip/main?type=4&userId=" + that.userId + 
+          "&relatedId=" + that.currentOperatedCommentId + 
+          "&reportedUserId=" + that.currentOperatedCommentUserId
+        });
       }
     }
   }
