@@ -100,7 +100,7 @@
           <div style="text-align:center;margin-top:10px;">
             <i-row>
               <i-col span="24">
-                <div @click="handleComment">
+                <div @click="handleComment(post.id)">
                   <i-icon size="30" type="message" />
                   <span style="font-size=50px;">{{ post.commentCount }}</span>
                 </div>
@@ -149,7 +149,7 @@
       <p style="font-size:15px;line-height:20px;margin:0 20px;">请您在本校地理范围登录校趣！</p>
       <p style="font-size:15px;line-height:20px;margin:0 20px;">或</p>
       <span style="font-size:15px;line-height:20px;margin:0 20px;">输入邀请码：</span>
-      <i-input mode="wrapped" placeholder="请在这里输入" />
+      <i-input v-model="invitationCode" mode="wrapped" placeholder="请在这里输入" @change="handleInvitationCodeChange"/>
     </i-modal>
     <i-modal title="欢迎首次进入校趣" :visible="visible1" @ok="handleClose1" @cancel="handleClose1">
       <p style="font-size:15px;line-height:20px;margin:0 20px;">您是厦门大学思明校区的学生吗？不是的话，请在本校校区时登录校趣。谢谢。</p>
@@ -174,6 +174,7 @@
 </template>
 
 <script>
+import { getQuery } from '../../utils/getPage';
 export default {
   data() {
     return {
@@ -208,17 +209,22 @@ export default {
         }
       ],
       searchKey: "", //搜索框内容
-      barTitle: "我创建及加入的兴趣组"
+      barTitle: "我创建及加入的兴趣组",
+      invitationCode: "",
+      shareUserId: undefined
     };
   },
   onShow() {
+    if(getQuery.getQuery().shareUserId){
+      this.shareUserId = getQuery.getQuery().shareUserId;
+    }
     var that = this;
     wx.login({
       success(res) {
         if (res.code) {
           //发起网络请求
           that.$wxhttp.post({
-            url: "/user/login?code=" + res.code,
+            url: "/user/login?code=" + res.code + "&shareUserId=" + that.shareUserId,
           }).then(resp => {
             if(resp.code === 0){
               that.userInfo.userId = resp.data.id;
@@ -237,7 +243,7 @@ export default {
               wx.showToast({
                 title: resp.msg,
                 icon: 'none'
-              })
+              });
             }
             
           });
@@ -436,6 +442,9 @@ export default {
     handleSearchChange(event){
       this.searchKey = event.mp.detail.detail.value;
     },
+    handleInvitationCodeChange(event){
+      this.invitationCode = event.mp.detail.detail.value;
+    },
     getGroupList() {
       this.$wxhttp.post({
         url: "/group/listMyGroups?userId=" + this.userInfo.userId,
@@ -479,9 +488,9 @@ export default {
       this.searchKey = "";
       this.barTitle = "我创建及加入的兴趣组"
     },
-    handleComment() {
+    handleComment(postId) {
       wx.navigateTo({
-        url: "../comment/main"
+        url: "../comment/main?userId=" + this.userInfo.userId + "&postId=" + postId
       });
     },
     showToast(msg) {
@@ -489,11 +498,33 @@ export default {
         title: msg,
         icon: "none"
       });
+    },
+    handleInvitationCode() {
+      this.$wxhttp.post({
+        url: "/manage/checkInivitationCode?code=" + this.invitationCode + "&userId=" + this.userInfo.userId
+      }).then(resp => {
+        if(resp.code === 0){
+          this.visible3 = false;
+          this.getGroupList();
+        }else{
+          wx.showToast({
+            title: resp.msg,
+            icon: "none"
+          });
+        }
+      })
     }
   },
 
   created() {
     // let app = getApp()
+  },
+  onShareAppMessage(object){
+    // console.log(object)
+    return {
+      title: "校趣",
+      path: "../index/main?shareUserId=" + this.userInfo.userId
+    }
   }
 };
 </script>
