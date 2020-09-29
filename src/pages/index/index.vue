@@ -174,7 +174,7 @@
 </template>
 
 <script>
-import { getQuery } from '../../utils/getPage';
+import getQuery from '../../utils/getPage';
 export default {
   data() {
     return {

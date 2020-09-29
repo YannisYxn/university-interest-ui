@@ -2,6 +2,7 @@
 const host = 'http://116.62.239.164:8080/xiaoqu'
 // const host = 'http://2559jc4123.wicp.vip:41613'
 const hostForFile = 'http://116.62.239.164:5001'
+const wshost = 'ws://116.62.239.164:8080/xiaoqu'
  
 function request (url, method, data, header = {}) {
   wx.showLoading({
@@ -53,5 +54,6 @@ export default {
   deleteRequest,
   put,
   host,
-  hostForFile
+  hostForFile,
+  wshost
 }
