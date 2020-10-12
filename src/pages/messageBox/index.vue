@@ -7,8 +7,8 @@
         :key="item"
         :title="item.userName"
         :label="item.userUniversityCampus"
-        :time="item.distance + 'km ' + item.createTime"
-        :content="item.message"
+        :time="(item.distance < 0 ? 0 : item.distance) + 'km ' + item.createTime"
+        :content="item.content"
         @click="handleChat(item.userId)"
       >
         <view slot="icon">
@@ -59,10 +59,10 @@ export default {
   methods: {
     getMessageList(){
       this.$wxhttp.get({
-        url: "/message?userId=" + this.userId 
+        url: "/message/getYouXinList?userId=" + this.userId 
       }).then(resp => {
         if(resp.code === 0){
-          this.messageList = resp.data.map(item => {
+          this.messageList = resp.data.latestChatRecord.map(item => {
             return {
               ...item,
               createTime: this.$moment(item.createTime).format("YYYY-MM-DD HH:mm:SS")

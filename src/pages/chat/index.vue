@@ -1,7 +1,7 @@
 <template>
-  <div style="background-color:#f3f4f5;height:1000px;">
+  <div style="background-color:#f3f4f5;min-height:530px;" id="chatPage">
     <i-cell-group>
-      <div v-for="item in chatInfo.chatMessageList" :key="item.id">
+      <div v-for="item in chatInfo.chatMessageList" :key="item">
         <i-chat-cell
           v-if="item.fromUserId == chatUserId"
           :title="item.content"
@@ -83,6 +83,7 @@ export default {
               createTime: this.$moment.unix(item.createTime).format("YYYY-MM-DD HH:mm:SS")
             }
           });
+          this.pageScrollToBottom();
         }else{
           wx.showToast({
             title: resp.msg,
@@ -119,7 +120,7 @@ export default {
       })
       wx.onSocketClose((res) => {
         console.log('WebSocket 已关闭！');
-        socketOpen = false;
+        that.socketOpen = false;
         this.reconnect()
       })
     },
@@ -130,10 +131,12 @@ export default {
     // 滚动到页面底部
     pageScrollToBottom() {
       let that = this;
-      wx.createSelectorQuery().select('#x_chat').boundingClientRect(function (rect) {
-        let top = rect.height * that.chatInfo.chatMessageList.length;
+      wx.createSelectorQuery().select('#chatPage').boundingClientRect(function (rect) {
+        console.log(rect)
+        let top = 68 * that.chatInfo.chatMessageList.length;
+        console.log(top)
         wx.pageScrollTo({
-          scrollTop: top,
+          scrollTop: rect.bottom,
           duration: 100
         })
       }).exec()
@@ -164,14 +167,23 @@ export default {
         return;
       }
 
-      if (socketOpen) {
+      if (this.socketOpen) {
         wx.sendSocketMessage({
           data: JSON.stringify({ 'message': msg, 'receiveId': this.chatUserId+'', 'roomId': this.roomId,'type':'0' }),
           success(res) {
-            
+            console.log("发送 " + msg + " 成功")
+            that.msg = "";
+            that.chatInfo.chatMessageList.push({
+              content: msg,
+              createTime: that.$moment(new Date().getTime()).format("YYYY-MM-DD HH:mm:SS"),
+              fromUserId: that.userId,
+              id: null,
+              toUserId: that.chatUserId,
+              type: 1
+            });
+            that.pageScrollToBottom();
           }
         })
-        this.msg = "";
       } else {
         wx.showToast({
           title: '链接已断,重新链接',

@@ -16,5 +16,6 @@
     "i-modal": "../../../static/iView/modal/index",
     "i-radio-group": "../../../static/iView/radio-group/index",
     "i-radio": "../../../static/iView/radio/index"
-  }
+  },
+  "backgroundColor": "#f3f4f5"
 }
