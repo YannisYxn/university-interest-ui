@@ -20,3 +20,6 @@
         <slot name="self"></slot>
     </view>
 </view>
+<view>
+    <slot name="last"></slot>
+</view>

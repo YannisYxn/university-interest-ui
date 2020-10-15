@@ -1,31 +1,41 @@
 <template>
-  <div style="background-color:#f3f4f5;min-height:530px;" id="chatPage">
-    <i-cell-group>
-      <div v-for="item in chatInfo.chatMessageList" :key="item">
-        <i-chat-cell
-          v-if="item.fromUserId == chatUserId"
-          :title="item.content"
-          :label="item.createTime"
-          style="float:left;min-width:55%;text-align:left;"
-        >
-          <view slot="icon">
-            <i-avatar :src="chatInfo.toUserPhoto" />
-          </view>
-        </i-chat-cell>
-        <i-chat-cell
-          v-else
-          :title="item.content"
-          :label="item.createTime"
-          style="float:right;min-width:55%;text-align:right;"
-        >
-          <view slot="self" style="float:right;">
-            <i-avatar :src="chatInfo.fromUserPhoto" />
-          </view>
-        </i-chat-cell>
-      </div>
-    </i-cell-group>
+  <div style="min-height:100%;" id="chatPage">
+    <div>
+      <i-cell-group>
+        <div v-for="(item,index) in chatInfo.chatMessageList" :key="item">
+          <i-chat-cell
+            v-if="item.fromUserId == chatUserId"
+            :title="item.content"
+            :label="item.createTime"
+            style="float:left;min-width:55%;text-align:left;"
+          >
+            <view slot="icon">
+              <i-avatar :src="chatInfo.toUserPhoto" />
+            </view>
+            <view slot="last">
+              <div v-if="index == (chatInfo.chatMessageList.length-1)" style="height:60px;width:100%;">
+              </div>
+            </view>
+          </i-chat-cell>
+          <i-chat-cell
+            v-else
+            :title="item.content"
+            :label="item.createTime"
+            style="float:right;min-width:55%;text-align:right;"
+          >
+            <view slot="self" style="float:right;">
+              <i-avatar :src="chatInfo.fromUserPhoto" />
+            </view>
+            <view slot="last">
+              <div v-if="index == (chatInfo.chatMessageList.length-1)" style="height:60px;width:100%;">
+              </div>
+            </view>
+          </i-chat-cell>
+        </div>
+      </i-cell-group>
+    </div>
 
-    <div style="position:fixed;bottom:0;width:100%">
+    <div style="position:fixed;bottom:0;width:100%;height:60px;">
       <i-row>
         <i-col span="18">
           <i-input @change="handleMsgChange" i-class="chat" placeholder="请输入消息..." :maxlength="33" chat />
@@ -132,11 +142,10 @@ export default {
     pageScrollToBottom() {
       let that = this;
       wx.createSelectorQuery().select('#chatPage').boundingClientRect(function (rect) {
-        console.log(rect)
         let top = 68 * that.chatInfo.chatMessageList.length;
         console.log(top)
         wx.pageScrollTo({
-          scrollTop: rect.bottom,
+          scrollTop: top,
           duration: 100
         })
       }).exec()
@@ -202,5 +211,8 @@ export default {
   border-radius: 20px;
   margin: 10px;
   width: 84%;
+}
+page {
+  background-color: #f3f4f5;
 }
 </style>
