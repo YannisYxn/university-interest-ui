@@ -38,7 +38,7 @@
     <div style="position:fixed;bottom:0;width:100%;height:60px;">
       <i-row>
         <i-col span="18">
-          <i-input @change="handleMsgChange" i-class="chat" placeholder="请输入消息..." :maxlength="33" chat />
+          <i-input :value="msg" @change="handleMsgChange" i-class="chat" placeholder="请输入消息..." :maxlength="33" chat />
         </i-col>
         <i-col span="6">
           <i-button @click="sendEvent" size="small" type="primary" shape="circle">发送</i-button>
@@ -86,6 +86,10 @@ export default {
         url: "/message/getChatRecord?fromUserId=" + this.userId + "&toUserId=" + this.chatUserId
       }).then(resp => {
         if(resp.code === 0){
+          // 设置页面标题
+          wx.setNavigationBarTitle({
+            title: String(resp.data.toUserName) + " " +  String(resp.data.distance > 0 ? resp.data.distance : 0) + "km"
+          });
           this.chatInfo = resp.data;
           this.chatInfo.chatMessageList = resp.data.chatMessageList.map(item => {
             return {
@@ -143,7 +147,6 @@ export default {
       let that = this;
       wx.createSelectorQuery().select('#chatPage').boundingClientRect(function (rect) {
         let top = 68 * that.chatInfo.chatMessageList.length;
-        console.log(top)
         wx.pageScrollTo({
           scrollTop: top,
           duration: 100
@@ -181,6 +184,9 @@ export default {
           data: JSON.stringify({ 'message': msg, 'receiveId': this.chatUserId+'', 'roomId': this.roomId,'type':'0' }),
           success(res) {
             console.log("发送 " + msg + " 成功")
+            that.$root.$mp.page.setData({
+              "$root[0].msg": ""
+            });
             that.msg = "";
             that.chatInfo.chatMessageList.push({
               content: msg,
@@ -192,7 +198,7 @@ export default {
             });
             that.pageScrollToBottom();
           }
-        })
+        });
       } else {
         wx.showToast({
           title: '链接已断,重新链接',

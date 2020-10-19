@@ -15,6 +15,23 @@
           <i-avatar :src="item.userPhoto" style="margin-right:10px;" />
         </view>
       </i-comment-cell>
+      <i-comment-cell
+        v-for="item in sayHelloList"
+        :key="item"
+        :title="item.userName"
+        :label="item.userUniversityCampus"
+        :time="(item.distance < 0 ? 0 : item.distance) + 'km ' + item.createTime"
+        :content="item.content"
+        @click="handleChat(item.userId)"
+      >
+        <view slot="icon">
+          <i-avatar :src="item.userPhoto" style="margin-right:10px;" />
+        </view>
+        <view slot="footer">
+          <i-button size="small" type="primary" shape="circle">OK</i-button>
+          <i-button size="small" type="error" shape="circle">NO</i-button>
+        </view>
+      </i-comment-cell>
     </i-cell-group>
   </div>
 </template>
@@ -24,7 +41,8 @@ export default {
   data() {
     return {
       userId: undefined,
-      messageList: []
+      messageList: [],
+      sayHelloList: []
     };
   },
   onShow() {
@@ -68,6 +86,12 @@ export default {
               createTime: this.$moment(item.createTime).format("YYYY-MM-DD HH:mm:SS")
             }
           });
+          this.sayHelloList = resp.data.sayHelloList.map(item => {
+            return {
+              ...item,
+              createTime: this.$moment(item.createTime).format("YYYY-MM-DD HH:mm:SS")
+            }
+          })
         }else{
           wx.showToast({
             title: resp.msg,
