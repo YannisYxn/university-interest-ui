@@ -1,7 +1,15 @@
 <template>
   <div style="background-color:#f3f4f5;">
-    <i-notice-bar icon="systemprompt" loop>麦麦在帖子 “想找人一起跑步” 回复你 “一起跑”</i-notice-bar>
+    <i-notice-bar icon="systemprompt" loop>{{ latestMessage }}</i-notice-bar>
     <i-cell-group>
+      <i-comment-cell
+        title="官方通知"
+        @click="handleChat(0)"
+      >
+        <!-- <view slot="icon">
+          <i-avatar :src="item.userPhoto" style="margin-right:10px;" />
+        </view> -->
+      </i-comment-cell>
       <i-comment-cell
         v-for="item in messageList"
         :key="item"
@@ -19,17 +27,16 @@
         v-for="item in sayHelloList"
         :key="item"
         :title="item.userName"
-        :label="item.userUniversityCampus"
+        :label="item.fromUserUniversityCampusIdName"
         :time="(item.distance < 0 ? 0 : item.distance) + 'km ' + item.createTime"
         :content="item.content"
-        @click="handleChat(item.userId)"
       >
         <view slot="icon">
-          <i-avatar :src="item.userPhoto" style="margin-right:10px;" />
+          <i-avatar :src="item.fromUserPhoto" style="margin-right:10px;" />
         </view>
         <view slot="footer">
-          <i-button size="small" type="primary" shape="circle">OK</i-button>
-          <i-button size="small" type="error" shape="circle">NO</i-button>
+          <i-button size="small" type="primary" shape="circle" @click="handleOK(item.id)">OK</i-button>
+          <i-button size="small" type="error" shape="circle" @click="handleNO(item.id)">NO</i-button>
         </view>
       </i-comment-cell>
     </i-cell-group>
@@ -42,7 +49,8 @@ export default {
     return {
       userId: undefined,
       messageList: [],
-      sayHelloList: []
+      sayHelloList: [],
+      latestMessage: ""
     };
   },
   onShow() {
@@ -57,6 +65,7 @@ export default {
             if(resp.code === 0){
               that.userId = resp.data.id;
               that.getMessageList();
+              that.getLatestMessage();
             }else{
               wx.showToast({
                 title: resp.msg,
@@ -89,9 +98,23 @@ export default {
           this.sayHelloList = resp.data.sayHelloList.map(item => {
             return {
               ...item,
-              createTime: this.$moment(item.createTime).format("YYYY-MM-DD HH:mm:SS")
+              createTime: this.$moment.unix(item.createTime).format("YYYY-MM-DD HH:mm:SS")
             }
           })
+        }else{
+          wx.showToast({
+            title: resp.msg,
+            icon: "none"
+          });
+        }
+      })
+    },
+    getLatestMessage() {
+      this.$wxhttp.get({
+        url: "/message/getLatestMessage?userId=" + this.userId
+      }).then(resp => {
+        if(resp.code == 0){
+          this.latestMessage = resp.data;
         }else{
           wx.showToast({
             title: resp.msg,
@@ -103,6 +126,34 @@ export default {
     handleChat(chatUserId) {
       wx.navigateTo({
         url: "../chat/main?chatUserId=" + chatUserId + "&userId=" + this.userId
+      });
+    },
+    handleOK(notificationId) {
+      this.$wxhttp.post({
+        url: "/user/clickOK?notificationId=" + notificationId
+      }).then(resp => {
+        if(resp.code === 0){
+          this.getMessageList();
+        }else{
+          wx.showToast({
+            title: resp.msg,
+            icon: "none"
+          });
+        }
+      });
+    },
+    handleNO(notificationId) {
+      this.$wxhttp.post({
+        url: "/user/clickNO?notificationId=" + notificationId
+      }).then(resp => {
+        if(resp.code === 0){
+          this.getMessageList();
+        }else{
+          wx.showToast({
+            title: resp.msg,
+            icon: "none"
+          });
+        }
       });
     }
   }

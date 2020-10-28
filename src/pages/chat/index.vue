@@ -69,13 +69,31 @@ export default {
   onShow() {
     this.userId = getQuery.getQuery().userId;
     this.chatUserId = getQuery.getQuery().chatUserId;
-    if(this.userId < this.chatUserId){
-      this.roomId = this.userId + "-" + this.chatUserId;
+    if(this.chatUserId == 0){
+      this.$wxhttp.get({
+        url: "/message/getSystemMsgList?userId=" + this.userId
+      }).then(resp => {
+        if(resp.code == 0){
+          wx.setNavigationBarTitle({
+            title: "官方通知"
+          });
+          this.chatInfo.chatMessageList = resp.data.map(item => {
+            return {
+              ...item,
+              createTime: this.$moment.unix(item.createTime).format("YYYY-MM-DD HH:mm:SS")
+            }
+          });
+        }
+      })
     }else{
-      this.roomId = this.chatUserId + "-" + this.userId;
+      if(this.userId < this.chatUserId){
+        this.roomId = this.userId + "-" + this.chatUserId;
+      }else{
+        this.roomId = this.chatUserId + "-" + this.userId;
+      }
+      this.linkSocket();
+      this.getMessage();
     }
-    this.linkSocket();
-    this.getMessage();
   },
   onUnload: function() {
     wx.closeSocket();
@@ -149,7 +167,7 @@ export default {
         let top = 68 * that.chatInfo.chatMessageList.length;
         wx.pageScrollTo({
           scrollTop: top,
-          duration: 100
+          duration: 0
         })
       }).exec()
     },
@@ -175,6 +193,12 @@ export default {
           title: '信息不能为空',
           icon: 'none',
           mask: true,
+        });
+        return;
+      }else if(that.judge_last_3()){
+        wx.showToast({
+          title: "未收到回复前最多发送3条消息",
+          icon: "none"
         });
         return;
       }
@@ -207,6 +231,17 @@ export default {
         });
       }
     },
+    judge_last_3(){
+      //判断最后三条是否为自己所发
+      var messageList = this.chatInfo.chatMessageList;
+      if(messageList[messageList.length-1].fromUserId == this.userId && 
+      messageList[messageList.length-2].fromUserId == this.userId &&
+      messageList[messageList.length-3].fromUserId == this.userId){
+        return true
+      }else{
+        return false
+      }
+    }
   }
 }
 </script>
