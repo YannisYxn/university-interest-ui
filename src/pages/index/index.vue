@@ -260,7 +260,7 @@ export default {
   methods: {
     handleToCityUniversity() {
       wx.navigateTo({
-        url: "../cityUniversityList/main?userId=" + this.userInfo.userId
+        url: "../indexPages/cityUniversityList/main?userId=" + this.userInfo.userId
       });
     },
     handleCreateGroup() {
@@ -272,14 +272,14 @@ export default {
       }else{
         //确认过学校跳转创建兴趣组页面
         wx.navigateTo({
-          url: "../createGroup/main?userId=" + this.userInfo.userId
+          url: "../indexPages/createGroup/main?userId=" + this.userInfo.userId
         });
       }
     },
     handleSelfUniversityInterestGroup() {
       wx.navigateTo({
         url: 
-          "../selfUniversityInterestGroup/main?userId=" + 
+          "../indexPages/selfUniversityInterestGroup/main?userId=" + 
           this.userInfo.userId + 
           "&universityId=" + 
           this.userInfo.universityId + 
@@ -289,12 +289,12 @@ export default {
     },
     handleInterestGroup(groupId) {
       wx.navigateTo({
-        url: "../interestGroup/main?groupId=" + groupId + "&userId=" + this.userInfo.userId
+        url: "../indexPages/interestGroup/main?groupId=" + groupId + "&userId=" + this.userInfo.userId
       });
     },
     handleManageInterestGroup(groupId) {
       wx.navigateTo({
-        url: "../manageInterestGroup/main?groupId=" + groupId + "&userId=" + this.userInfo.userId
+        url: "../indexPages/manageInterestGroup/main?groupId=" + groupId + "&userId=" + this.userInfo.userId
       });
     },
     handleClose1() {
@@ -490,7 +490,7 @@ export default {
     },
     handleComment(postId) {
       wx.navigateTo({
-        url: "../comment/main?userId=" + this.userInfo.userId + "&postId=" + postId
+        url: "../indexPages/comment/main?userId=" + this.userInfo.userId + "&postId=" + postId
       });
     },
     showToast(msg) {

@@ -64,7 +64,7 @@
 
     <div style="margin-top:5px;">
       <i-cell-group>
-        <i-cell title="积分动态" is-link :url="'../integralRecord/main?userId=' + userId">
+        <i-cell title="积分动态" is-link :url="'../myPages/integralRecord/main?userId=' + userId">
           <view slot="icon">
             <i-avatar
               size="small"
@@ -73,7 +73,7 @@
             />
           </view>
         </i-cell>
-        <i-cell title="兑换记录" is-link :url="'../exchangeRecord/main?userId=' + userId">
+        <i-cell title="兑换记录" is-link :url="'../myPages/exchangeRecord/main?userId=' + userId">
           <view slot="icon">
             <i-avatar
               size="small"
@@ -82,7 +82,7 @@
             />
           </view>
         </i-cell>
-        <i-cell title="我的发帖" is-link :url="'../post/main?userId=' + userId + '&selfUserId=' + userId">
+        <i-cell title="我的发帖" is-link :url="'../myPages/post/main?userId=' + userId + '&selfUserId=' + userId">
           <view slot="icon">
             <i-avatar
               size="small"
@@ -91,11 +91,20 @@
             />
           </view>
         </i-cell>
-        <i-cell title="分享记录" is-link :url="'../shareRecord/main?userId=' + userId">
+        <i-cell title="分享记录" is-link :url="'../myPages/shareRecord/main?userId=' + userId">
           <view slot="icon">
             <i-avatar
               size="small"
               src="../../../static/images/shareRecord.png"
+              style="margin-right:10px;"
+            />
+          </view>
+        </i-cell>
+        <i-cell title="打招呼设置" is-link url="../myPages/setting/main">
+          <view slot="icon">
+            <i-avatar
+              size="small"
+              src="../../../static/images/setting.png"
               style="margin-right:10px;"
             />
           </view>
@@ -109,7 +118,7 @@
             />
           </view>
         </i-cell>
-        <i-cell title="诉求" is-link :url="'../asking/main?userId=' + userId">
+        <i-cell title="诉求" is-link :url="'../myPages/asking/main?userId=' + userId">
           <view slot="icon">
             <i-avatar
               size="small"
@@ -118,7 +127,7 @@
             />
           </view>
         </i-cell>
-        <i-cell title="校趣规则" is-link url="../rule/main">
+        <i-cell title="校趣规则" is-link url="../myPages/rule/main">
           <view slot="icon">
             <i-avatar
               size="small"

@@ -1,14 +1,14 @@
 <template>
   <div style="background-color:#f3f4f5;">
-    <i-notice-bar icon="systemprompt" loop>{{ latestMessage }}</i-notice-bar>
+    <i-notice-bar icon="systemprompt" loop ref="noticeBar">{{ latestMessage }}</i-notice-bar>
     <i-cell-group>
       <i-comment-cell
         title="官方通知"
         @click="handleChat(0)"
       >
-        <!-- <view slot="icon">
-          <i-avatar :src="item.userPhoto" style="margin-right:10px;" />
-        </view> -->
+        <view slot="icon">
+          <i-avatar :src="avatar" style="margin-right:10px;" />
+        </view>
       </i-comment-cell>
       <i-comment-cell
         v-for="item in messageList"
@@ -44,13 +44,16 @@
 </template>
 
 <script>
+import avatar from "../../../static/images/avatar.png"
+
 export default {
   data() {
     return {
       userId: undefined,
       messageList: [],
       sayHelloList: [],
-      latestMessage: ""
+      latestMessage: "",
+      avatar: avatar
     };
   },
   onShow() {
@@ -125,7 +128,7 @@ export default {
     },
     handleChat(chatUserId) {
       wx.navigateTo({
-        url: "../chat/main?chatUserId=" + chatUserId + "&userId=" + this.userId
+        url: "../chat/chat/main?chatUserId=" + chatUserId + "&userId=" + this.userId
       });
     },
     handleOK(notificationId) {

@@ -1,27 +1,45 @@
 {
   "pages": [
     "pages/index/main",
-    "pages/cityUniversityList/main",
-    "pages/createGroup/main",
     "pages/exchange/main",
     "pages/my/main",
-    "pages/exchangeRecord/main",
-    "pages/shareRecord/main",
-    "pages/integralRecord/main",
-    "pages/asking/main",
     "pages/modify/main",
     "pages/logs/main",
-    "pages/post/main",
-    "pages/rule/main",
-    "pages/selfUniversityInterestGroup/main",
-    "pages/interestGroup/main",
-    "pages/comment/main",
-    "pages/messageBox/main",
-    "pages/chat/main",
-    "pages/createPost/main",
-    "pages/manageInterestGroup/main",
-    "pages/modifyGroup/main",
-    "pages/tip/main"
+    "pages/messageBox/main"
+  ],
+  "subPackages": [
+    {
+      "root": "pages/chat",
+      "pages": [
+        "chat/main"
+      ]
+    },
+    {
+      "root": "pages/myPages",
+      "pages": [
+        "asking/main",
+        "exchangeRecord/main",
+        "integralRecord/main",
+        "post/main",
+        "rule/main",
+        "shareRecord/main",
+        "setting/main"
+      ]
+    },
+    {
+      "root": "pages/indexPages",
+      "pages": [
+        "cityUniversityList/main",
+        "createGroup/main",
+        "createPost/main",
+        "selfUniversityInterestGroup/main",
+        "interestGroup/main",
+        "manageInterestGroup/main",
+        "comment/main",
+        "tip/main",
+        "modifyGroup/main"
+      ]
+    }
   ],
   "window": {
     "backgroundTextStyle": "light",
