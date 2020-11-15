@@ -214,10 +214,12 @@ export default {
       shareUserId: undefined
     };
   },
-  onShow() {
+  onShow(options) {
+    console.log("options:" + options);
     if(getQuery.getQuery().shareUserId){
       this.shareUserId = getQuery.getQuery().shareUserId;
     }
+    console.log(this.shareUserId)
     var that = this;
     wx.login({
       success(res) {
@@ -572,7 +574,7 @@ export default {
     // console.log(object)
     return {
       title: "校趣，欢迎加入校趣，不止有趣",
-      path: "../index/main?shareUserId=" + this.userInfo.userId
+      path: "/pages/index/main?shareUserId=" + this.userInfo.userId
     }
   }
 };
