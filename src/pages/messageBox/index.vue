@@ -63,7 +63,10 @@ export default {
         if (res.code) {
           //发起网络请求
           that.$wxhttp.post({
-            url: "/user/login?code=" + res.code,
+            url: "/user/login",
+            data: {
+              code: res.code
+            }
           }).then(resp => {
             if(resp.code === 0){
               that.userId = resp.data.id;

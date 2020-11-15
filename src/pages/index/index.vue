@@ -224,7 +224,11 @@ export default {
         if (res.code) {
           //发起网络请求
           that.$wxhttp.post({
-            url: "/user/login?code=" + res.code + ( that.shareUserId ? ("&shareUserId=" + that.shareUserId) : "" ),
+            url: "/user/login",
+            data: {
+              code: res.code,
+              shareUserId: that.shareUserId
+            }
           }).then(resp => {
             if(resp.code === 0){
               that.userInfo.userId = resp.data.id;
