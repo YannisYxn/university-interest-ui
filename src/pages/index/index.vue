@@ -215,12 +215,9 @@ export default {
     };
   },
   onShow(options) {
-    console.log("options:" + options);
     if(getQuery.getQuery().shareUserId){
       this.shareUserId = getQuery.getQuery().shareUserId;
-      console.log(getQuery.getQuery().shareUserId)
     }
-    console.log(this.shareUserId)
     var that = this;
     wx.login({
       success(res) {
