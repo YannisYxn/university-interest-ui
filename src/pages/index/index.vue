@@ -245,6 +245,10 @@ export default {
           }).then(resp => {
             if(resp.code === 0){
               that.userInfo.userId = resp.data.id;
+              // 绑定校区信息
+              that.userInfo.universityId = resp.data.universityId;
+              that.userInfo.universityName = resp.data.universityName;
+              that.userInfo.universityCampusId = resp.data.universityCampusId;
               that.userInfo.isCheckUniversity = resp.data.isCheckUniversity;
               if(resp.data.isCheckUniversity === 0){
                 //首次登录校趣，输入校区，授权信息，并完善个人信息
