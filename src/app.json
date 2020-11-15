@@ -23,7 +23,8 @@
         "post/main",
         "rule/main",
         "shareRecord/main",
-        "setting/main"
+        "setting/main",
+        "shareProfit/main"
       ]
     },
     {

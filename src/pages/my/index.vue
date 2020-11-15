@@ -48,7 +48,7 @@
                 />
                 <span style="font-size:9px;">上周发帖收益</span>
               </i-col>
-              <i-col span="7" offset="1">
+              <i-col span="7" offset="1" @click="handleProfit('share')">
                 <p style="font-size:16px;">9999</p>
                 <i-avatar
                   size="mini"
@@ -100,7 +100,7 @@
             />
           </view>
         </i-cell>
-        <i-cell title="打招呼设置" is-link url="../myPages/setting/main">
+        <i-cell title="打招呼设置" is-link :url="'../myPages/setting/main?userId=' + userId">
           <view slot="icon">
             <i-avatar
               size="small"
@@ -236,6 +236,13 @@ export default {
       wx.navigateTo({
         url: "../modify/main?userId=" + this.userId
       });
+    },
+    handleProfit(type) {
+      if(type == 'share') {
+        wx.navigateTo({
+          url: "../myPages/shareProfit/main"
+        });
+      }
     }
   }
 }

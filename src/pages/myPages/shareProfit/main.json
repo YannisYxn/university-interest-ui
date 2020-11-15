@@ -1,5 +1,5 @@
 {
-  "navigationBarTitleText": "设置打招呼选项",
+  "navigationBarTitleText": "分享链接及举报的收益明细",
   "usingComponents": {
     "i-button": "../../../../static/iView/button/index",
     "i-input": "../../../../static/iView/input/index",
@@ -15,10 +15,6 @@
     "i-modal": "../../../../static/iView/modal/index",
     "i-radio-group": "../../../../static/iView/radio-group/index",
     "i-radio": "../../../../static/iView/radio/index",
-    "i-load-more": "../../../../static/iView/load-more/index",
-    "i-collapse": "../../../../static/iView/collapse/index",
-    "i-collapse-item": "../../../../static/iView/collapse-item/index",
-    "i-checkbox-group": "../../../../static/iView/checkbox-group/index",
-    "i-checkbox": "../../../../static/iView/checkbox/index"
+    "i-load-more": "../../../../static/iView/load-more/index"
   }
 }
