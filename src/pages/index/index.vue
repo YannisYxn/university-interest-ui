@@ -415,6 +415,7 @@ export default {
         }else if(resp.code === 0){
           //成功在校内登录
           this.userInfo.isCheckUniversity = 1;
+          this.visible4 = false;
           // 绑定校区信息
           this.userInfo.universityId = resp.data.universityId;
           this.userInfo.universityName = resp.data.universityName;
