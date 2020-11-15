@@ -89,11 +89,17 @@
 
     <!-- 帖子列表 -->
     <div v-for="post in postList" :key="post.id" style="margin-top:15px;">
-      <i-card post :postTitle="post.userName" :time="post.createTime" :thumb="post.userPhtot">
+      <i-card
+        post
+        :postTitle="post.userName"
+        :time="post.createTime"
+        :thumb="post.userPhoto"
+        :university="post.universityCampusName"
+      >
         <view slot="content">
-          <span>{{ post.content }}</span>
-          <div style="display:flex;height:100px;width:120px;">
-            <image :src="post.img" style="padding:5px;max-width:100%;max-height:100%;" />
+          <span style="font-size:large;line-height:1.5;">{{ post.content }}</span>
+          <div v-if="post.img" style="display:flex;width:240px;text-align:center;">
+            <image :src="post.img" mode="widthFix" style="max-width:100%;" />
           </div>
         </view>
         <view slot="footer">
@@ -102,7 +108,10 @@
               <i-col span="24">
                 <div @click="handleComment(post.id)">
                   <i-icon size="30" type="message" />
-                  <span style="font-size=50px;">{{ post.commentCount }}</span>
+                  <span
+                    v-if="post.commentCount"
+                    style="font-size:15px;vertical-align:middle;"
+                  >{{ post.commentCount }}</span>
                 </div>
               </i-col>
               <!-- <i-col span="12">
@@ -113,6 +122,10 @@
           </div>
         </view>
       </i-card>
+    </div>
+
+    <div style="margin-top: 20px;">
+      <i-load-more :loading="false" />
     </div>
 
     <!-- 弹窗列表 -->
