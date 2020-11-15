@@ -21,9 +21,8 @@
               <i-checkbox 
                 v-for="item in allUniversityList" 
                 :key="item.id"
-                :value="item.name" 
+                :value="item.name"
                 color="#14d0b6"
-                :checked="universitySetting.includes(item.id)"
               />
             </i-checkbox-group>
           </view>
@@ -73,9 +72,10 @@ export default {
           if(resp.data.type == 3){
             // 接受同城所有学校打招呼
             this.setting = "2";
-            this.universitySetting = this.allUniversityList.forEach(item => {
-              return item.id
+            this.universitySetting = this.allUniversityList.map(item => {
+              return item.name
             });
+            console.log(this.universitySetting)
             this.isAllChecked = true;
           }else{
             this.setting = String(resp.data.type);
@@ -120,7 +120,7 @@ export default {
         })
       }else{
         this.isAllChecked = true;
-        this.universitySetting = this.allUniversityList.forEach(item => {
+        this.universitySetting = this.allUniversityList.map(item => {
           return item.id
         });
         this.$wxhttp.post({
@@ -145,15 +145,24 @@ export default {
       }
     },
     handleUniversityChange(current) {
-      console.log("111")
-      if(current.length !== this.allUniversityList.length){
+      console.log(current)
+      if(current.target.current) {
+        this.universitySetting.push(current.target.value);
+        console.log(this.universitySetting)
+      }else{
+        this.universitySetting.splice(this.universitySetting.indexOf(current.target.value));
+        console.log(this.universitySetting)
+      }
+      if(this.universitySetting.length !== this.allUniversityList.length){
         this.isAllChecked = false;
         this.$wxhttp.post({
           url: "/user/sayHelloSetting",
           data: {
             type: 2,  // 部分学校
             userId: this.userId,
-            universityIdList: this.universitySetting
+            universityIdList: this.universitySetting.map(item => {
+              return this.allUniversityList.find(item1 => item1.name == item).id
+            })
           }
         }).then(resp => {
           if(resp.code == 0){
@@ -174,7 +183,9 @@ export default {
           data: {
             type: 3,  //全部学校
             userId: this.userId,
-            universityIdList: this.universitySetting
+            universityIdList: this.allUniversityList.map(item => {
+              return item.id
+            })
           }
         }).then(resp => {
           if(resp.code == 0){
@@ -193,15 +204,17 @@ export default {
     handleAllChecked() {
       this.isAllChecked = !this.isAllChecked;
       if(this.isAllChecked){
-        this.universitySetting = this.allUniversityList.forEach(item => {
-          return item.id
+        this.universitySetting = this.allUniversityList.map(item => {
+          return item.name
         });
         this.$wxhttp.post({
           url: "/user/sayHelloSetting",
           data: {
             type: 3,
             userId: this.userId,
-            universityIdList: this.universitySetting
+            universityIdList: this.allUniversityList.map(item => {
+              return item.id
+            })
           }
         }).then(resp => {
           if(resp.code == 0){
