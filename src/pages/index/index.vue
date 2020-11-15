@@ -217,6 +217,7 @@ export default {
   onShow() {
     if(getQuery.getQuery().shareUserId){
       this.shareUserId = getQuery.getQuery().shareUserId;
+      console.log(getQuery.getQuery().shareUserId)
     }
     var that = this;
     wx.login({
