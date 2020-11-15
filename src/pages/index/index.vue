@@ -215,26 +215,20 @@ export default {
     };
   },
   onShow(options) {
-    console.log("options:" + options);
     if(getQuery.getQuery().shareUserId){
       this.shareUserId = getQuery.getQuery().shareUserId;
-      console.log(getQuery.getQuery().shareUserId)
     }
-    console.log(this.shareUserId)
     var that = this;
     wx.login({
       success(res) {
         if (res.code) {
           //发起网络请求
           that.$wxhttp.post({
-            url: "/user/login?code=" + res.code + "&shareUserId=" + that.shareUserId,
+            url: "/user/login?code=" + res.code + ( that.shareUserId ? ("&shareUserId=" + that.shareUserId) : "" ),
           }).then(resp => {
             if(resp.code === 0){
               that.userInfo.userId = resp.data.id;
               that.userInfo.isCheckUniversity = resp.data.isCheckUniversity;
-              that.userInfo.universityId = resp.data.universityId;
-              that.userInfo.universityName = resp.data.universityName;
-              that.userInfo.universityCampusId = resp.data.universityCampusId;
               if(resp.data.isCheckUniversity === 0){
                 //首次登录校趣，输入校区，授权信息，并完善个人信息
                 that.visible4 = true;
@@ -417,6 +411,10 @@ export default {
         }else if(resp.code === 0){
           //成功在校内登录
           this.userInfo.isCheckUniversity = 1;
+          // 绑定校区信息
+          this.userInfo.universityId = resp.data.universityId;
+          this.userInfo.universityName = resp.data.universityName;
+          this.userInfo.universityCampusId = resp.data.universityCampusId;
           // 首次上传用户信息
           this.$wxhttp.post({
             url: "/user/firstUploadUserInfo",
