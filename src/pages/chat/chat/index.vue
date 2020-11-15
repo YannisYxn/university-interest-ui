@@ -10,7 +10,7 @@
             style="float:left;min-width:55%;text-align:left;"
           >
             <view slot="icon">
-              <i-avatar :src="chatInfo.toUserPhoto" />
+              <i-avatar :src="chatInfo.toUserPhoto" @click="handleUserInfo()"/>
             </view>
             <view slot="last">
               <div v-if="index == (chatInfo.chatMessageList.length-1)" style="height:60px;width:100%;">
@@ -27,7 +27,7 @@
               <i-avatar :src="chatInfo.fromUserPhoto" />
             </view>
             <view slot="last">
-              <div v-if="index == (chatInfo.chatMessageList.length-1)" style="height:60px;width:100%;">
+              <div v-if="index == (chatInfo.chatMessageList.length-1)" style="height:100px;width:100%;">
               </div>
             </view>
           </i-chat-cell>
@@ -35,7 +35,7 @@
       </i-cell-group>
     </div>
 
-    <div style="position:fixed;bottom:0;width:100%;height:60px;">
+    <div style="position:fixed;bottom:0;width:100%;height:100px;">
       <i-row>
         <i-col span="18">
           <i-input :value="msg" @change="handleMsgChange" i-class="chat" placeholder="请输入消息..." :maxlength="33" chat />
@@ -44,7 +44,22 @@
           <i-button @click="sendEvent" size="small" type="primary" shape="circle">发送</i-button>
         </i-col>
       </i-row>
+      <i-button type="primary" long="true" @click="() => visibleCredit = true">送分</i-button>
     </div>
+
+    <i-modal
+      title="赠送积分"
+      :visible="visibleCredit"
+      @ok="handleCredit()"
+      @cancel="() => visibleCredit = false"
+    >
+      <i-input-number
+        v-model="credit"
+        :min="0"
+        :max="100"
+        @change="handleCreditChange"
+      />
+    </i-modal>
   </div>
 </template>
 
@@ -65,11 +80,12 @@ export default {
       socketMsgQueue: [],
       lockReconnect: false,
       limit: 0,
-      avatar: avatar
+      avatar: avatar,
+      credit: 5,
+      visibleCredit: false
     }
   },
   onShow() {
-    console.log("test")
     this.userId = getQuery.getQuery().userId;
     this.chatUserId = getQuery.getQuery().chatUserId;
     if(this.chatUserId == 0){
@@ -246,6 +262,40 @@ export default {
       }else{
         return false
       }
+    },
+    handleUserInfo() {
+      // 跳转个人主页
+      wx.closeSocket();
+      wx.navigateTo({
+        url: "../../myPages/post/main?userId=" + this.chatUserId + "&selfUserId=" + this.userId
+      });
+    },
+    handleCreditChange(event) {
+      this.credit = event.target.value;
+    },
+    handleCredit() {
+      // 赠送积分
+      console.log("test")
+      this.$wxhttp.post({
+        url: "/credit/giveCredit",
+        data: {
+          credit: this.credit,
+          fromUserId: this.userId,
+          toUserId: this.chatUserId
+        }
+      }).then(resp => {
+        if(resp.code == 0){
+          this.visibleCredit = false;
+          wx.showToast({
+            title: "赠送成功"
+          });
+        }else{
+          wx.showToast({
+            title: resp.msg,
+            icon: "none"
+          });
+        }
+      });
     }
   }
 }

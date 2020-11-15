@@ -1,5 +1,5 @@
 <template>
-  <div style="background-color:#f3f4f5;">
+  <div>
     <div class="head">
       <div style="margin:0 10px;">
         <i-row>
@@ -49,7 +49,7 @@
         </view>
         <view slot="content">
           <span style="font-size:large;line-height:1.5;">{{ post.content }}</span>
-          <div style="display:flex;width:240px;text-align:center;">
+          <div v-if="post.img" style="display:flex;width:240px;text-align:center;">
             <image :src="post.img" mode="widthFix" style="max-width:100%;" />
           </div>
         </view>
@@ -240,7 +240,7 @@ export default {
     },
     handlePost() {
       wx.navigateTo({
-        url: "../createPost/main?userId=" + this.userId + "&relatedId=" + this.groupId
+        url: "../createPost/main?userId=" + this.userId + "&groupId=" + this.groupId
       });
     },
     handleClickItem (detail) {

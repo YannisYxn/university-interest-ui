@@ -379,6 +379,12 @@ export default {
         })
       }else{
         //举报帖子
+        var that = this;
+        wx.navigateTo({
+          url: "../tip/main?type=3&userId=" + that.userId + 
+          "&relatedId=" + that.currentOperatedPostId + 
+          "&reportedUserId=" + that.currentOperatedPostUserId
+        });
       }
       this.postVisible = false;
     },
@@ -392,6 +398,7 @@ export default {
           name: "举报帖子"
         }];
       }
+      this.currentOperatedPostUserId = postUserId;
       this.currentOperatedPostId = postId;
       this.postVisible = true;
     },

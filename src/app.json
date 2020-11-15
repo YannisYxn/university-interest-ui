@@ -24,7 +24,9 @@
         "rule/main",
         "shareRecord/main",
         "setting/main",
-        "shareProfit/main"
+        "shareProfit/main",
+        "groupProfit/main",
+        "postProfit/main"
       ]
     },
     {

@@ -1,5 +1,5 @@
 <template>
-  <div style="background-color:#f3f4f5;">
+  <div>
     <div style="margin-top:15px;">
       <i-card
         post
@@ -9,8 +9,8 @@
         :university="post.universityCampusName"
       >
         <view slot="content">
-          <span style="font-size:large;line-height:1.5;">{{ post.content }}</span>
-          <div style="display:flex;width:240px;text-align:center;">
+          <span style="font-size:inherit;line-height:1.5;">{{ post.content }}</span>
+          <div v-if="post.img" style="display:flex;width:240px;text-align:center;">
             <image :src="post.img" mode="widthFix" style="max-width:100%;" />
           </div>
         </view>
@@ -32,7 +32,7 @@
       </i-card>
     </div>
 
-    <div style="background-color:#f3f4f5;height:10px;margin-top:5px;"></div>
+    <div style="height:10px;margin-top:5px;"></div>
 
     <div>
       <i-cell-group>

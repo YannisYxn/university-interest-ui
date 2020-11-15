@@ -24,7 +24,7 @@
         </div>
       </i-panel>
     </div>
-    <div style="margin:20px;">
+    <div style="margin:20px;margin-bottom:60px;">
       <p class="font" style="font-size:15px;line-height:2;color:#a3a4a4">提示：</p>
       <p
         class="font"

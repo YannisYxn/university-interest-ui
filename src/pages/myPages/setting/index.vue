@@ -121,14 +121,16 @@ export default {
       }else{
         this.isAllChecked = true;
         this.universitySetting = this.allUniversityList.map(item => {
-          return item.id
+          return item.name
         });
         this.$wxhttp.post({
           url: "/user/sayHelloSetting",
           data: {
             type: 3,
             userId: this.userId,
-            universityIdList: this.universitySetting
+            universityIdList: this.allUniversityList.map(item => {
+              return item.id
+            })
           }
         }).then(resp => {
           if(resp.code == 0){

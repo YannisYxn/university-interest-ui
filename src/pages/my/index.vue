@@ -10,7 +10,7 @@
             <p style="fong-size:15px;color:white;">{{ name }}</p>
             <p style="font-size:12px;color:white;line-height:25px;">
               {{ universityCampusName }}
-              <i-tag style="color:#07a68e;">升学</i-tag>
+              <i-tag style="color:#07a68e;" @click="() => visibleForUniversity = true">升学</i-tag>
             </p>
             <span style="font-size:11px;color:white;">{{ createTime }}(加入)</span>
           </i-col>
@@ -32,16 +32,16 @@
         <i-card>
           <view slot="content">
             <i-row>
-              <i-col span="7">
-                <p style="font-size:16px;">9999</p>
+              <i-col span="7" @click="handleProfit('group')">
+                <p style="font-size:16px;">{{ profit.lastWeekGroupMoney }}</p>
                 <i-avatar
                   size="mini"
                   src="../../../static/images/interest.png"
                 />
                 <span style="font-size:9px;">上周兴趣组收益</span>
               </i-col>
-              <i-col span="7" offset="1">
-                <p style="font-size:16px;">9999</p>
+              <i-col span="7" offset="1" @click="handleProfit('post')">
+                <p style="font-size:16px;">{{ profit.lastWeekPostMoney }}</p>
                 <i-avatar
                   size="mini"
                   src="../../../static/images/post.png"
@@ -49,7 +49,7 @@
                 <span style="font-size:9px;">上周发帖收益</span>
               </i-col>
               <i-col span="7" offset="1" @click="handleProfit('share')">
-                <p style="font-size:16px;">9999</p>
+                <p style="font-size:16px;">{{ profit.lastWeekShareMoney }}</p>
                 <i-avatar
                   size="mini"
                   src="../../../static/images/shareRecord.png"
@@ -109,13 +109,18 @@
             />
           </view>
         </i-cell>
-        <i-cell title="分享链接" is-link>
+        <i-cell title="分享链接">
           <view slot="icon">
             <i-avatar
               size="small"
               src="../../../static/images/shareLink.png"
               style="margin-right:10px;"
             />
+          </view>
+          <view slot="footer">
+            <button open-type="share" style="background-color:white'">
+              <i-icon type="share_fill"/>
+            </button>
           </view>
         </i-cell>
         <i-cell title="诉求" is-link :url="'../myPages/asking/main?userId=' + userId">
@@ -143,6 +148,20 @@
       :title="stopDay === -2 ? '被举报，此号暂停使用' : '严重违规，此号已被封号'"
       :visible="visible"
     />
+
+    <i-modal
+      title="请输入就读高校"
+      :visible="visibleForUniversity"
+      @ok="handleOnUniversity"
+      @cancel="handleClose"
+    >
+      <i-input
+        v-model="university"
+        maxlength="10"
+        placeholder="学校名称"
+        @change="handleUniversityChange"
+      />
+    </i-modal>
   </div>
 </template>
 
@@ -163,7 +182,18 @@ export default {
       stopDay: undefined,
       universityCampusId: undefined,
       universityCampusName: "",
-      visible: false
+      visible: false,
+      visibleForUniversity: false,
+      university: "",
+      latitude: undefined,
+      longitude: undefined,
+      profit: {
+        createTime: "",
+        id: undefined,
+        lastWeekGroupMoney: 0.00,
+        lastWeekPostMoney: 0.00,
+        lastWeekShareMoney: 0.00
+      }
     }
   },
   onShow() {
@@ -183,6 +213,7 @@ export default {
               }else{
                 //不是首次登录，获取兴趣组列表
                 that.getUserInfo();
+                that.getLastWeekMoney();
               }
             }else{
               wx.showToast({
@@ -201,6 +232,13 @@ export default {
         }
       }
     });
+  },
+  onShareAppMessage(object){
+    // console.log(object)
+    return {
+      title: "校趣",
+      path: "../index/main?shareUserId=" + this.userInfo.userId
+    }
   },
   methods: {
     getUserInfo() {
@@ -232,6 +270,27 @@ export default {
         }
       });
     },
+    getLastWeekMoney() {
+      // 获取上周收益
+      this.$wxhttp.get({
+        url: "/money/getLastWeekMoney?userId=" + this.userId
+      }).then(resp => {
+        if(resp.code == 0){
+          this.profit = {
+            createTime: resp.data.createTime,
+            id: resp.data.id,
+            lastWeekGroupMoney: resp.data.lastWeekGroupMoney,
+            lastWeekPostMoney: resp.data.lastWeekPostMoney,
+            lastWeekShareMoney: resp.data.lastWeekShareMoney
+          };
+        }else{
+          wx.showToast({
+            title: resp.msg,
+            icon: "none"
+          });
+        }
+      })
+    },
     handleModify() {
       wx.navigateTo({
         url: "../modify/main?userId=" + this.userId
@@ -240,7 +299,86 @@ export default {
     handleProfit(type) {
       if(type == 'share') {
         wx.navigateTo({
-          url: "../myPages/shareProfit/main"
+          url: "../myPages/shareProfit/main?userId=" + this.userId
+        });
+      }else if(type == 'group') {
+        wx.navigateTo({
+          url: "../myPages/groupProfit/main?userId=" + this.userId
+        });
+      }else{
+        wx.navigateTo({
+          url: "../myPages/postProfit/main?userId=" + this.userId
+        });
+      }
+    },
+    handleUniversityChange(event){
+      this.university = event.mp.detail.detail.value;
+    },
+    handleClose() {
+      this.visibleForUniversity = false;
+    },
+    handleOnUniversity() {
+      //获取经纬度
+      var that = this;
+      wx.getSetting({
+        success(res) {
+          if (!res.authSetting['scope.userLocation']) {
+            wx.authorize({
+              scope: 'scope.userLocation',
+              success () {
+                // 用户已经同意小程序使用定位功能，后续调用 wx.getLocation 接口不会弹窗询问
+                wx.getLocation({
+                  type: 'wgs84',
+                  success (res) {
+                    that.latitude = res.latitude;
+                    that.longitude = res.longitude;
+                    that.handleFurtherEducation();
+                  }
+                });
+              }
+            })
+          }else{
+            // 用户已经同意小程序使用定位功能，后续调用 wx.getLocation 接口不会弹窗询问
+            wx.getLocation({
+              type: 'wgs84',
+              success (res) {
+                that.latitude = res.latitude;
+                that.longitude = res.longitude;
+              }
+            });
+          }
+        }
+      });
+    },
+    handleFurtherEducation() {
+      if(this.latitude && this.longitude) {
+        // 处理用户升学
+        this.$wxhttp.post({
+          url: "/user/furtherEducation",
+          data: {
+            latitude: this.latitude,
+            longitude: this.longitude,
+            universityName: this.university,
+            userId: this.userId
+          }
+        }).then(resp => {
+          if(resp.code == 0){
+            wx.showToast({
+              title: "升学操作成功"
+            });
+            this.visibleForUniversity = false;
+            this.getUserInfo();
+          }else{
+            wx.showToast({
+              title: "升学操作失败",
+              icon: "none"
+            });
+          }
+        });
+      }else{
+        wx.showToast({
+          title: "地理位置异常",
+          icon: "none"
         });
       }
     }
@@ -255,5 +393,8 @@ export default {
   background-image: linear-gradient(to bottom, #14d0b6, #0ed4d6);
   text-align: center;
   vertical-align: middle;
+}
+button::after{
+  border: none;
 }
 </style>

@@ -1,5 +1,5 @@
 <template>
-  <div style="background-color:#f3f4f5">
+  <div>
     <div class="head">
       <div style="margin:0 10px;">
         <i-row>
@@ -15,8 +15,16 @@
             <span style="font-size:11px;color:white;">{{ userDetail.createTime }}(加入)</span>
           </i-col>
           <i-col span="9">
-            <p style="fong-size:12px;color:white;">ID:</p>
-            <p style="fong-size:12px;color:white;">{{ userDetail.id }}</p>
+            <p style="fong-size:10px;color:white;">ID:</p>
+            <p style="fong-size:10px;color:white;">{{ userId }}</p>
+            <i-icon
+              v-if="userId !== selfUserId"
+              type="add"
+              size="17"
+              color="red"
+              style="margin-left:5px;vertical-align:center;"
+              @click="() => isAdd = true"
+            />
             <p style="font-size:12px;color:white;line-height:25px;">积分:{{ userDetail.credit }}</p>
             <br />
             <i-tag class="i-tags" type="border" color="green">校内登录{{ userDetail.inCampusCount }}次</i-tag>
@@ -53,7 +61,7 @@
           />
         </view>
         <view slot="content">
-          <span style="font-size:large;line-height:1.5;">{{ post.content }}</span>
+          <span style="font-size:inherit;line-height:1.5;">{{ post.content }}</span>
           <div v-if="post.img" style="display:flex;width:240px;text-align:center;">
             <image :src="post.img" mode="widthFix" style="max-width:100%;" />
           </div>
@@ -85,9 +93,10 @@
       <i-load-more v-else :loading="false" />
     </div>
 
-    <i-button v-if="userId !== selfUserId" type="primary" shape="circle">发送消息给ta</i-button>
+    <i-button v-if="userId !== selfUserId && isFriend" type="primary" shape="circle" @click="handleChat">发送消息给ta</i-button>
+    <i-button v-if="userId !== selfUserId && !isFriend" type="primary" shape="circle" @click="() => visibleFriend = true">跟ta打招呼</i-button>
 
-    <i-action-sheet :visible="isAdd" :actions="addAction" show-cancel @cancel="handleCancel" />
+    <i-action-sheet :visible="isAdd" :actions="addAction" show-cancel @cancel="handleCancel" @iclick="handleClickItem4user"/>
 
     <!-- 帖子操作列表 -->
     <i-action-sheet
@@ -99,6 +108,21 @@
     />
 
     <i-modal :title="userDetail.stopDay === -2 ? '被举报，此号暂停使用' : '严重违规，此号已被封号'" :visible="visible" />
+
+    <i-modal
+      title="跟ta打招呼"
+      :visible="visibleFriend"
+      @ok="handleSayHello"
+      @cancel="() => visibleFriend = false"
+    >
+      <i-input
+        v-model="sayHelloContent"
+        type="textarea"
+        maxlength="25"
+        placeholder="打招呼内容"
+        @change="handleContentChange"
+      />
+    </i-modal>
   </div>
 </template>
 
@@ -111,13 +135,10 @@ export default {
       isAdd: false,
       addAction: [
         {
-          name: "回到陌生"
+          name: "回到陌生/拉黑"
         },
         {
           name: "举报"
-        },
-        {
-          name: "拉黑"
         }
       ],
       userId: undefined,  //查看的用户id
@@ -141,7 +162,10 @@ export default {
       postList: [],
       postAction: [],
       currentOperatedPostId: undefined,
-      postVisible: false
+      postVisible: false,
+      isFriend: false,
+      visibleFriend: false,
+      sayHelloContent: "你好，可以交个朋友吗？"
     }
   },
   onShow() {
@@ -149,6 +173,7 @@ export default {
     this.selfUserId = getQuery.getQuery().selfUserId;
     this.getUserInfo();
     this.getPostList();
+    this.judgeFriend();
   },
   methods: {
     getUserInfo() {
@@ -199,8 +224,40 @@ export default {
         }
       })
     },
-    handleAdd() {
-      this.isAdd = true;
+    judgeFriend() {
+      // 判断两人是否为朋友
+      this.$wxhttp.post({
+        url: "/user/queryIsFriend?oneUserId=" + this.userId + "&twoUserId=" + this.selfUserId
+      }).then(resp => {
+        if(resp.code == 0){
+          if(resp.data == 0){
+            this.isFriend = false;
+            this.addAction = [
+              {
+                name: "打招呼"
+              },
+              {
+                name: "举报"
+              }
+            ];
+          }else{
+            this.isFriend = true;
+            this.addAction = [
+              {
+                name: "回到陌生/拉黑"
+              },
+              {
+                name: "举报"
+              }
+            ];
+          }
+        }else{
+          wx.showToast({
+            title: resp.msg,
+            icon: "none"
+          });
+        }
+      });
     },
     handleCancel() {
       this.isAdd = false;
@@ -216,6 +273,7 @@ export default {
         }];
       }
       this.currentOperatedPostId = postId;
+      this.currentOperatedPostUserId = postUserId;
       this.postVisible = true;
     },
     handleClickItem4post() {
@@ -237,13 +295,77 @@ export default {
         })
       }else{
         //举报帖子
+        var that = this;
+        wx.navigateTo({
+          url: "../tip/main?type=3&userId=" + that.userId + 
+          "&relatedId=" + that.currentOperatedPostId + 
+          "&reportedUserId=" + that.currentOperatedPostUserId
+        });
       }
       this.postVisible = false;
+    },
+    handleClickItem4user(detail) {
+      const index = detail.mp.detail.index;
+      this.isAdd = false;
+      if(index == 0){
+        if(this.addAction[0].name == "回到陌生/拉黑"){
+          // 回到陌生、拉黑
+          this.$wxhttp.post({
+            url: "/user/backToStranger?fromUserId=" + this.selfUserId + "&toUserId=" + this.userId
+          }).then(resp => {
+            if(resp.code == 0){
+              wx.showToast({
+                title: "操作成功"
+              });
+            }else{
+              wx.showToast({
+                title: resp.msg,
+                icon: "none"
+              });
+            }
+          });
+        }else{
+          // 打招呼
+          this.visibleFriend = true;
+        }
+      }else{
+        // 举报用户
+        var that = this;
+        wx.navigateTo({
+          url: "../tip/main?type=2&userId=" + that.selfUserId + 
+          "&reportedUserId=" + that.userId
+        });
+      }
     },
     handleComment(postId) {
       var userId = this.selfUserId;
       wx.navigateTo({
-        url: "../comment/main?postId=" + postId + "&userId=" + userId
+        url: "../../indexPages/comment/main?postId=" + postId + "&userId=" + userId
+      });
+    },
+    handleContentChange(event) {
+      this.sayHelloContent = event.mp.detail.detail.value;
+    },
+    handleSayHello() {
+      this.$wxhttp.post({
+        url: "/user/sayHello?fromUserId=" + this.selfUserId + "&toUserId=" + this.userId
+      }).then(resp => {
+        if(resp.code == 0) {
+          wx.showToast({
+            title: "发送成功"
+          });
+          this.visibleFriend = false;
+        }else{
+          wx.showToast({
+            title: resp.msg,
+            icon: "none"
+          });
+        }
+      });
+    },
+    handleChat() {
+      wx.navigateTo({
+        url: "../../chat/chat/main?userId=" + this.selfUserId + "&chatUserId=" + this.userId
       });
     }
   }

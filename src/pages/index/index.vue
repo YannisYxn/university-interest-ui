@@ -238,6 +238,7 @@ export default {
               }else{
                 //不是首次登录，获取兴趣组列表
                 that.getGroupList();
+                that.handleLoginLocation();
               }
             }else{
               wx.showToast({
@@ -512,7 +513,55 @@ export default {
             icon: "none"
           });
         }
-      })
+      });
+    },
+    handleLoginLocation() {
+      // 查找是否授权地理位置，未授权则要求用户授权地理位置
+      var that = this;
+      wx.getSetting({
+        success(res) {
+          if (!res.authSetting['scope.userLocation']) {
+            wx.authorize({
+              scope: 'scope.userLocation',
+              success () {
+                // 用户已经同意小程序使用定位功能，后续调用 wx.getLocation 接口不会弹窗询问
+                wx.getLocation({
+                  type: 'wgs84',
+                  success (res) {
+                    that.saveLoginLocation(res.latitude,res.longitude);
+                  }
+                });
+              }
+            })
+          }else{
+            // 用户已经同意小程序使用定位功能，后续调用 wx.getLocation 接口不会弹窗询问
+            wx.getLocation({
+              type: 'wgs84',
+              success (res) {
+                that.saveLoginLocation(res.latitude,res.longitude);
+              }
+            });
+          }
+        }
+      });
+      
+    },
+    saveLoginLocation(latitude, longitude) {
+      this.$wxhttp.post({
+        url: "/user/saveLoginLocation",
+        data: {
+          latitude: latitude,
+          longitude: longitude,
+          userId: this.userInfo.userId
+        }
+      }).then(resp => {
+        if(resp.code != 0){
+          wx.showToast({
+            title: resp,msg,
+            icon: "none"
+          });
+        }
+      });
     }
   },
 
@@ -522,7 +571,7 @@ export default {
   onShareAppMessage(object){
     // console.log(object)
     return {
-      title: "校趣",
+      title: "校趣，欢迎加入校趣，不止有趣",
       path: "../index/main?shareUserId=" + this.userInfo.userId
     }
   }
