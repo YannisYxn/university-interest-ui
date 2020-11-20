@@ -1,8 +1,8 @@
 
-const host = 'http://www.xiaoquzu.cn:8080/xiaoqu'
+const host = 'https://www.xiaoquzu.cn/xiaoqu'
 // const host = 'http://2559jc4123.wicp.vip:41613'
-const hostForFile = 'http://www.xiaoquzu.cn:5001'
-const wshost = 'ws://www.xiaoquzu.cn:8080/xiaoqu'
+const hostForFile = 'https://www.xiaoquzu.cn:5001'
+const wshost = 'wss://www.xiaoquzu.cn/xiaoqu'
  
 function request (url, method, data, header = {}) {
   wx.showLoading({
