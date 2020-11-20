@@ -37,6 +37,16 @@ Component({
         university: {
             type: String,
             value: ''
+        },
+        userId: {
+            type: String,
+            value: ''
+        }
+    },
+    methods: {
+        clickTitle(e) {
+            var userId = e.currentTarget.dataset.userid;
+            this.triggerEvent('clickTitle', userId);  
         }
     }
 });

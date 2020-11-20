@@ -22,11 +22,14 @@
         <view slot="icon">
           <i-avatar :src="item.userPhoto" style="margin-right:10px;" />
         </view>
+        <view slot="badge">
+          <i-badge v-if="item.unReadCount !== 0" dot />
+        </view>
       </i-comment-cell>
       <i-comment-cell
         v-for="item in sayHelloList"
         :key="item"
-        :title="item.userName"
+        :title="item.fromUserName"
         :label="item.fromUserUniversityCampusIdName"
         :time="(item.distance < 0 ? 0 : item.distance) + 'km ' + item.createTime"
         :content="item.content"
@@ -44,7 +47,7 @@
 </template>
 
 <script>
-import avatar from "../../../static/images/avatar.png"
+import avatar from "../../../static/images/benxiao.png"
 
 export default {
   data() {
@@ -72,6 +75,8 @@ export default {
               that.userId = resp.data.id;
               that.getMessageList();
               that.getLatestMessage();
+              that.timer = setInterval(that.getMessageList, 10000);
+              that.updateBadge();
             }else{
               wx.showToast({
                 title: resp.msg,
@@ -88,10 +93,29 @@ export default {
         }
       }
     });
+
+    
+  },
+  onHide() {
+    clearInterval(this.timer);
   },
   methods: {
+    updateBadge() {
+      this.$wxhttp.unloadGet({
+        url: "/message/unreadNumber?userId=" + this.userId
+      }).then(resp2 => {
+        if(resp2.code == 0){
+          if(resp2.data !== 0){
+            wx.setTabBarBadge({
+              index: 1,
+              text: String(resp2.data)
+            });
+          }
+        }
+      });
+    },
     getMessageList(){
-      this.$wxhttp.get({
+      this.$wxhttp.unloadGet({
         url: "/message/getYouXinList?userId=" + this.userId 
       }).then(resp => {
         if(resp.code === 0){

@@ -56,9 +56,12 @@ export default {
       mode: ""  //跳转模式
     }
   },
-  mounted() {
+  onShow() {
     this.groupId = getQuery.getQuery().groupId;
     this.userId = getQuery.getQuery().userId;
+
+    this.content = "";
+    this.tempFilePath = "";
     // 查找是否授权地理位置，未授权则要求用户授权地理位置
     var that = this;
     wx.getSetting({

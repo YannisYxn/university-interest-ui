@@ -217,6 +217,7 @@ export default {
                 //不是首次登录，获取兴趣组列表
                 that.getUserInfo();
                 that.getLastWeekMoney();
+                that.updateBadge();
               }
             }else{
               wx.showToast({
@@ -244,6 +245,20 @@ export default {
     }
   },
   methods: {
+    updateBadge() {
+      this.$wxhttp.unloadGet({
+        url: "/message/unreadNumber?userId=" + this.userId
+      }).then(resp2 => {
+        if(resp2.code == 0){
+          if(resp2.data !== 0){
+            wx.setTabBarBadge({
+              index: 1,
+              text: String(resp2.data)
+            });
+          }
+        }
+      });
+    },
     getUserInfo() {
       //获取用户详细信息
       this.$wxhttp.get({

@@ -2,7 +2,7 @@
   <div style="min-height:100%;" id="chatPage">
     <div>
       <i-cell-group>
-        <div v-for="(item,index) in chatInfo.chatMessageList" :key="item">
+        <div v-for="(item,index) in chatMessageList" :key="item">
           <i-chat-cell
             v-if="item.fromUserId == chatUserId"
             :title="item.content"
@@ -13,7 +13,7 @@
               <i-avatar :src="chatInfo.toUserPhoto" @click="handleUserInfo()"/>
             </view>
             <view slot="last">
-              <div v-if="index == (chatInfo.chatMessageList.length-1)" style="height:60px;width:100%;">
+              <div v-if="index == (chatMessageList.length-1)" style="height:100px;width:100%;">
               </div>
             </view>
           </i-chat-cell>
@@ -27,7 +27,7 @@
               <i-avatar :src="chatInfo.fromUserPhoto" />
             </view>
             <view slot="last">
-              <div v-if="index == (chatInfo.chatMessageList.length-1)" style="height:100px;width:100%;">
+              <div v-if="index == (chatMessageList.length-1)" style="height:100px;width:100%;">
               </div>
             </view>
           </i-chat-cell>
@@ -65,15 +65,16 @@
 
 <script>
 import getQuery from '../../../utils/getPage';
-import avatar from "../../../../static/images/avatar.png";
+import avatar from "../../../../static/images/benxiao.png";
 export default {
   data() {
     return {
       userId: undefined,
-      chatUserId: undefined,
+      chatUserId: 0,
       chatInfo: {
         chatMessageList: []
       },
+      chatMessageList: [],
       msg: "",
       roomId: undefined,
       socketOpen: false,
@@ -96,7 +97,7 @@ export default {
           wx.setNavigationBarTitle({
             title: "官方通知"
           });
-          this.chatInfo.chatMessageList = resp.data.map(item => {
+          this.chatMessageList = resp.data.map(item => {
             return {
               ...item,
               createTime: this.$moment.unix(item.createTime).format("YYYY-MM-DD HH:mm:SS")
@@ -130,7 +131,7 @@ export default {
             title: String(resp.data.toUserName) + " " +  String(resp.data.distance > 0 ? resp.data.distance : 0) + "km"
           });
           this.chatInfo = resp.data;
-          this.chatInfo.chatMessageList = resp.data.chatMessageList.map(item => {
+          this.chatMessageList = resp.data.chatMessageList.map(item => {
             return {
               ...item,
               createTime: this.$moment.unix(item.createTime).format("YYYY-MM-DD HH:mm:SS")
@@ -151,7 +152,7 @@ export default {
     linkSocket() {
       let that = this;
       wx.connectSocket({
-        url: that.$wxhttp.wshost + "/chat/" + that.userId + "," + that.chatUserId,
+        url: that.$wxhttp.wshost + "/chat/" + that.userId + "," + that.roomId,
         success() {
           that.socketOpen = true;
           that.initEventHandle();
@@ -162,7 +163,12 @@ export default {
       let that = this
       wx.onSocketMessage((res) => {
         // 数据处理
-        that.setMessage(res.data)
+        this.setMessage(res.data)
+        // var item = JSON.parse(res)
+        // item.createTime = that.$moment(item.createTime).format("YYYY-MM-DD HH:mm:SS")
+        // console.log(item)
+        // that.chatInfo.chatMessageList.push(item)
+        // that.pageScrollToBottom()
       })
       wx.onSocketOpen(() => {
         console.log('WebSocket连接打开')
@@ -178,14 +184,25 @@ export default {
       })
     },
     setMessage(res) {
-      this.chatInfo.chatMessageList.push(JSON.parse(res));
-      this.pageScrollToBottom();
+      let that = this;
+      var item = JSON.parse(res);
+      item.createTime = that.$moment(item.createTime).format("YYYY-MM-DD HH:mm:SS");
+      let chatMessageList = that.chatMessageList;
+      chatMessageList.push(item);
+      that.chatMessageList = chatMessageList;
+
+      // this.setChatMessageList(chatMessageList);
+      that.pageScrollToBottom();
+      
+    },
+    setChatMessageList(chatMessageList) {
+      this.chatMessageList = chatMessageList;
     },
     // 滚动到页面底部
     pageScrollToBottom() {
       let that = this;
       wx.createSelectorQuery().select('#chatPage').boundingClientRect(function (rect) {
-        let top = 68 * that.chatInfo.chatMessageList.length;
+        let top = 68 * that.chatMessageList.length;
         wx.pageScrollTo({
           scrollTop: top,
           duration: 0
@@ -229,19 +246,16 @@ export default {
           data: JSON.stringify({ 'message': msg, 'receiveId': this.chatUserId+'', 'roomId': this.roomId,'type':'0' }),
           success(res) {
             console.log("发送 " + msg + " 成功")
-            that.$root.$mp.page.setData({
-              "$root[0].msg": ""
-            });
             that.msg = "";
-            that.chatInfo.chatMessageList.push({
-              content: msg,
-              createTime: that.$moment(new Date().getTime()).format("YYYY-MM-DD HH:mm:SS"),
-              fromUserId: that.userId,
-              id: null,
-              toUserId: that.chatUserId,
-              type: 1
-            });
-            that.pageScrollToBottom();
+            // that.chatInfo.chatMessageList.push({
+            //   content: msg,
+            //   createTime: that.$moment(new Date().getTime()).format("YYYY-MM-DD HH:mm:SS"),
+            //   fromUserId: that.userId,
+            //   id: null,
+            //   toUserId: that.chatUserId,
+            //   type: 1
+            // });
+            // that.pageScrollToBottom();
           }
         });
       } else {
@@ -254,7 +268,7 @@ export default {
     },
     judge_last_3(){
       //判断最后三条是否为自己所发
-      var messageList = this.chatInfo.chatMessageList;
+      var messageList = this.chatMessageList;
       if(messageList[messageList.length-1].fromUserId == this.userId && 
       messageList[messageList.length-2].fromUserId == this.userId &&
       messageList[messageList.length-3].fromUserId == this.userId){

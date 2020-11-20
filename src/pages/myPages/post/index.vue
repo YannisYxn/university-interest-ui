@@ -88,13 +88,15 @@
       </i-card>
     </div>
 
-    <div style="margin-top:25px;">
+    <div style="margin-top:25px;margin-bottom:30px;">
       <i-load-more v-if="postList.length === 0" tip="该用户当前无帖子" :loading="false" />
       <i-load-more v-else :loading="false" />
     </div>
 
-    <i-button v-if="userId !== selfUserId && isFriend" type="primary" shape="circle" @click="handleChat">发送消息给ta</i-button>
-    <i-button v-if="userId !== selfUserId && !isFriend" type="primary" shape="circle" @click="() => visibleFriend = true">跟ta打招呼</i-button>
+    <div style="position:fixed;bottom:0">
+      <i-button v-if="userId !== selfUserId && isFriend" type="primary" shape="circle" @click="handleChat">发送消息给ta</i-button>
+      <i-button v-if="userId !== selfUserId && !isFriend" type="primary" shape="circle" @click="() => visibleFriend = true">跟ta打招呼</i-button>
+    </div>
 
     <i-action-sheet :visible="isAdd" :actions="addAction" show-cancel @cancel="handleCancel" @iclick="handleClickItem4user"/>
 

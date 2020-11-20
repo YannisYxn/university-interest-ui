@@ -1,5 +1,5 @@
 <template>
-  <div style="background-color:#f3f4f5;">
+  <div>
     <div class="head">
       <div style="margin:0 10px;">
         <i-row>

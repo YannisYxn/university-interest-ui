@@ -1,6 +1,6 @@
 <view class="i-class i-card {{ full ? 'i-card-full' : '' }} {{ post ? 'i-card-post' : '' }}">
     <view class="i-class i-card-header">
-        <view class="i-card-header-content">
+        <view class="i-card-header-content" bindtap="clickTitle" data-userid="{{ userId }}">
             <image class="i-card-header-thumb" src="{{ thumb }}" mode="aspectFit" wx:if="{{ thumb && !post }}" />
             <image class="i-card-header-post-thumb" src="{{ thumb }}" mode="aspectFit" wx:if="{{ thumb && post }}" />
             {{ title }}

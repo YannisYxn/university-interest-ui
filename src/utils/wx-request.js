@@ -30,6 +30,30 @@ function request (url, method, data, header = {}) {
     })
   })
 }
+
+function unloadRequest (url, method, data, header = {}) {
+  return new Promise((resolve, reject) => {
+    wx.request({
+      url: host + url, // 仅为示例
+      method: method,
+      data: data,
+      headers: {
+        'content-type': 'application/json' // 默认值
+      },
+      success: function (res) {
+        wx.hideLoading()
+        resolve(res.data)
+      },
+      fail: function (res) {
+        wx.hideLoading()
+        // reject(false)
+      },
+      complete: function () {
+        wx.hideLoading()
+      }
+    })
+  })
+}
  
 function get (obj) {
   return request(obj.url, 'GET', obj.data)
@@ -46,6 +70,14 @@ function deleteRequest (obj) {
 function put (obj) {
   return request(obj.url, 'PUT', obj.data)
 }
+
+function unloadPost (obj) {
+  return unloadRequest(obj.url, 'POST', obj.data)
+}
+
+function unloadGet (obj) {
+  return unloadRequest(obj.url, 'GET', obj.data)
+}
  
 export default {
   request,
@@ -53,6 +85,8 @@ export default {
   post,
   deleteRequest,
   put,
+  unloadPost,
+  unloadGet,
   host,
   hostForFile,
   wshost

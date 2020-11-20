@@ -56,6 +56,7 @@ export default {
               }else{
                 //不是首次登录，获取兑换券列表
                 that.getTicketList();
+                that.updateBadge();
               }
             }else{
               wx.showToast({
@@ -76,6 +77,20 @@ export default {
     });
   },
   methods: {
+    updateBadge() {
+      this.$wxhttp.unloadGet({
+        url: "/message/unreadNumber?userId=" + this.userId
+      }).then(resp2 => {
+        if(resp2.code == 0){
+          if(resp2.data !== 0){
+            wx.setTabBarBadge({
+              index: 1,
+              text: String(resp2.data)
+            });
+          }
+        }
+      });
+    },
     getTicketList() {
       this.$wxhttp.get({
         url: "/ticket?userId=" + this.userId
@@ -84,7 +99,7 @@ export default {
           this.ticketList = resp.data.map(item => {
             return {
               ...item,
-              deadline: this.$moment.unix(item.deadline).format("YYYY-MM-DD")
+              deadline: this.$moment(item.deadline).format("YYYY-MM-DD")
             }
           });
         }else{

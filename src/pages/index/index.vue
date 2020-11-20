@@ -95,6 +95,8 @@
         :time="post.createTime"
         :thumb="post.userPhoto"
         :university="post.universityCampusName"
+        :userId="post.userId"
+        @clickTitle="handlePersonalPage"
       >
         <view slot="content">
           <span style="font-size:large;line-height:1.5;">{{ post.content }}</span>
@@ -259,12 +261,12 @@ export default {
               if(resp.data.isCheckUniversity === 0){
                 //首次登录校趣，输入校区，授权信息，并完善个人信息
                 that.visible4 = true;
-                that.handleLoginLocation();
               }else{
                 //不是首次登录，获取兴趣组列表
                 that.getGroupList();
                 that.handleLoginLocation();
               }
+              that.updateBadge();
             }else{
               wx.showToast({
                 title: resp.msg,
@@ -282,8 +284,27 @@ export default {
         }
       }
     });
+
+    // 全局定时，获取有信未读消息数
+    // setInterval(() => {
+    //   this.updateBadge();
+    // }, 10000)
   },
   methods: {
+    updateBadge() {
+      this.$wxhttp.unloadGet({
+        url: "/message/unreadNumber?userId=" + this.userInfo.userId
+      }).then(resp2 => {
+        if(resp2.code == 0){
+          if(resp2.data !== 0){
+            wx.setTabBarBadge({
+              index: 1,
+              text: String(resp2.data)
+            });
+          }
+        }
+      });
+    },
     handleToCityUniversity() {
       wx.navigateTo({
         url: "../indexPages/cityUniversityList/main?userId=" + this.userInfo.userId
@@ -363,6 +384,7 @@ export default {
                   type: 'wgs84',
                   success (res) {
                     that.isOnUniversity(res.latitude,res.longitude);
+                    that.handleLoginLocation();
                   }
                 });
               }
@@ -373,6 +395,7 @@ export default {
               type: 'wgs84',
               success (res) {
                 that.isOnUniversity(res.latitude,res.longitude);
+                that.handleLoginLocation();
               }
             });
           }
@@ -597,6 +620,12 @@ export default {
             icon: "none"
           });
         }
+      });
+    },
+    handlePersonalPage(e) {
+      // console.log(e.mp.detail)
+      wx.navigateTo({
+        url: "../myPages/post/main?userId=" + e.mp.detail + "&selfUserId=" + this.userInfo.userId
       });
     }
   },
