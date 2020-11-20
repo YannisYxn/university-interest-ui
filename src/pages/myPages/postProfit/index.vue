@@ -1,7 +1,7 @@
 <template>
   <div>
     <div style="margin-top: 15px; text-align: center">
-      <i-card>
+      <i-card title="收益明细">
         <view slot="content">
           <i-row>
             <i-col span="11">
@@ -11,7 +11,7 @@
                 size="small"
                 src="../../../static/images/lastweek.png"
               />
-              <span style="font-size: 11px; margin-left: 5px"
+              <span style="font-size: 12px; margin-left: 5px"
                 >你的上周收益</span
               >
             </i-col>
@@ -22,7 +22,7 @@
                 size="small"
                 src="../../../static/images/profit.png"
               />
-              <span style="font-size: 11px; margin-left: 5px"
+              <span style="font-size: 12px; margin-left: 5px"
                 >此项累计收益</span
               >
             </i-col>

@@ -29,7 +29,7 @@
         <p style="font-size:12px;color:white;">简介：{{ description ? description : "无简介" }}</p>
       </div>
       <div style="margin-top:5px;text-align:center;">
-        <i-card>
+        <i-card title="收益列表">
           <view slot="content">
             <i-row>
               <i-col span="7" @click="handleProfit('group')">

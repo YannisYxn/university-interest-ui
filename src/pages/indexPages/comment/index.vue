@@ -121,6 +121,7 @@ export default {
   mounted() {
     this.userId = getQuery.getQuery().userId;
     this.postId = getQuery.getQuery().postId;
+    this.comment = "";
     //获取经纬度
     var that = this;
     wx.getSetting({
@@ -182,7 +183,6 @@ export default {
       }).then(resp => {
         if(resp.code === 0){
           this.post.commentDetailDTOList = resp.data.map(item => {
-            console.log(this.$moment.unix(this.post.createTime).format("YYYY-MM-DD HH:mm:SS"))
             return {
               ...item,
               createTime: this.$moment.unix(item.createTime).format("YYYY-MM-DD HH:mm:SS")

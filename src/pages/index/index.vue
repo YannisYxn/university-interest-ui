@@ -227,7 +227,13 @@ export default {
       shareUserId: undefined
     };
   },
-  onShow(options) {
+  onShow() {
+    if(this.searchKey){
+      this.handleClearSearch();
+    }
+    this.getGroupList();
+  },
+  onLoad(options) {
     if(getQuery.getQuery().shareUserId){
       this.shareUserId = getQuery.getQuery().shareUserId;
     }
@@ -253,6 +259,7 @@ export default {
               if(resp.data.isCheckUniversity === 0){
                 //首次登录校趣，输入校区，授权信息，并完善个人信息
                 that.visible4 = true;
+                that.handleLoginLocation();
               }else{
                 //不是首次登录，获取兴趣组列表
                 that.getGroupList();
@@ -497,7 +504,12 @@ export default {
           if(resp.code === 0){
             this.barTitle = "与" + this.searchKey + "相关的兴趣组与帖子";
             this.groupList = resp.data.groupList;
-            this.postList = resp.data.postList;
+            this.postList = resp.data.postList.map(item => {
+              return {
+                ...item,
+                createTime: this.$moment.unix(item.createTime).format("YYYY-MM-DD HH:mm:SS")
+              }
+            });
           }else{
             wx.showToast({
               title: resp.msg,
@@ -510,6 +522,7 @@ export default {
     handleClearSearch() {
       this.getGroupList();
       this.searchKey = "";
+      this.postList = [];
       this.barTitle = "我创建及加入的兴趣组"
     },
     handleComment(postId) {
