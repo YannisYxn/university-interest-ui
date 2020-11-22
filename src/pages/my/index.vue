@@ -144,12 +144,18 @@
       </i-cell-group>
     </div>
 
-    <i-modal
+    <!-- <i-modal
       :title="stopDay === -2 ? '被举报，此号暂停使用' : '严重违规，此号已被封号'"
       :visible="visible"
-    />
+    /> -->
+    <mp-dialog
+      :title="stopDay === -2 ? '被举报，此号暂停使用' : '严重违规，此号已被封号'"
+      :show="visible"
+      @confirm="() => visible = false"
+    >
+    </mp-dialog>
 
-    <i-modal
+    <!-- <i-modal
       title="请输入就读高校"
       :visible="visibleForUniversity"
       @ok="handleOnUniversity"
@@ -161,7 +167,21 @@
         placeholder="学校名称"
         @change="handleUniversityChange"
       />
-    </i-modal>
+    </i-modal> -->
+    <mp-dialog
+      title="请输入就读高校"
+      :show="visibleForUniversity"
+      :buttons="[{text: '取消'}]"
+      @buttontap="handleClose"
+      @confirm="handleOnUniversity"
+    >
+      <i-input
+        v-model="university"
+        maxlength="10"
+        placeholder="学校名称"
+        @change="handleUniversityChange"
+      />
+    </mp-dialog>
   </div>
 </template>
 

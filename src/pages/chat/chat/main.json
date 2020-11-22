@@ -16,7 +16,8 @@
     "i-badge": "../../../../static/iView/badge/index",
     "i-modal": "../../../../static/iView/modal/index",
     "i-radio-group": "../../../../static/iView/radio-group/index",
-    "i-radio": "../../../../static/iView/radio/index"
+    "i-radio": "../../../../static/iView/radio/index",
+    "mp-dialog": "../../../../static/WeUI/dialog/dialog"
   },
   "backgroundColor": "#f3f4f5"
 }

@@ -47,7 +47,7 @@
       <i-button type="primary" long="true" @click="() => visibleCredit = true">送分</i-button>
     </div>
 
-    <i-modal
+    <!-- <i-modal
       title="赠送积分"
       :visible="visibleCredit"
       @ok="handleCredit()"
@@ -59,7 +59,21 @@
         :max="100"
         @change="handleCreditChange"
       />
-    </i-modal>
+    </i-modal> -->
+    <mp-dialog
+      title="赠送积分"
+      :show="visibleCredit"
+      :buttons="[{text: '取消'}]"
+      @buttontap="() => visibleCredit = false"
+      @confirm="handleCredit()"
+    >
+      <i-input-number
+        v-model="credit"
+        :min="0"
+        :max="100"
+        @change="handleCreditChange"
+      />
+    </mp-dialog>
   </div>
 </template>
 

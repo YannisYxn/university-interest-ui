@@ -109,9 +109,15 @@
       @iclick="handleClickItem4post"
     />
 
-    <i-modal :title="userDetail.stopDay === -2 ? '被举报，此号暂停使用' : '严重违规，此号已被封号'" :visible="visible" />
+    <!-- <i-modal :title="userDetail.stopDay === -2 ? '被举报，此号暂停使用' : '严重违规，此号已被封号'" :visible="visible" /> -->
+    <mp-dialog
+      :title="stopDay === -2 ? '被举报，此号暂停使用' : '严重违规，此号已被封号'"
+      :show="visible"
+      @confirm="() => visible = false"
+    >
+    </mp-dialog>
 
-    <i-modal
+    <!-- <i-modal
       title="跟ta打招呼"
       :visible="visibleFriend"
       @ok="handleSayHello"
@@ -124,7 +130,22 @@
         placeholder="打招呼内容"
         @change="handleContentChange"
       />
-    </i-modal>
+    </i-modal> -->
+    <mp-dialog
+      title="跟ta打招呼"
+      :show="visibleFriend"
+      :buttons="[{text: '取消'}]"
+      @buttontap="() => visibleFriend = false"
+      @confirm="handleSayHello"
+    >
+      <i-input
+        v-model="sayHelloContent"
+        type="textarea"
+        maxlength="25"
+        placeholder="打招呼内容"
+        @change="handleContentChange"
+      />
+    </mp-dialog>
   </div>
 </template>
 
