@@ -160,17 +160,39 @@
         <span style="line-height:20px;">（可修改,上传不雅头像,会被封号）</span>
       </div>
     </i-modal> -->
-    <i-modal title="提示" :visible="visible3" @ok="handleClose3" @cancel="handleClose3">
+    <!-- <i-modal title="提示" :visible="visible3" @ok="handleClose3" @cancel="handleClose3">
       <p style="font-size:15px;line-height:20px;margin:0 20px;">请您在本校地理范围登录校趣！</p>
       <p style="font-size:15px;line-height:20px;margin:0 20px;">或</p>
       <span style="font-size:15px;line-height:20px;margin:0 20px;">输入邀请码：</span>
       <i-input v-model="invitationCode" mode="wrapped" placeholder="请在这里输入" @change="handleInvitationCodeChange"/>
-    </i-modal>
-    <i-modal title="欢迎首次进入校趣" :visible="visible1" @ok="handleClose1" @cancel="handleClose1">
+    </i-modal> -->
+    <mp-dialog
+      title="提示"
+      :show="visible3"
+      :buttons="[{text: '取消'}]"
+      @buttontap="handleClose3"
+      @confirm="handleClose3"
+    >
+      <p style="font-size:15px;line-height:20px;margin:0 20px;">请您在本校地理范围登录校趣！</p>
+      <p style="font-size:15px;line-height:20px;margin:0 20px;">或</p>
+      <span style="font-size:15px;line-height:20px;margin:0 20px;">输入邀请码：</span>
+      <i-input v-model="invitationCode" mode="wrapped" placeholder="请在这里输入" @change="handleInvitationCodeChange"/>
+    </mp-dialog>
+    <!-- <i-modal title="欢迎首次进入校趣" :visible="visible1" @ok="handleClose1" @cancel="handleClose1">
       <p style="font-size:15px;line-height:20px;margin:0 20px;">您是厦门大学思明校区的学生吗？不是的话，请在本校校区时登录校趣。谢谢。</p>
       <p style="font-size:10px;">提示：冒用ta人校区，被举报，会封号。</p>
-    </i-modal>
-    <i-modal
+    </i-modal> -->
+    <mp-dialog
+      title="欢迎首次进入校趣"
+      :show="visible1"
+      :buttons="[{text: '取消'}]"
+      @buttontap="handleClose1"
+      @confirm="handleClose1"
+    >
+      <p style="font-size:15px;line-height:20px;margin:0 20px;">您是厦门大学思明校区的学生吗？不是的话，请在本校校区时登录校趣。谢谢。</p>
+      <p style="font-size:10px;">提示：冒用ta人校区，被举报，会封号。</p>
+    </mp-dialog>
+    <!-- <i-modal
       title="请输入就读高校"
       :visible="visible4"
       @ok="handleOnUniversity"
@@ -184,7 +206,22 @@
         placeholder="学校名称"
         @change="handleUniversityChange"
       />
-    </i-modal>
+    </i-modal> -->
+    <mp-dialog
+      title="请输入就读高校"
+      :show="visible4"
+      :buttons="[{text: '取消'}]"
+      openType="getUserInfo"
+      @buttontap="handleClose4"
+      @confirm="handleOnUniversity"
+    >
+      <i-input
+        v-model="university"
+        maxlength="10"
+        placeholder="学校名称"
+        @change="handleUniversityChange"
+      />
+    </mp-dialog>
   </div>
 </template>
 
@@ -196,7 +233,7 @@ export default {
       visible1: false,
       // visible2: false,
       visible3: false,
-      visible4: false,
+      visible4: true,
       university: "", //输入高校名称
       userInfo: { //用户信息
         userId: "",
@@ -372,6 +409,7 @@ export default {
     },
     handleOnUniversity() {
       // 查找是否授权地理位置，未授权则要求用户授权地理位置
+      this.getUserInfo();
       var that = this;
       wx.getSetting({
         success(res) {
