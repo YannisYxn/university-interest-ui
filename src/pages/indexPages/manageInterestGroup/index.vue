@@ -45,6 +45,8 @@
           :time="post.createTime"
           :thumb="post.userPhoto"
           :university="post.universityCampusName"
+          :userId="post.userId"
+          @clickTitle="handlePersonalPage"
         >
           <view slot="operation">
             <i-icon
@@ -91,7 +93,7 @@
 
     <div style="margin-top:5px;" v-if="current === 'member'">
       <i-cell-group>
-        <i-cell v-for="member in memberList" :key="member.id" :title="member.name">
+        <i-cell v-for="member in memberList" :key="member.id" :title="member.name" @click="handlePersonalPageForUserList(member.id)">
           <view slot="icon">
             <i-avatar :src="member.photo" style="margin-right:10px;" />
           </view>
@@ -402,6 +404,17 @@ export default {
       this.currentOperatedPostId = postId;
       this.postVisible = true;
     },
+    handlePersonalPage(e) {
+      // console.log(e.mp.detail)
+      wx.navigateTo({
+        url: "../../myPages/post/main?userId=" + e.mp.detail + "&selfUserId=" + this.userId
+      });
+    },
+    handlePersonalPageForUserList(visitUserId) {
+      wx.navigateTo({
+        url: "../../myPages/post/main?userId=" + visitUserId + "&selfUserId=" + this.userId
+      });
+    }
   }
 };
 </script>

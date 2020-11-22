@@ -5,9 +5,9 @@ const hostForFile = 'https://www.xiaoquzu.cn:5001'
 const wshost = 'wss://www.xiaoquzu.cn/xiaoqu'
  
 function request (url, method, data, header = {}) {
-  wx.showLoading({
-    title: '加载中' // 数据请求前loading
-  })
+  // wx.showLoading({
+  //   title: '加载中' // 数据请求前loading
+  // })
   return new Promise((resolve, reject) => {
     wx.request({
       url: host + url, // 仅为示例

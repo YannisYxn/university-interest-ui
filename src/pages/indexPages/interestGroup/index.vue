@@ -37,6 +37,8 @@
         :time="post.createTime"
         :thumb="post.userPhoto"
         :university="post.universityCampusName"
+        :userId="post.userId"
+        @clickTitle="handlePersonalPage"
       >
         <view slot="operation">
           <i-icon
@@ -392,6 +394,13 @@ export default {
         });
       }
       this.postVisible = false;
+    },
+    handlePersonalPage(e) {
+      // console.log(e.mp.detail)
+      console.log(e.mp.detail)
+      wx.navigateTo({
+        url: "../../myPages/post/main?userId=" + e.mp.detail + "&selfUserId=" + this.userId
+      });
     }
   }
 };

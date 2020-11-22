@@ -131,7 +131,7 @@
     </div>
 
     <!-- 弹窗列表 -->
-    <i-modal title="提示" :visible="visible2" @ok="handleUserInfo" @cancel="handleClose2">
+    <!-- <i-modal title="提示" :visible="visible2" @ok="handleUserInfo" @cancel="handleClose2">
       <p style="font-size:15px;line-height:20px;margin:0 20px;">请简单完善个人资料后，再建组，发帖，回复等操作。谢谢。</p>
       <div style="display:flex;align-items:center;margin-left:20px;">
         性别：
@@ -159,7 +159,7 @@
         <i-avatar :src="userInfo.avatarUrl">头</i-avatar>
         <span style="line-height:20px;">（可修改,上传不雅头像,会被封号）</span>
       </div>
-    </i-modal>
+    </i-modal> -->
     <i-modal title="提示" :visible="visible3" @ok="handleClose3" @cancel="handleClose3">
       <p style="font-size:15px;line-height:20px;margin:0 20px;">请您在本校地理范围登录校趣！</p>
       <p style="font-size:15px;line-height:20px;margin:0 20px;">或</p>
@@ -194,7 +194,7 @@ export default {
   data() {
     return {
       visible1: false,
-      visible2: false,
+      // visible2: false,
       visible3: false,
       visible4: false,
       university: "", //输入高校名称
@@ -347,9 +347,9 @@ export default {
     handleClose1() {
       this.visible1 = false;
     },
-    handleClose2() {
-      this.visible2 = false;
-    },
+    // handleClose2() {
+    //   this.visible2 = false;
+    // },
     handleClose3() {
       this.visible3 = false;
     },

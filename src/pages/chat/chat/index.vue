@@ -119,6 +119,7 @@ export default {
   },
   onUnload: function() {
     wx.closeSocket();
+    clearTimeout(this.timer);
   },
   methods: {
     getMessage() {
