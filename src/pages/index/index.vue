@@ -233,7 +233,7 @@ export default {
       visible1: false,
       // visible2: false,
       visible3: false,
-      visible4: true,
+      visible4: false,
       university: "", //输入高校名称
       userInfo: { //用户信息
         userId: "",
