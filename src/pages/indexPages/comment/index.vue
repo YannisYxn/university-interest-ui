@@ -7,6 +7,8 @@
         :time="post.createTime"
         :thumb="post.userPhoto"
         :university="post.universityCampusName"
+        :userId="post.userId"
+        @clickTitle="handlePersonalPage"
       >
         <view slot="content">
           <span style="font-size:inherit;line-height:1.5;">{{ post.content }}</span>
@@ -272,6 +274,13 @@ export default {
           "&reportedUserId=" + that.currentOperatedCommentUserId
         });
       }
+    },
+    handlePersonalPage(e) {
+      // console.log(e.mp.detail)
+      console.log(e.mp.detail)
+      wx.navigateTo({
+        url: "../../myPages/post/main?userId=" + e.mp.detail + "&selfUserId=" + this.userId
+      });
     }
   }
 }

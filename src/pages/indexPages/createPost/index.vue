@@ -3,7 +3,7 @@
     <div style="margin-top:10px;display:block;">
       <i-panel>
         <i-input
-          v-model="content"
+          :value="content"
           asking
           mode="wrapped"
           type="textarea"
@@ -18,7 +18,7 @@
         >
           <i-icon color="#b6b6b6" size="25" type="add" />
         </div>
-        <div v-else style="text-align:center;margin:10px;width:240px;">
+        <div v-else style="text-align:center;margin:10px;">
           <!-- <img :src="tempFilePath" style="max-width:100%;max-height:100%;" /> -->
           <image :src="tempFilePath" mode="widthFix" style="max-width:100%;"/>
         </div>
@@ -96,12 +96,14 @@ export default {
   methods: {
     handleChooseImage() {
       var that = this;
+      var content = that.content;
       wx.chooseImage({
         count: 1, //最多上传1张照片
         sizeType: ['original','compressed'], //压缩图
         sourceType: ['album','camera'], //指定来源，相册和相机都可
         success(res) {
           that.tempFilePath = res.tempFilePaths[0];
+          that.content = content;
         }
       });
     },
