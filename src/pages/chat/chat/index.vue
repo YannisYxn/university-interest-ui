@@ -119,6 +119,7 @@ export default {
           });
           this.chatInfo.toUserPhoto = this.avatar;
           this.pageScrollToBottom();
+          this.readNotificationMsg();
         }
       })
     }else{
@@ -153,6 +154,7 @@ export default {
             }
           });
           this.pageScrollToBottom();
+          this.readChatMsg();
         }else{
           wx.showToast({
             title: resp.msg,
@@ -325,6 +327,30 @@ export default {
           });
         }
       });
+    },
+    readNotificationMsg() {
+      // 已读消息
+      this.$wxhttp.post({
+        url: "/message/readMsg",
+        data: {
+          messageIdList: [],
+          notificationIdList: this.chatMessageList.map(item => {
+            return item.id
+          })
+        }
+      })
+    },
+    readChatMsg() {
+      // 已读消息
+      this.$wxhttp.post({
+        url: "/message/readMsg",
+        data: {
+          messageIdList: this.chatMessageList.map(item => {
+            return item.id
+          }),
+          notificationIdList: []
+        }
+      })
     }
   }
 }

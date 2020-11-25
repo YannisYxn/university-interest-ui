@@ -382,6 +382,7 @@ export default {
               success (res) {
                 that.latitude = res.latitude;
                 that.longitude = res.longitude;
+                that.handleFurtherEducation();
               }
             });
           }

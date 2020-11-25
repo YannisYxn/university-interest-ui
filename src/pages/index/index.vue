@@ -270,7 +270,9 @@ export default {
     if(this.searchKey){
       this.handleClearSearch();
     }
-    this.getGroupList();
+    if(this.userInfo.userId){
+      this.getGroupList();
+    }
   },
   onLoad(options) {
     if(getQuery.getQuery().shareUserId){
