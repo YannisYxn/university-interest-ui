@@ -171,7 +171,7 @@
       :show="visible3"
       :buttons="[{text: '取消'}]"
       @buttontap="handleClose3"
-      @confirm="handleClose3"
+      @confirm="handleInvitationCode"
     >
       <p style="font-size:15px;line-height:20px;margin:0 20px;">请您在本校地理范围登录校趣！</p>
       <p style="font-size:15px;line-height:20px;margin:0 20px;">或</p>
@@ -208,18 +208,18 @@
       />
     </i-modal> -->
     <mp-dialog
-      title="请输入就读高校"
+      title="请确认校区"
       :show="visible4"
       :buttons="[{text: '取消'}]"
       openType="getUserInfo"
       @buttontap="handleClose4"
-      @confirm="handleOnUniversity"
+      @confirm="getUserInfo"
     >
       <i-input
-        v-model="university"
+        v-model="userInfo.universityName"
         maxlength="10"
         placeholder="学校名称"
-        @change="handleUniversityChange"
+        disabled
       />
     </mp-dialog>
   </div>
@@ -299,7 +299,8 @@ export default {
               that.userInfo.isCheckUniversity = resp.data.isCheckUniversity;
               if(resp.data.isCheckUniversity === 0){
                 //首次登录校趣，输入校区，授权信息，并完善个人信息
-                that.visible4 = true;
+                // that.visible4 = true;
+                that.handleOnUniversity();
               }else{
                 //不是首次登录，获取兴趣组列表
                 that.getGroupList();
@@ -393,25 +394,42 @@ export default {
       this.visible3 = false;
     },
     handleClose4() {
+      // 确认校区时点否出现提示
       this.visible4 = false;
-      this.visible3 = true;
+      wx.showToast({
+        title: "请在本学校范围时登录",
+        icon: "none"
+      });
     },
     getUserInfo(detail) {
-      var that = this;
-      wx.getUserInfo({
-        success(res) {
-          that.userInfo = {
-            ...that.userInfo,
-            avatarUrl: res.userInfo.avatarUrl,
-            gender: res.userInfo.gender,
-            nickName: res.userInfo.nickName
-          };
+      this.visible4 = false;
+      this.$wxhttp.post({
+        url: "/user/confirmUniversityCampus?userId=" + this.userInfo.userId + "&universityCampusId=" + this.userInfo.universityCampusId
+      }).then(resp => {
+        if(resp.code == 0){
+          var that = this;
+          wx.getUserInfo({
+            success(res) {
+              that.userInfo = {
+                ...that.userInfo,
+                avatarUrl: res.userInfo.avatarUrl,
+                gender: res.userInfo.gender,
+                nickName: res.userInfo.nickName
+              };
+              that.uploadUserInfoFirstTime();
+              that.handleLoginLocation();
+            }
+          });
+        }else{
+          wx.showToast({
+            title: resp.msg,
+            icon: "none"
+          });
         }
       });
     },
     handleOnUniversity() {
       // 查找是否授权地理位置，未授权则要求用户授权地理位置
-      this.getUserInfo();
       var that = this;
       wx.getSetting({
         success(res) {
@@ -424,7 +442,6 @@ export default {
                   type: 'wgs84',
                   success (res) {
                     that.isOnUniversity(res.latitude,res.longitude);
-                    that.handleLoginLocation();
                   }
                 });
               }
@@ -435,7 +452,6 @@ export default {
               type: 'wgs84',
               success (res) {
                 that.isOnUniversity(res.latitude,res.longitude);
-                that.handleLoginLocation();
               }
             });
           }
@@ -484,9 +500,9 @@ export default {
       this.$wxhttp.post({
         url: "/user/onUniversity",
         data: {
-          latitude: latitude,
-          longitude: longitude,
-          universityName: this.university,
+          latitude: 24.442994,
+          longitude: 118.103852,
+          // universityName: this.university,
           userId: this.userInfo.userId
         }
       }).then(resp => {
@@ -500,32 +516,33 @@ export default {
           this.visible4 = false;
           this.visible1 = true;
         }else if(resp.code === 0){
-          //成功在校内登录
+          // 成功在校内登录
           this.userInfo.isCheckUniversity = 1;
-          this.visible4 = false;
-          // 绑定校区信息
           this.userInfo.universityId = resp.data.universityId;
           this.userInfo.universityName = resp.data.universityName;
           this.userInfo.universityCampusId = resp.data.universityCampusId;
-          // 首次上传用户信息
-          this.$wxhttp.post({
-            url: "/user/firstUploadUserInfo",
-            data: {
-              description: this.userInfo.introduction,
-              id: this.userInfo.userId,
-              name: this.userInfo.nickName,
-              photo: this.userInfo.avatarUrl,
-              sex: this.userInfo.gender
-            }
-          }).then(resp => {
-            if(resp.code === 0){
-              this.getGroupList();
-            }else{
-              wx.showToast({
-                title: resp.msg,
-                icon: "none"
-              });
-            }
+          this.visible4 = true; //确认校区
+        }
+      });
+    },
+    uploadUserInfoFirstTime() {
+      // 首次上传用户信息
+      this.$wxhttp.post({
+        url: "/user/firstUploadUserInfo",
+        data: {
+          description: this.userInfo.introduction,
+          id: this.userInfo.userId,
+          name: this.userInfo.nickName,
+          photo: this.userInfo.avatarUrl,
+          sex: this.userInfo.gender
+        }
+      }).then(resp => {
+        if(resp.code === 0){
+          this.getGroupList();
+        }else{
+          wx.showToast({
+            title: resp.msg,
+            icon: "none"
           });
         }
       });

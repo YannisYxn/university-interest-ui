@@ -10,7 +10,7 @@
             <p style="fong-size:15px;color:white;">{{ name }}</p>
             <p style="font-size:12px;color:white;line-height:25px;">
               {{ universityCampusName }}
-              <i-tag style="color:#07a68e;" @click="() => visibleForUniversity = true">升学</i-tag>
+              <i-tag style="color:#07a68e;" @click="handleOnUniversity">升学</i-tag>
             </p>
             <span style="font-size:11px;color:white;">{{ createTime }}(加入)</span>
           </i-col>
@@ -169,6 +169,20 @@
       />
     </i-modal> -->
     <mp-dialog
+      title="请确认校区"
+      :show="visibleForUniversity"
+      :buttons="[{text: '取消'}]"
+      @buttontap="handleClose"
+      @confirm="getUserInfo"
+    >
+      <i-input
+        v-model="universityName"
+        maxlength="10"
+        placeholder="学校名称"
+        disabled
+      />
+    </mp-dialog>
+    <!-- <mp-dialog
       title="请输入就读高校"
       :show="visibleForUniversity"
       :buttons="[{text: '取消'}]"
@@ -181,7 +195,7 @@
         placeholder="学校名称"
         @change="handleUniversityChange"
       />
-    </mp-dialog>
+    </mp-dialog> -->
   </div>
 </template>
 
@@ -397,19 +411,18 @@ export default {
           data: {
             latitude: this.latitude,
             longitude: this.longitude,
-            universityName: this.university,
+            // universityName: this.university,
             userId: this.userId
           }
         }).then(resp => {
           if(resp.code == 0){
-            wx.showToast({
-              title: "升学操作成功"
-            });
-            this.visibleForUniversity = false;
-            this.getUserInfo();
+            this.universityName = resp.data.universityName;
+            this.universityCampusId = resp.data.universityCampusId;
+            this.universityId = resp.data.universityId;
+            this.visibleForUniversity = true;
           }else{
             wx.showToast({
-              title: "升学操作失败",
+              title: resp.msg,
               icon: "none"
             });
           }
@@ -420,6 +433,24 @@ export default {
           icon: "none"
         });
       }
+    },
+    confirmFurtherEducation() {
+      this.visibleForUniversity = false;
+      this.$wxhttp.post({
+        url: "/user/confirmUniversityCampus?userId=" + this.userInfo.userId + "&universityCampusId=" + this.userInfo.universityCampusId
+      }).then(resp => {
+        if(resp.code == 0){
+          wx.showToast({
+            title: "升学操作成功"
+          });
+          this.getUserInfo();
+        }else{
+          wx.showToast({
+            title: resp.msg,
+            icon: "none"
+          });
+        }
+      });
     }
   }
 }
