@@ -500,8 +500,8 @@ export default {
       this.$wxhttp.post({
         url: "/user/onUniversity",
         data: {
-          latitude: 24.442994,
-          longitude: 118.103852,
+          latitude: latitude,
+          longitude: longitude,
           // universityName: this.university,
           userId: this.userInfo.userId
         }
