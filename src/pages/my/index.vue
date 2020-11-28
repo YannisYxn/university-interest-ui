@@ -173,12 +173,12 @@
       :show="visibleForUniversity"
       :buttons="[{text: '取消'}]"
       @buttontap="handleClose"
-      @confirm="getUserInfo"
+      @confirm="handleFurtherEducation"
     >
       <i-input
-        v-model="universityName"
+        v-model="universityCampusName"
         maxlength="10"
-        placeholder="学校名称"
+        placeholder="校区名字"
         disabled
       />
     </mp-dialog>
@@ -294,6 +294,7 @@ export default {
       });
     },
     getUserInfo() {
+      if(this)
       //获取用户详细信息
       this.$wxhttp.get({
         url: "/user/getUserDetailById?userId=" + this.userId
@@ -384,7 +385,7 @@ export default {
                   success (res) {
                     that.latitude = res.latitude;
                     that.longitude = res.longitude;
-                    that.handleFurtherEducation();
+                    that.isOnUniversity();
                   }
                 });
               }
@@ -396,30 +397,58 @@ export default {
               success (res) {
                 that.latitude = res.latitude;
                 that.longitude = res.longitude;
-                that.handleFurtherEducation();
+                that.isOnUniversity();
               }
             });
           }
         }
       });
     },
+    isOnUniversity(latitude,longitude) {
+      // 判断当前位置是否处于校内
+      var that = this;
+      this.$wxhttp.post({
+        url: "/user/onUniversity",
+        data: {
+          latitude: latitude,
+          longitude: longitude,
+          // universityName: this.university,
+          userId: this.userInfo.userId
+        }
+      }).then(resp => {
+        if(resp.code === 3){
+          //学校不存在
+          wx.showToast({
+            title: '学校不存在'
+          });
+        }else if(resp.code === 4){
+          //不在学校范围内
+          wx.showToast({
+            title: "未在学校范围内",
+            icon: "none"
+          });
+        }else if(resp.code === 0){
+          // 成功在校内登录
+          this.universityId = resp.data.universityId;
+          this.universityName = resp.data.universityName;
+          this.universityCampusName = resp.data.universityCampusName;
+          this.universityCampusId = resp.data.universityCampusId;
+          this.visibleForUniversity = true; //确认校区
+        }
+      });
+    },
     handleFurtherEducation() {
-      if(this.latitude && this.longitude) {
+      this.visibleForUniversity = false;
+      if(this.universityCampusName) {
         // 处理用户升学
         this.$wxhttp.post({
-          url: "/user/furtherEducation",
-          data: {
-            latitude: this.latitude,
-            longitude: this.longitude,
-            // universityName: this.university,
-            userId: this.userId
-          }
+          url: "/user/furtherEducation?userId=" + this.userId + "&universityCampusId" + this.universityCampusId
         }).then(resp => {
           if(resp.code == 0){
-            this.universityName = resp.data.universityName;
-            this.universityCampusId = resp.data.universityCampusId;
-            this.universityId = resp.data.universityId;
-            this.visibleForUniversity = true;
+            wx.showToast({
+              title: "升序操作成功"
+            });
+            this.getUserInfo();
           }else{
             wx.showToast({
               title: resp.msg,
@@ -433,24 +462,6 @@ export default {
           icon: "none"
         });
       }
-    },
-    confirmFurtherEducation() {
-      this.visibleForUniversity = false;
-      this.$wxhttp.post({
-        url: "/user/confirmUniversityCampus?userId=" + this.userInfo.userId + "&universityCampusId=" + this.userInfo.universityCampusId
-      }).then(resp => {
-        if(resp.code == 0){
-          wx.showToast({
-            title: "升学操作成功"
-          });
-          this.getUserInfo();
-        }else{
-          wx.showToast({
-            title: resp.msg,
-            icon: "none"
-          });
-        }
-      });
     }
   }
 }

@@ -2,7 +2,7 @@
 const host = 'https://www.xiaoquzu.cn/api/xiaoqu'
 // const host = 'http://2559jc4123.wicp.vip:41613'
 const hostForFile = 'https://www.xiaoquzu.cn/file'
-const wshost = 'wss://www.xiaoquzu.cn/xiaoqu'
+const wshost = 'wss://www.xiaoquzu.cn/api/xiaoqu'
  
 function request (url, method, data, header = {}) {
   // wx.showLoading({

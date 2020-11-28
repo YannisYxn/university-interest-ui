@@ -13,7 +13,7 @@
     <view class="i-cell-content-part">
         <view wx:if="{{ time }}" class="i-cell-time">{{ time }}</view>
         <view wx:if="{{ content }}" class="i-cell-content">
-            <textarea value="{{ content }}" auto-height style="width:auto;"></textarea>
+            <textarea value="{{ content }}" auto-height style="width:auto;" disabled="{{true}}"></textarea>
             <!-- {{ content }} -->
         </view>
         <slot></slot>

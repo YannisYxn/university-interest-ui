@@ -216,7 +216,7 @@
       @confirm="getUserInfo"
     >
       <i-input
-        v-model="userInfo.universityName"
+        v-model="userInfo.universityCampusName"
         maxlength="10"
         placeholder="暂无检测到学校"
         disabled
@@ -520,6 +520,7 @@ export default {
         }else if(resp.code === 0){
           // 成功在校内登录
           this.userInfo.isCheckUniversity = 1;
+          this.userInfo.universityCampusName = resp.data.universityCampusName;
           this.userInfo.universityId = resp.data.universityId;
           this.userInfo.universityName = resp.data.universityName;
           this.userInfo.universityCampusId = resp.data.universityCampusId;
