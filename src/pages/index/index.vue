@@ -218,7 +218,7 @@
       <i-input
         v-model="userInfo.universityName"
         maxlength="10"
-        placeholder="学校名称"
+        placeholder="暂无检测到学校"
         disabled
       />
     </mp-dialog>
@@ -403,30 +403,32 @@ export default {
     },
     getUserInfo(detail) {
       this.visible4 = false;
-      this.$wxhttp.post({
-        url: "/user/confirmUniversityCampus?userId=" + this.userInfo.userId + "&universityCampusId=" + this.userInfo.universityCampusId
-      }).then(resp => {
-        if(resp.code == 0){
-          var that = this;
-          wx.getUserInfo({
-            success(res) {
-              that.userInfo = {
-                ...that.userInfo,
-                avatarUrl: res.userInfo.avatarUrl,
-                gender: res.userInfo.gender,
-                nickName: res.userInfo.nickName
-              };
-              that.uploadUserInfoFirstTime();
-              that.handleLoginLocation();
-            }
-          });
-        }else{
-          wx.showToast({
-            title: resp.msg,
-            icon: "none"
-          });
-        }
-      });
+      if(this.userInfo.universityName){
+        this.$wxhttp.post({
+          url: "/user/confirmUniversityCampus?userId=" + this.userInfo.userId + "&universityCampusId=" + this.userInfo.universityCampusId
+        }).then(resp => {
+          if(resp.code == 0){
+            var that = this;
+            wx.getUserInfo({
+              success(res) {
+                that.userInfo = {
+                  ...that.userInfo,
+                  avatarUrl: res.userInfo.avatarUrl,
+                  gender: res.userInfo.gender,
+                  nickName: res.userInfo.nickName
+                };
+                that.uploadUserInfoFirstTime();
+                that.handleLoginLocation();
+              }
+            });
+          }else{
+            wx.showToast({
+              title: resp.msg,
+              icon: "none"
+            });
+          }
+        });
+      }
     },
     handleOnUniversity() {
       // 查找是否授权地理位置，未授权则要求用户授权地理位置

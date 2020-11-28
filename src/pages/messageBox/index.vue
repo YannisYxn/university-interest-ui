@@ -140,7 +140,7 @@ export default {
       })
     },
     getLatestMessage() {
-      this.$wxhttp.get({
+      this.$wxhttp.post({
         url: "/message/getLatestMessage?userId=" + this.userId
       }).then(resp => {
         if(resp.code == 0){
