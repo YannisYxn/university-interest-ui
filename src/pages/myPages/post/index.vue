@@ -140,10 +140,9 @@
     >
       <i-input
         v-model="sayHelloContent"
-        type="textarea"
         maxlength="25"
         placeholder="打招呼内容"
-        @change="handleContentChange"
+        disabled
       />
     </mp-dialog>
   </div>
