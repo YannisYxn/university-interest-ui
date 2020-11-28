@@ -216,7 +216,7 @@
       @confirm="getUserInfo"
     >
       <i-input
-        v-model="userInfo.universityCampusName"
+        v-model="universityCampusName"
         maxlength="10"
         placeholder="暂无检测到学校"
         disabled
@@ -234,7 +234,7 @@ export default {
       // visible2: false,
       visible3: false,
       visible4: false,
-      university: "", //输入高校名称
+      universityCampusName: "", //输入高校名称
       userInfo: { //用户信息
         userId: "",
         isCheckUniversity: "",  //是否确认过学校
@@ -520,6 +520,7 @@ export default {
         }else if(resp.code === 0){
           // 成功在校内登录
           this.userInfo.isCheckUniversity = 1;
+          this.universityCampusName = resp.data.universityCampusName;
           this.userInfo.universityCampusName = resp.data.universityCampusName;
           this.userInfo.universityId = resp.data.universityId;
           this.userInfo.universityName = resp.data.universityName;
