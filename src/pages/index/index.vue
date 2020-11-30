@@ -516,7 +516,7 @@ export default {
         }else if(resp.code === 4){
           //不在学校范围内
           this.visible4 = false;
-          this.visible1 = true;
+          this.visible3 = true;
         }else if(resp.code === 0){
           // 成功在校内登录
           this.userInfo.isCheckUniversity = 1;
