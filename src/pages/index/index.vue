@@ -176,7 +176,7 @@
       <p style="font-size:15px;line-height:20px;margin:0 20px;">请您在本校地理范围登录校趣！</p>
       <p style="font-size:15px;line-height:20px;margin:0 20px;">或</p>
       <span style="font-size:15px;line-height:20px;margin:0 20px;">输入邀请码：</span>
-      <i-input v-model="invitationCode" mode="wrapped" placeholder="请在这里输入" @change="handleInvitationCodeChange"/>
+      <i-input :value="invitationCode" mode="wrapped" maxlength="10" placeholder="请在这里输入" @change="handleInvitationCodeChange"/>
     </mp-dialog>
     <!-- <i-modal title="欢迎首次进入校趣" :visible="visible1" @ok="handleClose1" @cancel="handleClose1">
       <p style="font-size:15px;line-height:20px;margin:0 20px;">您是厦门大学思明校区的学生吗？不是的话，请在本校校区时登录校趣。谢谢。</p>
