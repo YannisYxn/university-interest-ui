@@ -622,7 +622,7 @@ export default {
     },
     handleInvitationCode() {
       this.$wxhttp.post({
-        url: "/manage/checkInivitationCode?code=" + this.invitationCode + "&userId=" + this.userInfo.userId
+        url: "/user/checkInivitationCode?code=" + this.invitationCode + "&userId=" + this.userInfo.userId
       }).then(resp => {
         if(resp.code === 0){
           this.visible3 = false;

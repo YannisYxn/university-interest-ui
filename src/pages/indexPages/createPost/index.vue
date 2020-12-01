@@ -113,40 +113,68 @@ export default {
     handlePost() {
       var that = this;
       if(this.content || this.tempFilePath){
-        wx.uploadFile({
-          url: that.$wxhttp.host + "/image/uploadPostImg",
-          filePath: that.tempFilePath,
-          name: "image",
-          header: { "Content-Type": "multipart/form-data" },
-          success(res) {
-            //全部图片上传成功，创建帖子
-            that.$wxhttp.post({
-              url: "/post",
-              data: {
-                content: that.content,
-                latitude: that.latitude,
-                longitude: that.longitude,
-                groupId: that.groupId,
-                img: that.$wxhttp.hostForFile + String(JSON.parse(res.data).data),
-                userId: that.userId
-              }
-            }).then(resp => {
-              if(resp.code === 0){
-                wx.showToast({
-                  title: "发帖成功"
-                });
-                wx.navigateBack({
-                  delta: 1
-                });
-              }else{
-                wx.showToast({
-                  title: resp.msg,
-                  icon: "none"
-                });
-              }
-            })
-          }
-        });
+        if(this.tempFilePath){
+          wx.uploadFile({
+            url: that.$wxhttp.host + "/image/uploadPostImg",
+            filePath: that.tempFilePath,
+            name: "image",
+            header: { "Content-Type": "multipart/form-data" },
+            success(res) {
+              //全部图片上传成功，创建帖子
+              that.$wxhttp.post({
+                url: "/post",
+                data: {
+                  content: that.content,
+                  latitude: that.latitude,
+                  longitude: that.longitude,
+                  groupId: that.groupId,
+                  img: that.$wxhttp.hostForFile + String(JSON.parse(res.data).data),
+                  userId: that.userId
+                }
+              }).then(resp => {
+                if(resp.code === 0){
+                  wx.showToast({
+                    title: "发帖成功"
+                  });
+                  wx.navigateBack({
+                    delta: 1
+                  });
+                }else{
+                  wx.showToast({
+                    title: resp.msg,
+                    icon: "none"
+                  });
+                }
+              });
+            }
+          });
+        }else{
+          this.$wxhttp.post({
+            url: "/post",
+            data: {
+              content: this.content,
+              latitude: this.latitude,
+              longitude: this.longitude,
+              groupId: this.groupId,
+              img: "",
+              userId: this.userId
+            }
+          }).then(resp => {
+            if(resp.code === 0){
+              wx.showToast({
+                title: "发帖成功"
+              });
+              wx.navigateBack({
+                delta: 1
+              });
+            }else{
+              wx.showToast({
+                title: resp.msg,
+                icon: "none"
+              });
+            }
+          });
+        }
       }else{
         wx.showToast({
           title: "内容不可为空",

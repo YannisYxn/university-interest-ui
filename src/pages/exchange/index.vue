@@ -25,6 +25,16 @@
       <i-load-more v-if="ticketList.length === 0" tip="当前无优惠券" :loading="false" />
       <i-load-more v-else :loading="false" />
     </div>
+
+    <mp-dialog
+      title="确认"
+      :show="visible"
+      :buttons="[{text: '取消'}]"
+      @buttontap="() => visible = false"
+      @confirm="doExchange"
+    >
+      <span>是否确认兑换?</span>
+    </mp-dialog>
   </div>
 </template>
 
@@ -33,10 +43,12 @@ export default {
   data() {
     return {
       userId: undefined,
-      ticketList: []
+      ticketList: [],
+      visible: false,
+      ticketId: undefined
     }
   },
-  mounted() {
+  onShow() {
     var that = this;
     wx.login({
       success(res) {
@@ -111,12 +123,15 @@ export default {
       })
     },
     handleExchange(ticketId) {
+      this.ticketId = ticketId;
+      this.visible = true;
+    },
+    doExchange() {
+      this.visible = false;
       //兑换
       this.$wxhttp.post({
-        url: "/ticket/exchange?userId=" + this.userId + "&ticketId=" + ticketId
+        url: "/ticket/exchange?userId=" + this.userId + "&ticketId=" + this.ticketId
       }).then(resp => {
-        // 无论兑换成功与否，更新兑换券列表
-        this.getTicketList();
         if(resp.code === 0){
           wx.showToast({
             title: "兑换成功"
@@ -128,6 +143,8 @@ export default {
             icon: "none"
           });
         }
+        // 无论兑换成功与否，更新兑换券列表
+        this.getTicketList();
       });
     }
   }
