@@ -279,6 +279,9 @@ export default {
       this.shareUserId = getQuery.getQuery().shareUserId;
     }
     var that = this;
+    wx.showLoading({
+      title: '加载中' // 数据请求前loading
+    });
     wx.login({
       success(res) {
         if (res.code) {

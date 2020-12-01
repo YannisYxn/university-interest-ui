@@ -20,7 +20,7 @@
         </div>
         <div v-else style="text-align:center;margin:10px;">
           <!-- <img :src="tempFilePath" style="max-width:100%;max-height:100%;" /> -->
-          <image :src="tempFilePath" mode="widthFix" style="max-width:100%;"/>
+          <image :src="uploadFilePath" mode="widthFix" style="max-width:100%;"/>
         </div>
       </i-panel>
     </div>
@@ -37,7 +37,7 @@
     </div>
     <div style="height:20px;" />
     <div style="position:fixed;bottom:0;width:100%;">
-      <i-button style="margin:10px;width:100%" shape="circle" type="primary" @click="handlePost">发布</i-button>
+      <i-button style="margin:10px;width:100%" shape="circle" type="primary" @click="handlePostPosition">发布</i-button>
     </div>
   </div>
 </template>
@@ -51,12 +51,13 @@ export default {
       groupId: undefined,
       content: "",
       tempFilePath: "",
+      uploadFilePath: "",
       latitude: undefined,
       longitude: undefined,
       mode: ""  //跳转模式
     }
   },
-  onShow() {
+  mounted() {
     this.groupId = getQuery.getQuery().groupId;
     this.userId = getQuery.getQuery().userId;
 
@@ -97,6 +98,9 @@ export default {
     handleChooseImage() {
       var that = this;
       var content = that.content;
+      wx.showLoading({
+        title: '加载中' // 数据请求前loading
+      });
       wx.chooseImage({
         count: 1, //最多上传1张照片
         sizeType: ['original','compressed'], //压缩图
@@ -104,47 +108,86 @@ export default {
         success(res) {
           that.tempFilePath = res.tempFilePaths[0];
           that.content = content;
+          wx.uploadFile({
+            url: that.$wxhttp.host + "/image/uploadPostImg",
+            filePath: res.tempFilePaths[0],
+            name: "image",
+            header: { "Content-Type": "multipart/form-data" },
+            success(res2) {
+              that.uploadFilePath = that.$wxhttp.hostForFile + String(JSON.parse(res2.data).data);
+              wx.hideLoading();
+            }
+          });
         }
       });
     },
     handleContentChange(event) {
       this.content = event.mp.detail.detail.value;
     },
-    handlePost() {
+    handlePostPosition() {
+      // 查找是否授权地理位置，未授权则要求用户授权地理位置
       var that = this;
-      if(this.content || this.tempFilePath){
-        if(this.tempFilePath){
-          wx.uploadFile({
-            url: that.$wxhttp.host + "/image/uploadPostImg",
-            filePath: that.tempFilePath,
-            name: "image",
-            header: { "Content-Type": "multipart/form-data" },
-            success(res) {
-              //全部图片上传成功，创建帖子
-              that.$wxhttp.post({
-                url: "/post",
-                data: {
-                  content: that.content,
-                  latitude: that.latitude,
-                  longitude: that.longitude,
-                  groupId: that.groupId,
-                  img: that.$wxhttp.hostForFile + String(JSON.parse(res.data).data),
-                  userId: that.userId
-                }
-              }).then(resp => {
-                if(resp.code === 0){
-                  wx.showToast({
-                    title: "发帖成功"
-                  });
-                  wx.navigateBack({
-                    delta: 1
-                  });
-                }else{
-                  wx.showToast({
-                    title: resp.msg,
-                    icon: "none"
-                  });
-                }
+      wx.getSetting({
+        success(res) {
+          if (!res.authSetting['scope.userLocation']) {
+            wx.authorize({
+              scope: 'scope.userLocation',
+              success () {
+                // 用户已经同意小程序使用定位功能，后续调用 wx.getLocation 接口不会弹窗询问
+                wx.getLocation({
+                  type: 'wgs84',
+                  success (res) {
+                    that.latitude = res.latitude;
+                    that.longitude = res.longitude;
+                    that.handlePost();
+                  }
+                });
+              }
+            })
+          }else{
+            // 用户已经同意小程序使用定位功能，后续调用 wx.getLocation 接口不会弹窗询问
+            wx.getLocation({
+              type: 'wgs84',
+              success (res) {
+                that.latitude = res.latitude;
+                that.longitude = res.longitude;
+                that.handlePost();
+              }
+            });
+          }
+        }
+      });
+    },
+    handlePost() {
+      var that = this; 
+      if(this.content){
+        if(this.uploadFilePath){
+          wx.showLoading({
+            title: '加载中' // 数据请求前loading
+          });
+          //全部图片上传成功，创建帖子
+          that.$wxhttp.post({
+            url: "/post",
+            data: {
+              content: that.content,
+              latitude: that.latitude,
+              longitude: that.longitude,
+              groupId: that.groupId,
+              img: that.uploadFilePath,
+              userId: that.userId
+            }
+          }).then(resp => {
+            if(resp.code === 0){
+              wx.showToast({
+                title: "发帖成功"
+              });
+              wx.navigateBack({
+                delta: 1
+              });
+            }else{
+              wx.showToast({
+                title: resp.msg,
+                icon: "none"
               });
             }
           });
