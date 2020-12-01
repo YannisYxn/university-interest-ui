@@ -6,7 +6,7 @@
           <i-avatar size="large" shape="square" :src="tempFilePath || avatarUrl" @click="handleChooseImage">头</i-avatar>
         </div>
         <i-input v-model="name" title="昵称" right mode="wrapped" placeholder="名称" maxlength="12" @change="handleNameChange"/>
-        <i-input v-model="introduction" title="简介" right type="textarea" mode="wrapped" placeholder="简介" maxlength="99" @change="handleIntroductionChange"/>
+        <i-input v-model="introduction" title="简介" right mode="wrapped" placeholder="简介" maxlength="99" @change="handleIntroductionChange"/>
       </i-panel>
     </div>
     <div style="margin-top:25px;">
