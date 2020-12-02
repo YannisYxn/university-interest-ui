@@ -19,6 +19,7 @@
     "i-collapse": "../../../../static/iView/collapse/index",
     "i-collapse-item": "../../../../static/iView/collapse-item/index",
     "i-checkbox-group": "../../../../static/iView/checkbox-group/index",
-    "i-checkbox": "../../../../static/iView/checkbox/index"
+    "i-checkbox": "../../../../static/iView/checkbox/index",
+    "mp-dialog": "../../../../static/WeUI/dialog/dialog"
   }
 }

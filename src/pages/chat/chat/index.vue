@@ -35,7 +35,7 @@
       </i-cell-group>
     </div>
 
-    <div style="position:fixed;bottom:0;width:100%;height:100px;">
+    <div v-if="visible" style="position:fixed;bottom:0;width:100%;height:100px;">
       <i-row>
         <i-col span="18">
           <i-input :value="msg" @change="handleMsgChange" i-class="chat" placeholder="请输入消息..." :maxlength="33" chat />
@@ -97,12 +97,14 @@ export default {
       limit: 0,
       avatar: avatar,
       credit: 5,
-      visibleCredit: false
+      visibleCredit: false,
+      visible: false
     }
   },
   onShow() {
     this.userId = getQuery.getQuery().userId;
     this.chatUserId = getQuery.getQuery().chatUserId;
+    this.msg = "";
     if(this.chatUserId == 0){
       this.$wxhttp.get({
         url: "/message/getSystemMsgList?userId=" + this.userId
@@ -123,6 +125,7 @@ export default {
         }
       })
     }else{
+      this.visible = true;
       if(this.userId < this.chatUserId){
         this.roomId = this.userId + "-" + this.chatUserId;
       }else{
@@ -134,6 +137,8 @@ export default {
   },
   onUnload: function() {
     wx.closeSocket();
+    this.userId = "";
+    this.chatUserId = "";
     clearTimeout(this.timer);
   },
   methods: {
@@ -144,7 +149,7 @@ export default {
         if(resp.code === 0){
           // 设置页面标题
           wx.setNavigationBarTitle({
-            title: String(resp.data.toUserName) + " " +  String(resp.data.distance > 0 ? resp.data.distance : 0) + "km"
+            title: String(resp.data.toUserName) + " " +  String(resp.data.distance.toFixed(2)) + "km"
           });
           this.chatInfo = resp.data;
           this.chatMessageList = resp.data.chatMessageList.map(item => {

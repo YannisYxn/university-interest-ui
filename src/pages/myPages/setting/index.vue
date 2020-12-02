@@ -17,6 +17,7 @@
       <i-input
         v-model="universityCampusName"
         maxlength="10"
+        placeholder="校区名字"
         disabled
       />
     </mp-dialog>

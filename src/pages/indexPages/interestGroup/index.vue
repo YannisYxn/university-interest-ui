@@ -257,10 +257,14 @@ export default {
         }).then(resp => {
           if(resp.code === 0){
             //加入成功
-            this.getGroupInfo();
             wx.showToast({
               title: "加入成功",
-              icon: "success"
+              icon: "success",
+              success: () => {
+                setTimeout(() => {
+                  this.getGroupInfo();
+                }, 1000)
+              }
             });
           }else{
             wx.showToast({
@@ -276,10 +280,15 @@ export default {
         }).then(resp => {
           if(resp.code === 0){
             //退出成功
-            this.getGroupInfo();
+            // this.getGroupInfo();
             wx.showToast({
               title: "退出成功",
-              icon: "success"
+              icon: "success",
+              success: () => {
+                setTimeout(() => {
+                  this.getGroupInfo();
+                }, 1000)
+              }
             });
           }else{
             wx.showToast({
@@ -301,10 +310,15 @@ export default {
         }).then(resp => {
           if(resp.code === 0){
             //冻结成功
-            this.getGroupInfo();
+            // this.getGroupInfo();
             wx.showToast({
               title: "冻结成功",
-              icon: "success"
+              icon: "success",
+              success: () => {
+                setTimeout(() => {
+                  this.getGroupInfo();
+                }, 1000)
+              }
             });
           }else{
             wx.showToast({
@@ -320,10 +334,15 @@ export default {
         }).then(resp => {
           if(resp.code === 0){
             //解冻成功
-            this.getGroupInfo();
+            // this.getGroupInfo();
             wx.showToast({
               title: "解冻成功",
-              icon: "success"
+              icon: "success",
+              success: () => {
+                setTimeout(() => {
+                  this.getGroupInfo();
+                }, 1000)
+              }
             });
           }else{
             wx.showToast({
@@ -341,10 +360,14 @@ export default {
             //解散成功
             wx.showToast({
               title: "解散成功",
-              icon: "success"
-            });
-            wx.switchTab({
-              url: "../index/main"
+              icon: "success",
+              success: () => {
+                setTimeout(() => {
+                  wx.switchTab({
+                    url: "../index/main"
+                  });
+                }, 1000)
+              }
             });
           }else{
             wx.showToast({
@@ -377,9 +400,13 @@ export default {
         }).then(resp => {
           if(resp.code === 0){
             wx.showToast({
-              title: "删除成功"
+              title: "删除成功",
+              success: () => {
+                setTimeout(() => {
+                  this.getPostList();
+                }, 1000)
+              }
             });
-            this.getPostList();
           }else{
             wx.showToast({
               title: resp.msg,

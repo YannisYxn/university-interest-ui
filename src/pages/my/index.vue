@@ -4,6 +4,7 @@
       <div style="margin:0 10px;">
         <i-row>
           <i-col span="6">
+            <i-icon type="brush" style="float:right" size="25" color="white" @click="handleModify" />
             <i-avatar size="avatar" :src="photo" />
           </i-col>
           <i-col span="9">
@@ -17,7 +18,6 @@
             <p style="fong-size:12px;color:white;">ID:</p>
             <p style="fong-size:12px;color:white;">{{ userId }}</p>
             <p style="font-size:12px;color:white;line-height:25px;">积分:{{ credit }}</p>
-            <i-icon type="brush" size="15" color="white" @click="handleModify" />
             <br />
             <i-tag class="i-tags" type="border" color="green">校内登录{{ inCampusCount }}次</i-tag>
             <i-tag class="i-tags" type="border" color="red">校外登录{{ outCampusCount }}次</i-tag>

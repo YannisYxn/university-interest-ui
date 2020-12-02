@@ -13,7 +13,6 @@
         />
         <i-input
           v-model="introduction"
-          style="height:100px;"
           title="兴趣组介绍"
           right
           high
@@ -66,6 +65,9 @@ export default {
   mounted() {
     // 获取当前的地理位置
     this.userId = getQuery.getQuery().userId;
+    this.name = "";
+    this.introduction = "";
+    this.tempFilePath = "";
     var that = this;
     wx.getLocation({
       type: 'wgs84',

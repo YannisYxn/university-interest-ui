@@ -15,7 +15,7 @@
         :key="item"
         :title="item.userName"
         :label="item.userUniversityCampus"
-        :time="(item.distance < 0 ? 0 : item.distance) + 'km ' + item.createTime"
+        :time="item.distance + 'km ' + item.createTime"
         :content="item.content"
         @click="handleChat(item.userId)"
       >
@@ -31,7 +31,7 @@
         :key="item"
         :title="item.fromUserName"
         :label="item.fromUserUniversityCampusIdName"
-        :time="(item.distance < 0 ? 0 : item.distance) + 'km ' + item.createTime"
+        :time="item.distance + 'km ' + item.createTime"
         :content="item.content"
       >
         <view slot="icon">
@@ -122,13 +122,15 @@ export default {
           this.messageList = resp.data.latestChatRecord.map(item => {
             return {
               ...item,
-              createTime: this.$moment(item.createTime).format("YYYY-MM-DD HH:mm:SS")
+              createTime: this.$moment(item.createTime).format("YYYY-MM-DD HH:mm:SS"),
+              distance: item.distance.toFixed(2)
             }
           });
           this.sayHelloList = resp.data.sayHelloList.map(item => {
             return {
               ...item,
-              createTime: this.$moment.unix(item.createTime).format("YYYY-MM-DD HH:mm:SS")
+              createTime: this.$moment.unix(item.createTime).format("YYYY-MM-DD HH:mm:SS"),
+              distance: item.distance.toFixed(2)
             }
           })
         }else{

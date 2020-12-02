@@ -8,7 +8,7 @@
           mode="wrapped"
           type="textarea"
           maxlength="99"
-          placeholder="请输入你想说的..."
+          placeholder="请输入你想说的...限99字"
           @change="handleContentChange"
         />
         <div

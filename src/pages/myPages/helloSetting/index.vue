@@ -1,19 +1,19 @@
 <template>
   <div>
     <i-radio-group :current="setting" vertical @change="handleChange">
-      <i-radio value="4" label="接受所有打招呼">
+      <!-- <i-radio value="4" label="接受所有打招呼">
         <span>接受所有打招呼</span>
-      </i-radio>
+      </i-radio> -->
       <i-radio value="0" label="不接受打招呼">
         <span>不接受打招呼</span>
       </i-radio>
       <i-radio value="1" label="只接受本校打招呼">
         <span>只接受本校打招呼</span>
       </i-radio>
-      <i-radio value="2" label="接受同城其它学校打招呼">
+      <i-radio value="2" label="接受同城学校打招呼">
         <span>接受同城及其它学校打招呼</span>
       </i-radio>
-      <i-collapse v-if="setting == '2'" name="university" style="margin:20px;">
+      <!-- <i-collapse v-if="setting == '2'" name="university" style="margin:20px;">
         <i-collapse-item title="学校列表" name="university">
           <view slot="content">
             <i-radio value="全选" label="全选" :checked="isAllChecked" color="#14d0b6" @change="handleAllChecked()"/>
@@ -27,7 +27,7 @@
             </i-checkbox-group>
           </view>
         </i-collapse-item>
-      </i-collapse>
+      </i-collapse> -->
     </i-radio-group>
   </div>
 </template>
