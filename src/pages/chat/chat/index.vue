@@ -123,7 +123,7 @@ export default {
           this.chatMessageList = resp.data.map(item => {
             return {
               ...item,
-              createTime: this.$moment.unix(item.createTime).format("YYYY-MM-DD HH:mm:SS")
+              createTime: this.$moment.unix(item.createTime).format("YYYY-MM-DD HH:mm")
             }
           });
           this.chatInfo.toUserPhoto = this.avatar;
@@ -162,7 +162,7 @@ export default {
           this.chatMessageList = resp.data.chatMessageList.map(item => {
             return {
               ...item,
-              createTime: this.$moment.unix(item.createTime).format("YYYY-MM-DD HH:mm:SS")
+              createTime: this.$moment.unix(item.createTime).format("YYYY-MM-DD HH:mm")
             }
           });
           this.pageScrollToBottom();
@@ -215,7 +215,7 @@ export default {
     setMessage(res) {
       let that = this;
       var item = JSON.parse(res);
-      item.createTime = that.$moment(item.createTime).format("YYYY-MM-DD HH:mm:SS");
+      item.createTime = that.$moment(item.createTime).format("YYYY-MM-DD HH:mm");
       let chatMessageList = that.chatMessageList;
       chatMessageList.push(item);
       that.chatMessageList = chatMessageList;

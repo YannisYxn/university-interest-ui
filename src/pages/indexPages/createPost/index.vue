@@ -70,6 +70,7 @@ export default {
 
     this.content = "";
     this.tempFilePath = "";
+    this.uploadFilePath = "";
     // 查找是否授权地理位置，未授权则要求用户授权地理位置
     var that = this;
     wx.getSetting({
@@ -127,6 +128,7 @@ export default {
           });
         }
       });
+      wx.hideLoading();
     },
     handleContentChange(event) {
       this.content = event.mp.detail.detail.value;

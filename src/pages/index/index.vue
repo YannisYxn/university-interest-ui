@@ -589,7 +589,7 @@ export default {
           }
         }).then(resp => {
           if(resp.code === 0){
-            this.barTitle = "与" + this.searchKey + "相关的兴趣组与帖子";
+            this.barTitle = "相关的兴趣组与帖子";
             this.groupList = resp.data.groupList;
             this.postList = resp.data.postList.map(item => {
               return {
