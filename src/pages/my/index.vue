@@ -4,7 +4,7 @@
       <div style="margin:0 10px;">
         <i-row>
           <i-col span="6">
-            <i-icon type="brush" style="float:right" size="25" color="white" @click="handleModify" />
+            <i-icon type="brush" style="float:right" size="20" color="white" @click="handleModify" />
             <i-avatar size="avatar" :src="photo" />
           </i-col>
           <i-col span="9">

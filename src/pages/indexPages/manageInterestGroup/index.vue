@@ -105,7 +105,7 @@
             </div>
           </view>
           <view slot="footer">
-            <i-icon color="red" size="20" type="add" />
+            <i-icon color="red" size="20" type="add" @click="handleOperateMember(member.id)"/>
           </view>
         </i-cell>
       </i-cell-group>
@@ -139,6 +139,14 @@
       show-cancel
       @cancel="() => postVisible = false"
       @iclick="handleClickItem4post"
+    />
+
+    <i-action-sheet
+      :visible="memberVisible"
+      :actions="memberAction"
+      show-cancel
+      @cancel="() => memberVisible = false"
+      @iclick="handleClickItem4member"
     />
   </div>
 </template>
@@ -180,9 +188,15 @@ export default {
           openType: 'share'
         }
       ],
+      interestGroupAction: [
+        {
+          name: "拉黑"
+        }
+      ],
       postVisible: false,
       postAction: [],
-      currentOperatedPostId: undefined
+      currentOperatedPostId: undefined,
+      currentOperatedMemberId: undefined
     };
   },
   onShareAppMessage(object){
@@ -380,6 +394,34 @@ export default {
         });
       }
       this.interestGroupVisible = false;
+    },
+    handleOperateMember(memberId) {
+      this.currentOperatedMemberId = memberId;
+      this.memberVisible = true;
+    },
+    handleClickItem4member(memberId) {
+      // 回到陌生、拉黑
+      this.$wxhttp.post({
+        url: "/user/backToStranger?fromUserId=" + this.userId + "&toUserId=" + currentOperatedMemberId
+      }).then(resp => {
+        if(resp.code == 0){
+          wx.showToast({
+            title: "操作成功",
+            success: () => {
+              setTimeout(() => {
+                this.memberVisible = false;
+                this.getMemberList();
+              },1000);
+            }
+          });
+        }else{
+          this.memberVisible = false;
+          wx.showToast({
+            title: resp.msg,
+            icon: "none"
+          });
+        }
+      });
     },
     handleClickItem4post() {
       if(this.postAction[0].name === "删除帖子"){

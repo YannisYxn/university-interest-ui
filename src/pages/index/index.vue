@@ -222,6 +222,14 @@
         disabled
       />
     </mp-dialog>
+    <mp-dialog
+      title="是否订阅校趣消息"
+      :show="visibleMessage"
+      :buttons="[{text: '取消'}]"
+      @buttontap="() => visibleMessage = false"
+      @confirm="handleSubscriptions"
+    >
+    </mp-dialog>
   </div>
 </template>
 
@@ -234,6 +242,7 @@ export default {
       // visible2: false,
       visible3: false,
       visible4: false,
+      visibleMessage: false,
       universityCampusName: "", //输入高校名称
       userInfo: { //用户信息
         userId: "",
@@ -332,6 +341,7 @@ export default {
     // setInterval(() => {
     //   this.updateBadge();
     // }, 10000)
+    this.checkSubscriptions();
   },
   methods: {
     updateBadge() {
@@ -690,6 +700,40 @@ export default {
       // console.log(e.mp.detail)
       wx.navigateTo({
         url: "../myPages/post/main?userId=" + e.mp.detail + "&selfUserId=" + this.userInfo.userId
+      });
+    },
+    checkSubscriptions() {
+      // 订阅消息
+      var that = this;
+      wx.getSetting({
+        withSubscriptions: true,
+        success(res) {
+          if (!res.subscriptionsSetting['mainSwitch'] || 
+            !res.subscriptionsSetting['QMyzhlEEfg40tA6TL1v5OXVKVMp1WwZ6lW2xHwItNLM'] ||
+            res.subscriptionsSetting['QMyzhlEEfg40tA6TL1v5OXVKVMp1WwZ6lW2xHwItNLM'] !== 'accept') {
+              that.visibleMessage = true;
+          }
+        }
+      });
+    },
+    handleSubscriptions() {
+      var that = this;
+      wx.requestSubscribeMessage({
+        tmplIds: ['QMyzhlEEfg40tA6TL1v5OXVKVMp1WwZ6lW2xHwItNLM'],
+        success(res) {
+          that.visibleMessage = false;
+          wx.showToast({
+            title: "订阅成功"
+          });
+        },
+        fail(res) {
+          console.log(res)
+          that.visibleMessage = false;
+          wx.showToast({
+            title: "订阅失败",
+            icon: "none"
+          });
+        }
       });
     }
   },
