@@ -371,7 +371,7 @@ export default {
         // 举报用户
         var that = this;
         wx.navigateTo({
-          url: "../tip/main?type=2&userId=" + that.selfUserId + 
+          url: "../../indexPages/tip/main?type=2&userId=" + that.selfUserId + 
           "&reportedUserId=" + that.userId
         });
       }
