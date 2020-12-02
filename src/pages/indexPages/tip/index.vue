@@ -51,6 +51,9 @@ export default {
       path: "/pages/index/main?shareUserId=" + this.userId
     }
   },
+  onShow() {
+    this.tempFilePath = "";
+  },
   methods: {
     handleChooseImage() {
       var that = this;
@@ -65,6 +68,9 @@ export default {
     },
     handleTip() {
       var that = this;
+      wx.showLoading({
+        title: "加载中"
+      });
       if(this.tempFilePath){
         wx.uploadFile({
           url: that.$wxhttp.host + "/image/uploadReportImg",
