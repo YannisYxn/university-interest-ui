@@ -39,11 +39,21 @@
       </div>
     </div>
 
-    <div class="label">
-      <span style="margin:5px;color:#ffffff">ta 的发帖 ({{ postList.length }})</span>
-    </div>
+    <i-row>
+      <i-col span="10">
+        <div class="label">
+          <span style="margin:5px;color:#ffffff">ta 的发帖 ({{ postList.length }})</span>
+        </div>
+      </i-col>
+      <i-col span="14">
+        <div style="float:right;margin:5px;">
+          <i-button v-if="userId !== selfUserId && isFriend" size="small" type="primary" long shape="circle" @click="handleChat">发送消息给ta</i-button>
+          <i-button v-if="userId !== selfUserId && !isFriend" size="small" type="primary" long shape="circle" @click="() => visibleFriend = true">跟ta打招呼</i-button>
+        </div>
+      </i-col>
+    </i-row>
 
-    <div v-for="post in postList" :key="post.id" style="margin-top:15px;">
+    <div v-for="post in postList" :key="post.id" style="margin-top:10px;">
       <i-card
         post
         :postTitle="userDetail.name"
@@ -93,10 +103,10 @@
       <i-load-more v-else :loading="false" />
     </div>
 
-    <div style="position:fixed;bottom:0">
-      <i-button v-if="userId !== selfUserId && isFriend" type="primary" shape="circle" @click="handleChat">发送消息给ta</i-button>
-      <i-button v-if="userId !== selfUserId && !isFriend" type="primary" shape="circle" @click="() => visibleFriend = true">跟ta打招呼</i-button>
-    </div>
+    <!-- <div style="position:fixed;bottom:0;width:100%;margin:10px;">
+      <i-button v-if="userId !== selfUserId && isFriend" type="primary" long shape="circle" @click="handleChat">发送消息给ta</i-button>
+      <i-button v-if="userId !== selfUserId && !isFriend" type="primary" long shape="circle" @click="() => visibleFriend = true">跟ta打招呼</i-button>
+    </div> -->
 
     <i-action-sheet :visible="isAdd" :actions="addAction" show-cancel @cancel="handleCancel" @iclick="handleClickItem4user"/>
 
@@ -132,7 +142,7 @@
       />
     </i-modal> -->
     <mp-dialog
-      title="跟ta打招呼"
+      title="跟ta打招呼(消耗1积分)"
       :show="visibleFriend"
       :buttons="[{text: '取消'}]"
       @buttontap="() => visibleFriend = false"
@@ -408,7 +418,6 @@ export default {
   height: 35px;
   display: flex;
   align-items: center;
-  width: 40%;
   border-bottom-right-radius: 50px;
   border-top-right-radius: 50px;
 }

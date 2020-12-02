@@ -1,34 +1,25 @@
 <template>
   <div>
-    <i-radio-group :current="setting" vertical @change="handleChange">
-      <i-radio value="4" label="接受所有打招呼">
-        <span>接受所有打招呼</span>
-      </i-radio>
-      <i-radio value="0" label="不接受打招呼">
-        <span>不接受打招呼</span>
-      </i-radio>
-      <i-radio value="1" label="只接受本校打招呼">
-        <span>只接受本校打招呼</span>
-      </i-radio>
-      <i-radio value="2" label="接受同城其它学校打招呼">
-        <span>接受同城及其它学校打招呼</span>
-      </i-radio>
-      <i-collapse v-if="setting == '2'" name="university" style="margin:20px;">
-        <i-collapse-item title="学校列表" name="university">
-          <view slot="content">
-            <i-radio value="全选" label="全选" :checked="isAllChecked" color="#14d0b6" @change="handleAllChecked()"/>
-            <i-checkbox-group :current="universitySetting" @change="handleUniversityChange">
-              <i-checkbox 
-                v-for="item in allUniversityList" 
-                :key="item.id"
-                :value="item.name"
-                color="#14d0b6"
-              />
-            </i-checkbox-group>
-          </view>
-        </i-collapse-item>
-      </i-collapse>
-    </i-radio-group>
+    <i-cell-group>
+      <i-cell title="打招呼设置" is-link :url="'../helloSetting/main?userId=' + userId">
+      </i-cell>
+      <i-cell title="升学" @click="handleOnUniversity">
+      </i-cell>
+    </i-cell-group>
+
+    <mp-dialog
+      title="请确认校区"
+      :show="visibleForUniversity"
+      :buttons="[{text: '取消'}]"
+      @buttontap="handleClose"
+      @confirm="handleFurtherEducation"
+    >
+      <i-input
+        v-model="universityCampusName"
+        maxlength="10"
+        disabled
+      />
+    </mp-dialog>
   </div>
 </template>
 
@@ -38,191 +29,99 @@ import getQuery from '../../../utils/getPage';
 export default {
   data() {
     return {
-      setting: "0",
-      universitySetting: [],
-      allUniversityList: [],  // 同城所有学校列表
-      isAllChecked: false
+      visibleForUniversity: false,
+      universityCampusName: "",
+      userId: undefined,
+      latitude: undefined,
+      longitude: undefined
     }
   },
   onShow() {
     this.userId = getQuery.getQuery().userId;
-
-    // 获取同城学校列表
-    this.$wxhttp.get({
-      url: "/university/listUniversityByCity?userId=" + this.userId
-    }).then(resp => {
-      if(resp.code == 0){
-        this.allUniversityList = resp.data;
-        this.getSayHelloSetting();
-      }else{
-        wx.showToast({
-          title: "获取同城学校列表错误",
-          icon: "none"
-        });
-      }
-    });
   },
   methods: {
-    getSayHelloSetting() {
-      // 获取打招呼设置状态
-      this.$wxhttp.post({
-        url: "/user/getSayHelloSetting?userId=" + this.userId
-      }).then(resp => {
-        if(resp.code == 0){
-          if(resp.data.type == 3){
-            // 接受同城所有学校打招呼
-            this.setting = "2";
-            this.universitySetting = this.allUniversityList.map(item => {
-              return item.name
-            });
-            console.log(this.universitySetting)
-            this.isAllChecked = true;
-          }else{
-            this.setting = String(resp.data.type);
-            if(resp.data.universitySetting){
-              // 接受同城部分学校打招呼
-              this.universitySetting = resp.data.universityIdList;
-              if(this.universitySetting.length === this.allUniversityList.length){
-                this.isAllChecked = true;
-              }else{
-                this.isAllChecked = false;
+    handleOnUniversity() {
+      //获取经纬度
+      var that = this;
+      wx.getSetting({
+        success(res) {
+          if (!res.authSetting['scope.userLocation']) {
+            wx.authorize({
+              scope: 'scope.userLocation',
+              success () {
+                // 用户已经同意小程序使用定位功能，后续调用 wx.getLocation 接口不会弹窗询问
+                wx.getLocation({
+                  type: 'wgs84',
+                  success (res) {
+                    that.latitude = res.latitude;
+                    that.longitude = res.longitude;
+                    that.isOnUniversity(res.latitude,res.longitude);
+                  }
+                });
               }
-            }
+            })
+          }else{
+            // 用户已经同意小程序使用定位功能，后续调用 wx.getLocation 接口不会弹窗询问
+            wx.getLocation({
+              type: 'wgs84',
+              success (res) {
+                that.latitude = res.latitude;
+                that.longitude = res.longitude;
+                that.isOnUniversity(res.latitude,res.longitude);
+              }
+            });
           }
-        }else{
-          wx.showToast({
-            title: resp.msg,
-            icon: "none"
-          });
         }
       });
     },
-    handleChange(current) {
-      this.setting = current.target.value;
-      if(this.setting == "0" || this.setting == "1" || this.setting == "4") {
-        this.$wxhttp.post({
-          url: "/user/sayHelloSetting",
-          data: {
-            type: Number(this.setting),
-            userId: this.userId
-          }
-        }).then(resp => {
-          if(resp.code == 0){
-            wx.showToast({
-              title: "设置成功"
-            });
-          }else{
-            wx.showToast({
-              title: resp.msg,
-              icon: "none"
-            });
-          }
-        })
-      }else{
-        this.isAllChecked = true;
-        this.universitySetting = this.allUniversityList.map(item => {
-          return item.name
-        });
-        this.$wxhttp.post({
-          url: "/user/sayHelloSetting",
-          data: {
-            type: 3,
-            userId: this.userId,
-            universityIdList: this.allUniversityList.map(item => {
-              return item.id
-            })
-          }
-        }).then(resp => {
-          if(resp.code == 0){
-            wx.showToast({
-              title: "设置成功"
-            });
-          }else{
-            wx.showToast({
-              title: resp.msg,
-              icon: "none"
-            });
-          }
-        });
-      }
+    isOnUniversity(latitude,longitude) {
+      // 判断当前位置是否处于校内
+      var that = this;
+      this.$wxhttp.post({
+        url: "/user/onUniversity",
+        data: {
+          latitude: latitude,
+          longitude: longitude,
+          // universityName: this.university,
+          userId: this.userId
+        }
+      }).then(resp => {
+        if(resp.code === 3){
+          //学校不存在
+          wx.showToast({
+            title: '学校不存在'
+          });
+        }else if(resp.code === 4){
+          //不在学校范围内
+          wx.showToast({
+            title: "未在学校范围内",
+            icon: "none"
+          });
+        }else if(resp.code === 0){
+          // 成功在校内登录
+          this.universityId = resp.data.universityId;
+          this.universityName = resp.data.universityName;
+          this.universityCampusName = resp.data.universityCampusName;
+          this.universityCampusId = resp.data.universityCampusId;
+          this.visibleForUniversity = true; //确认校区
+        }
+      });
     },
-    handleUniversityChange(current) {
-      console.log(current)
-      if(current.target.current) {
-        this.universitySetting.push(current.target.value);
-        console.log(this.universitySetting)
-      }else{
-        this.universitySetting.splice(this.universitySetting.indexOf(current.target.value));
-        console.log(this.universitySetting)
-      }
-      if(this.universitySetting.length !== this.allUniversityList.length){
-        this.isAllChecked = false;
-        this.$wxhttp.post({
-          url: "/user/sayHelloSetting",
-          data: {
-            type: 2,  // 部分学校
-            userId: this.userId,
-            universityIdList: this.universitySetting.map(item => {
-              return this.allUniversityList.find(item1 => item1.name == item).id
-            })
-          }
-        }).then(resp => {
-          if(resp.code == 0){
-            wx.showToast({
-              title: "设置成功"
-            });
-          }else{
-            wx.showToast({
-              title: resp.msg,
-              icon: "none"
-            });
-          }
-        });
-      }else{
-        this.isAllChecked = true;
-        this.$wxhttp.post({
-          url: "/user/sayHelloSetting",
-          data: {
-            type: 3,  //全部学校
-            userId: this.userId,
-            universityIdList: this.allUniversityList.map(item => {
-              return item.id
-            })
-          }
-        }).then(resp => {
-          if(resp.code == 0){
-            wx.showToast({
-              title: "设置成功"
-            });
-          }else{
-            wx.showToast({
-              title: resp.msg,
-              icon: "none"
-            });
-          }
-        });
-      }
+    handleClose() {
+      this.visibleForUniversity = false;
     },
-    handleAllChecked() {
-      this.isAllChecked = !this.isAllChecked;
-      if(this.isAllChecked){
-        this.universitySetting = this.allUniversityList.map(item => {
-          return item.name
-        });
+    handleFurtherEducation() {
+      this.visibleForUniversity = false;
+      if(this.universityCampusName) {
+        // 处理用户升学
         this.$wxhttp.post({
-          url: "/user/sayHelloSetting",
-          data: {
-            type: 3,
-            userId: this.userId,
-            universityIdList: this.allUniversityList.map(item => {
-              return item.id
-            })
-          }
+          url: "/user/furtherEducation?userId=" + this.userId + "&universityCampusId" + this.universityCampusId
         }).then(resp => {
           if(resp.code == 0){
             wx.showToast({
-              title: "设置成功"
+              title: "升序操作成功"
             });
+            this.getUserInfo();
           }else{
             wx.showToast({
               title: resp.msg,
@@ -231,7 +130,10 @@ export default {
           }
         });
       }else{
-        this.universitySetting = [];
+        wx.showToast({
+          title: "地理位置异常",
+          icon: "none"
+        });
       }
     }
   }

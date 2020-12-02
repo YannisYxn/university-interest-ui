@@ -158,6 +158,9 @@ export default {
   },
   methods: {
     getPostList() {
+      wx.showLoading({
+        title: "加载中"
+      });
       //请求小组底下所有帖子
       this.$wxhttp.get({
         url: "/post/listGroupPost?groupId=" + this.groupId
