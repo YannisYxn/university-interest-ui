@@ -35,16 +35,30 @@
       </i-cell-group>
     </div>
 
-    <div v-if="visible" style="position:fixed;bottom:0;width:100%;height:100px;">
+    <div v-if="visible" style="position:fixed;bottom:0;width:100%;height:100px;background-color:white;">
       <i-row>
         <i-col span="18">
-          <i-input :value="msg" @change="handleMsgChange" i-class="chat" placeholder="请输入消息..." :maxlength="33" chat />
+          <i-input :value="msg" @change="handleMsgChange" i-class="chat" placeholder="请输入消息..." :maxlength="33" chat style="background-color:#ececec;"/>
         </i-col>
         <i-col span="6">
           <i-button @click="sendEvent" size="small" type="primary" shape="circle">发送</i-button>
         </i-col>
       </i-row>
-      <i-button type="primary" long="true" @click="() => visibleCredit = true">送分</i-button>
+      <div>
+        <i-row>
+          <i-col span="12" style="text-align:center;">
+            <span style="color:#12d2c2;" @click="() => visibleCredit = true">送分</span>
+          </i-col>
+          <i-col span="12" style="text-align:center;">
+            <i-avatar
+              size="small"
+              shape="square"
+              src="../../../static/images/photo.png"
+            />
+          </i-col>
+        </i-row>
+      </div>
+      <!-- <i-button type="primary" long="true" @click="() => visibleCredit = true">送分</i-button> -->
     </div>
 
     <!-- <i-modal
