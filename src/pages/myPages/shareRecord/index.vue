@@ -34,6 +34,13 @@ export default {
       records: []
     }
   },
+  onShareAppMessage(object){
+    // console.log(object)
+    return {
+      title: "校趣，欢迎加入校趣，不止有趣",
+      path: "/pages/index/main?shareUserId=" + getQuery.getQuery().userId
+    }
+  },
   mounted() {
     this.$wxhttp.get({
       url: "/user/share?userId=" + getQuery.getQuery().userId

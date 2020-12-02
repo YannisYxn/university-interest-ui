@@ -11,8 +11,24 @@
 </template>
 
 <script>
+import getQuery from "../../../utils/getPage";
+
 export default {
-  
+  data() {
+    return {
+      userId: undefined
+    }
+  },
+  onShareAppMessage(object){
+    // console.log(object)
+    return {
+      title: "校趣，欢迎加入校趣，不止有趣",
+      path: "/pages/index/main?shareUserId=" + this.userId
+    }
+  },
+  onShow() {
+    this.userId = getQuery.getQuery().userId
+  }
 }
 </script>
 

@@ -40,6 +40,13 @@ export default {
       totalCredit: undefined
     }
   },
+  onShareAppMessage(object){
+    // console.log(object)
+    return {
+      title: "校趣，欢迎加入校趣，不止有趣",
+      path: "/pages/index/main?shareUserId=" + getQuery.getQuery().userId
+    }
+  },
   mounted() {
     //获取积分动态
     this.$wxhttp.get({

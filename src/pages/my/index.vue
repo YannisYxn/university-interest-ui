@@ -131,7 +131,7 @@
             />
           </view>
         </i-cell>
-        <i-cell title="校趣规则" is-link url="../myPages/rule/main">
+        <i-cell title="校趣规则" is-link :url="'../myPages/rule/main?userId=' + userId">
           <view slot="icon">
             <i-avatar
               size="small"

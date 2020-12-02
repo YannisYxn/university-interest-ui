@@ -80,6 +80,13 @@ export default {
       totalMoney: 0.00
     }
   },
+  onShareAppMessage(object){
+    // console.log(object)
+    return {
+      title: "校趣，欢迎加入校趣，不止有趣",
+      path: "/pages/index/main?shareUserId=" + this.userId
+    }
+  },
   onShow() {
     this.userId = getQuery.getQuery().userId;
     this.$wxhttp.get({
