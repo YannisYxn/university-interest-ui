@@ -141,17 +141,25 @@ export default {
       }).then(resp => {
         if(resp.code === 0){
           wx.showToast({
-            title: "兑换成功"
+            title: "兑换成功",
+            success: () => {
+              setTimeout(() => {
+                this.getTicketList();
+              },1000);
+            }
           });
           //更新兑换券列表
         }else{
           wx.showToast({
             title: resp.msg,
-            icon: "none"
+            icon: "none",
+            success: () => {
+              setTimeout(() => {
+                this.getTicketList();
+              },1000);
+            }
           });
         }
-        // 无论兑换成功与否，更新兑换券列表
-        this.getTicketList();
       });
     }
   }

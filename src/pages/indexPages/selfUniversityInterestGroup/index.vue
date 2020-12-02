@@ -20,7 +20,7 @@
             type="setup_fill"
             size="25"
             color="#67ddd3"
-            @click="handleManageInterestGroup"
+            @click="handleManageInterestGroup(group.id)"
           />
         </view>
       </i-cell>
@@ -77,9 +77,9 @@ export default {
         url: "../interestGroup/main?userId=" + this.userId + "&groupId=" + groupId
       });
     },
-    handleManageInterestGroup() {
+    handleManageInterestGroup(groupId) {
       wx.navigateTo({
-        url: "../manageInterestGroup/main"
+        url: "../manageInterestGroup/main?userId=" + this.userId + "&groupId=" + groupId
       });
     }
   }

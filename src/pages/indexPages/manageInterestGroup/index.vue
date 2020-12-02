@@ -37,7 +37,7 @@
       </i-tabs>
     </div>
 
-    <div v-if="current === 'post'" style="background-color:#f3f4f5">
+    <div v-if="current === 'post'">
       <div v-for="post in postList" :key="post.id" style="margin-top:15px;">
         <i-card
           post
@@ -294,7 +294,7 @@ export default {
     },
     handlePost() {
       wx.navigateTo({
-        url: "../createPost/main"
+        url: "../createPost/main?groupId=" + this.groupId + "&userId=" + this.userId
       });
     },
     handleTabChange(detail) {
@@ -309,10 +309,14 @@ export default {
         }).then(resp => {
           if(resp.code === 0){
             //冻结成功
-            this.getGroupInfo();
             wx.showToast({
               title: "冻结成功",
-              icon: "success"
+              icon: "success",
+              success: () => {
+                setTimeout(() => {
+                  this.getGroupInfo();
+                },1000);
+              }
             });
           }else{
             wx.showToast({
@@ -328,10 +332,14 @@ export default {
         }).then(resp => {
           if(resp.code === 0){
             //解冻成功
-            this.getGroupInfo();
             wx.showToast({
               title: "解冻成功",
-              icon: "success"
+              icon: "success",
+              success: () => {
+                setTimeout(() => {
+                  this.getGroupInfo();
+                },1000);
+              }
             });
           }else{
             wx.showToast({
@@ -349,10 +357,14 @@ export default {
             //解散成功
             wx.showToast({
               title: "解散成功",
-              icon: "success"
-            });
-            wx.switchTab({
-              url: "../index/main"
+              icon: "success",
+              success: () => {
+                setTimeout(() => {
+                  wx.switchTab({
+                    url: "../../index/main"
+                  });
+                },1000);
+              }
             });
           }else{
             wx.showToast({
@@ -376,9 +388,13 @@ export default {
         }).then(resp => {
           if(resp.code === 0){
             wx.showToast({
-              title: "删除成功"
+              title: "删除成功",
+              success: () => {
+                setTimeout(() => {
+                  this.getPostList();
+                },1000);
+              }
             });
-            this.getPostList();
           }else{
             wx.showToast({
               title: resp.msg,

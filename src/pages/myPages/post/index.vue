@@ -10,7 +10,6 @@
             <p style="fong-size:15px;color:white;">{{ userDetail.name }}</p>
             <p style="font-size:12px;color:white;line-height:25px;">
               {{ userDetail.universityCampusName }}
-              <i-tag style="color:#07a68e;">升学</i-tag>
             </p>
             <span style="font-size:11px;color:white;">{{ userDetail.createTime }}(加入)</span>
           </i-col>
