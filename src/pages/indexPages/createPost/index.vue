@@ -111,19 +111,25 @@ export default {
       });
       wx.chooseImage({
         count: 1, //最多上传1张照片
-        sizeType: ['original','compressed'], //压缩图
+        sizeType: ['compressed'], //压缩图
         sourceType: ['album','camera'], //指定来源，相册和相机都可
         success(res) {
           that.tempFilePath = res.tempFilePaths[0];
           that.content = content;
-          wx.uploadFile({
-            url: that.$wxhttp.host + "/image/uploadPostImg",
-            filePath: res.tempFilePaths[0],
-            name: "image",
-            header: { "Content-Type": "multipart/form-data" },
-            success(res2) {
-              that.uploadFilePath = that.$wxhttp.hostForFile + String(JSON.parse(res2.data).data);
-              wx.hideLoading();
+          wx.compressImage({
+            src: res.tempFilePaths[0],
+            quality: 40,
+            success(res3) {
+              wx.uploadFile({
+                url: that.$wxhttp.host + "/image/uploadPostImg",
+                filePath: res3.tempFilePath,
+                name: "image",
+                header: { "Content-Type": "multipart/form-data" },
+                success(res2) {
+                  that.uploadFilePath = that.$wxhttp.hostForFile + String(JSON.parse(res2.data).data);
+                  wx.hideLoading();
+                }
+              });
             }
           });
         }
