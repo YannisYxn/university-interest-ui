@@ -20,6 +20,7 @@
             <p style="font-size:12px;color:white;line-height:25px;">积分:{{ credit }}</p>
             <br />
             <i-tag class="i-tags" type="border" color="green">校内登录{{ inCampusCount }}次</i-tag>
+            <br />
             <i-tag class="i-tags" type="border" color="red">校外登录{{ outCampusCount }}次</i-tag>
           </i-col>
         </i-row>
