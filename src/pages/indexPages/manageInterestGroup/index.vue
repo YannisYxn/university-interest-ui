@@ -188,12 +188,13 @@ export default {
           openType: 'share'
         }
       ],
-      interestGroupAction: [
+      memberAction: [
         {
           name: "拉黑"
         }
       ],
       postVisible: false,
+      memberVisible: false,
       postAction: [],
       currentOperatedPostId: undefined,
       currentOperatedMemberId: undefined

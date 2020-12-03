@@ -454,7 +454,7 @@ export default {
               success () {
                 // 用户已经同意小程序使用定位功能，后续调用 wx.getLocation 接口不会弹窗询问
                 wx.getLocation({
-                  type: 'wgs84',
+                  type: 'gcj02',
                   success (res) {
                     that.isOnUniversity(res.latitude,res.longitude);
                   }
@@ -464,7 +464,7 @@ export default {
           }else{
             // 用户已经同意小程序使用定位功能，后续调用 wx.getLocation 接口不会弹窗询问
             wx.getLocation({
-              type: 'wgs84',
+              type: 'gcj02',
               success (res) {
                 that.isOnUniversity(res.latitude,res.longitude);
               }
@@ -659,7 +659,7 @@ export default {
               success () {
                 // 用户已经同意小程序使用定位功能，后续调用 wx.getLocation 接口不会弹窗询问
                 wx.getLocation({
-                  type: 'wgs84',
+                  type: 'gcj02',
                   success (res) {
                     that.saveLoginLocation(res.latitude,res.longitude);
                   }
@@ -669,7 +669,7 @@ export default {
           }else{
             // 用户已经同意小程序使用定位功能，后续调用 wx.getLocation 接口不会弹窗询问
             wx.getLocation({
-              type: 'wgs84',
+              type: 'gcj02',
               success (res) {
                 that.saveLoginLocation(res.latitude,res.longitude);
               }

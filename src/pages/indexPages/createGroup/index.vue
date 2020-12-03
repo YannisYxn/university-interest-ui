@@ -77,7 +77,7 @@ export default {
     this.tempFilePath = "";
     var that = this;
     wx.getLocation({
-      type: 'wgs84',
+      type: 'gcj02',
       success (res) {
         that.latitude = res.latitude
         that.longitude = res.longitude
