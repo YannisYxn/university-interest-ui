@@ -173,7 +173,7 @@
       @buttontap="handleClose3"
       @confirm="handleInvitationCode"
     >
-      <p style="font-size:15px;line-height:20px;margin:0 20px;">请您在本校地理范围登录校趣！</p>
+      <p style="font-size:15px;line-height:20px;margin:0 20px;">首次登陆校趣需要在本人校园范围内呦！</p>
       <p style="font-size:15px;line-height:20px;margin:0 20px;">或</p>
       <span style="font-size:15px;line-height:20px;margin:0 20px;">输入邀请码：</span>
       <i-input :value="invitationCode" mode="wrapped" maxlength="10" placeholder="请在这里输入" @change="handleInvitationCodeChange"/>
@@ -651,7 +651,18 @@ export default {
           }
         }).then(resp => {
           if(resp.code === 0){
-            this.getGroupList();
+            // 完善商家信息
+            wx.getUserInfo({
+              success(res) {
+                that.userInfo = {
+                  ...that.userInfo,
+                  avatarUrl: res.userInfo.avatarUrl,
+                  gender: res.userInfo.gender,
+                  nickName: res.userInfo.nickName
+                };
+                that.uploadUserInfoFirstTime();
+              }
+            });
           }else{
             wx.showToast({
               title: resp.msg,
