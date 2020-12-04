@@ -634,19 +634,25 @@ export default {
       });
     },
     handleInvitationCode() {
-      this.$wxhttp.post({
-        url: "/user/checkInivitationCode?code=" + this.invitationCode + "&userId=" + this.userInfo.userId
-      }).then(resp => {
-        if(resp.code === 0){
-          this.visible3 = false;
-          this.getGroupList();
-        }else{
-          wx.showToast({
-            title: resp.msg,
-            icon: "none"
-          });
-        }
-      });
+      this.visible3 = false;
+      if(this.invitationCode !== ""){
+        this.$wxhttp.post({
+          url: "/user/checkInivitationCode",
+          data: {
+            code: this.invitationCode,
+            userId: this.userInfo.userId
+          }
+        }).then(resp => {
+          if(resp.code === 0){
+            this.getGroupList();
+          }else{
+            wx.showToast({
+              title: resp.msg,
+              icon: "none"
+            });
+          }
+        });
+      }
     },
     handleLoginLocation() {
       // 查找是否授权地理位置，未授权则要求用户授权地理位置
