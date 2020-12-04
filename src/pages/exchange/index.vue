@@ -121,6 +121,9 @@ export default {
       });
     },
     getTicketList() {
+      wx.showLoading({
+        title: "加载中"
+      });
       this.$wxhttp.get({
         url: "/ticket?userId=" + this.userId
       }).then(resp => {

@@ -59,7 +59,7 @@
           </view>
           <view slot="content">
             <span style="font-size:large;line-height:1.5;">{{ post.content }}</span>
-            <div style="display:flex;width:240px;text-align:center;">
+            <div v-if="post.img" style="display:flex;width:240px;text-align:center;">
               <image :src="post.img" mode="widthFix" style="max-width:100%;" />
             </div>
           </view>

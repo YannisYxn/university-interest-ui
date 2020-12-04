@@ -9,6 +9,7 @@
           :title="record.ticketName"
           :label="record.createTime"
           :value="'兑换码：' + record.code"
+          @click="handleClip(record.code)"
         ></exchange-cell>
       </i-cell-group>
     </div>
@@ -56,6 +57,23 @@ export default {
       }
     })
   },
+  methods: {
+    handleClip(code){
+      wx.setClipboardData({
+        data: code,
+        success (res) {
+          wx.showToast({
+            title: "邀请码已复制"
+          });
+          wx.getClipboardData({
+            success (res) {
+              console.log(res.data) // data
+            }
+          })
+        }
+      })
+    }
+  }
 }
 </script>
 
