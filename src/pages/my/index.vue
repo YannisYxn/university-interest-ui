@@ -123,7 +123,7 @@
             </button>
           </view>
         </i-cell>
-        <i-cell title="诉求" is-link :url="'../myPages/asking/main?userId=' + userId">
+        <i-cell title="反馈" is-link :url="'../myPages/asking/main?userId=' + userId">
           <view slot="icon">
             <i-avatar
               size="small"
@@ -206,7 +206,17 @@ export default {
               that.userId = resp.data.id;
               if(resp.data.isCheckUniversity === 0){
                 //首次登录校趣，输入校区，授权信息，并完善个人信息
-                wx.switchTab("../index/main");
+                wx.showToast({
+                  title: "请完成在校认证再进入校趣",
+                  icon: "none",
+                  success: () => {
+                    setTimeout(() => {
+                      wx.switchTab({
+                        url: "../index/main"
+                      });
+                    },1500);
+                  }
+                });
               }else{
                 //不是首次登录，获取兴趣组列表
                 that.getUserInfo();

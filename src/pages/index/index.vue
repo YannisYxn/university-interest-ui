@@ -279,7 +279,10 @@ export default {
     if(this.searchKey){
       this.handleClearSearch();
     }
-    if(this.userInfo.userId){
+    if(this.userInfo.isCheckUniversity === 0){
+      //首次登录校趣，输入校区，授权信息，并完善个人信息
+      this.handleOnUniversity();
+    }else if(this.userInfo.userId){
       this.getGroupList();
     }
   },
@@ -325,7 +328,6 @@ export default {
                 icon: 'none'
               });
             }
-            
           });
         } else {
           console.log("登录失败！" + res.errMsg);
@@ -521,16 +523,7 @@ export default {
           userId: this.userInfo.userId
         }
       }).then(resp => {
-        if(resp.code === 3){
-          //学校不存在
-          wx.showToast({
-            title: '学校不存在'
-          });
-        }else if(resp.code === 4){
-          //不在学校范围内
-          this.visible4 = false;
-          this.visible3 = true;
-        }else if(resp.code === 0){
+        if(resp.code === 0){
           // 成功在校内登录
           this.userInfo.isCheckUniversity = 1;
           this.universityCampusName = resp.data.universityCampusName;
@@ -539,6 +532,15 @@ export default {
           this.userInfo.universityName = resp.data.universityName;
           this.userInfo.universityCampusId = resp.data.universityCampusId;
           this.visible4 = true; //确认校区
+        }else if(resp.code === 4){
+          //不在学校范围内
+          this.visible4 = false;
+          this.visible3 = true;
+        }else{
+          wx.showToast({
+            title: resp.msg,
+            icon: "none"
+          });
         }
       });
     },
