@@ -272,7 +272,8 @@ export default {
       searchKey: "", //搜索框内容
       barTitle: "我创建及加入的兴趣组",
       invitationCode: "",
-      shareUserId: undefined
+      shareUserId: undefined,
+      isChecked: false
     };
   },
   onShow() {
@@ -320,6 +321,7 @@ export default {
                 //不是首次登录，获取兴趣组列表
                 that.getGroupList();
                 that.handleLoginLocation();
+                that.isChecked = true;
               }
               that.updateBadge();
             }else{
@@ -379,15 +381,17 @@ export default {
       }
     },
     handleSelfUniversityInterestGroup() {
-      wx.navigateTo({
-        url: 
-          "../indexPages/selfUniversityInterestGroup/main?userId=" + 
-          this.userInfo.userId + 
-          "&universityId=" + 
-          this.userInfo.universityId + 
-          "&universityName=" + 
-          this.userInfo.universityName
-      });
+      if(this.isChecked){
+        wx.navigateTo({
+          url: 
+            "../indexPages/selfUniversityInterestGroup/main?userId=" + 
+            this.userInfo.userId + 
+            "&universityId=" + 
+            this.userInfo.universityId + 
+            "&universityName=" + 
+            this.userInfo.universityName
+        });
+      }
     },
     handleInterestGroup(groupId) {
       wx.navigateTo({
@@ -423,6 +427,7 @@ export default {
           url: "/user/confirmUniversityCampus?userId=" + this.userInfo.userId + "&universityCampusId=" + this.userInfo.universityCampusId
         }).then(resp => {
           if(resp.code == 0){
+            this.isChecked = true;
             var that = this;
             wx.getUserInfo({
               success(res) {
