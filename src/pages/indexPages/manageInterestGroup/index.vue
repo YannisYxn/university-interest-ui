@@ -4,7 +4,7 @@
       <div style="margin:0 10px;">
         <i-row>
           <i-col span="6">
-            <i-avatar size="avatar" :src="groupDetail.logo" />
+            <i-avatar size="avatar" :src="groupDetail.logo" @click="handlePreview(groupDetail.logo)"/>
           </i-col>
           <i-col span="9">
             <p style="fong-size:15px;color:white;">{{ groupDetail.name }}</p>
@@ -60,7 +60,7 @@
           <view slot="content">
             <span style="font-size:large;line-height:1.5;">{{ post.content }}</span>
             <div v-if="post.img" style="display:flex;width:240px;text-align:center;">
-              <image :src="post.img" mode="widthFix" style="max-width:100%;" />
+              <image :src="post.img" mode="widthFix" style="max-width:100%;" @click="handlePreview(post.img)"/>
             </div>
           </view>
           <view slot="footer">
@@ -301,7 +301,7 @@ export default {
         }
       });
     },
-    handleComment() {
+    handleComment(postId) {
       var userId = this.userId;
       wx.navigateTo({
         url: "../comment/main?postId=" + postId + "&userId=" + userId
@@ -479,6 +479,12 @@ export default {
     handlePersonalPageForUserList(visitUserId) {
       wx.navigateTo({
         url: "../../myPages/post/main?userId=" + visitUserId + "&selfUserId=" + this.userId
+      });
+    },
+    handlePreview(url) {
+      wx.previewImage({
+        current: url, // 当前显示图片的http链接
+        urls: [url] // 需要预览的图片http链接列表
       });
     }
   }

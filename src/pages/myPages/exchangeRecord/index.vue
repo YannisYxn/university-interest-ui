@@ -65,11 +65,11 @@ export default {
           wx.showToast({
             title: "邀请码已复制"
           });
-          wx.getClipboardData({
-            success (res) {
-              console.log(res.data) // data
-            }
-          })
+          // wx.getClipboardData({
+          //   success (res) {
+          //     console.log(res.data) // data
+          //   }
+          // })
         }
       })
     }

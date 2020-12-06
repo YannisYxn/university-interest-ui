@@ -5,7 +5,7 @@
         <i-row>
           <i-col span="6">
             <i-icon type="brush" style="float:right" size="20" color="white" @click="handleModify" />
-            <i-avatar size="avatar" :src="photo" />
+            <i-avatar size="avatar" :src="photo" @click="handlePreview(photo)"/>
           </i-col>
           <i-col span="9">
             <p style="fong-size:15px;color:white;">{{ name }}</p>
@@ -333,6 +333,12 @@ export default {
           url: "../myPages/postProfit/main?userId=" + this.userId
         });
       }
+    },
+    handlePreview(url) {
+      wx.previewImage({
+        current: url, // 当前显示图片的http链接
+        urls: [url] // 需要预览的图片http链接列表
+      });
     }
   }
 }
