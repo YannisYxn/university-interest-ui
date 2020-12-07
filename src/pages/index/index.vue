@@ -101,7 +101,7 @@
         <view slot="content">
           <span style="font-size:large;line-height:1.5;">{{ post.content }}</span>
           <div v-if="post.img" style="display:flex;width:240px;text-align:center;">
-            <image :src="post.img" mode="widthFix" style="max-width:100%;" />
+            <image :src="post.img" mode="widthFix" style="max-width:100%;" @click="handlePreview(post.img)"/>
           </div>
         </view>
         <view slot="footer">
@@ -127,7 +127,8 @@
     </div>
 
     <div style="margin-top: 20px;">
-      <i-load-more :loading="false" />
+      <i-load-more v-if="groupList.length === 0 && postList.length === 0" tip="无相关的兴趣组或帖子" :loading="false" />
+      <i-load-more v-else :loading="false" />
     </div>
 
     <!-- 弹窗列表 -->
@@ -758,6 +759,12 @@ export default {
             icon: "none"
           });
         }
+      });
+    },
+    handlePreview(url) {
+      wx.previewImage({
+        current: url, // 当前显示图片的http链接
+        urls: [url] // 需要预览的图片http链接列表
       });
     }
   },

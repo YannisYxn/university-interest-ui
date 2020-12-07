@@ -81,10 +81,9 @@
       @buttontap="() => visibleCredit = false"
       @confirm="handleCredit()"
     >
-      <i-input-number
+      <i-input
         v-model="credit"
-        :min="0"
-        :max="100"
+        maxlength="5"
         @change="handleCreditChange"
       />
     </mp-dialog>
@@ -328,31 +327,43 @@ export default {
       });
     },
     handleCreditChange(event) {
-      this.credit = event.target.value;
+      this.credit = event.mp.detail.detail.value;
     },
     handleCredit() {
       // 赠送积分
-      console.log("test")
-      this.$wxhttp.post({
-        url: "/credit/giveCredit",
-        data: {
-          credit: this.credit,
-          fromUserId: this.userId,
-          toUserId: this.chatUserId
-        }
-      }).then(resp => {
-        if(resp.code == 0){
-          this.visibleCredit = false;
-          wx.showToast({
-            title: "赠送成功"
-          });
-        }else{
-          wx.showToast({
-            title: resp.msg,
-            icon: "none"
-          });
-        }
-      });
+      var regPos = /^\d+/;
+      if(!regPos.test(this.credit)){
+        wx.showToast({
+          title: "请输入数字",
+          icon: "none"
+        });
+      }else if(this.credit == '0'){
+        wx.showToast({
+          title: "请输入非负数",
+          icon: "none"
+        });
+      }else{
+        this.$wxhttp.post({
+          url: "/credit/giveCredit",
+          data: {
+            credit: this.credit,
+            fromUserId: this.userId,
+            toUserId: this.chatUserId
+          }
+        }).then(resp => {
+          if(resp.code == 0){
+            this.visibleCredit = false;
+            wx.showToast({
+              title: "赠送成功"
+            });
+          }else{
+            wx.showToast({
+              title: resp.msg,
+              icon: "none"
+            });
+          }
+        });
+      }
     },
     readNotificationMsg() {
       // 已读消息
