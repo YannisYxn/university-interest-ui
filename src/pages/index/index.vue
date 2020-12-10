@@ -174,7 +174,7 @@
       @buttontap="handleClose3"
       @confirm="handleInvitationCode"
     >
-      <p style="font-size:15px;line-height:20px;margin:0 20px;">首次登陆校趣需要在本人校园范围内呦！</p>
+      <p style="font-size:15px;line-height:20px;margin:0 20px;">首次登陆校趣需要在本人的大学校园范围内呦！</p>
       <p style="font-size:15px;line-height:20px;margin:0 20px;">或</p>
       <span style="font-size:15px;line-height:20px;margin:0 20px;">输入邀请码：</span>
       <i-input :value="invitationCode" mode="wrapped" maxlength="10" placeholder="请在这里输入" @change="handleInvitationCodeChange"/>

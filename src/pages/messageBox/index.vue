@@ -29,10 +29,12 @@
       <i-comment-cell
         v-for="item in sayHelloList"
         :key="item"
+        :userId="item.userId"
         :title="item.fromUserName"
         :label="item.fromUserUniversityCampusIdName"
         :time="item.distance + 'km ' + item.createTime"
         :content="item.content"
+        @clickTitle="handlePersonalPage"
       >
         <view slot="icon">
           <i-avatar :src="item.fromUserPhoto" style="margin-right:10px;" />
@@ -210,7 +212,13 @@ export default {
           });
         }
       });
-    }
+    },
+    handlePersonalPage(e) {
+      // console.log(e.mp.detail)
+      wx.navigateTo({
+        url: "../myPages/post/main?userId=" + e.mp.detail + "&selfUserId=" + this.userId
+      });
+    },
   }
 };
 </script>

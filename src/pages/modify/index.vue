@@ -2,14 +2,23 @@
   <div>
     <div style="margin:5px;">
       <i-panel>
-        <div style="display:flex;margin:5px;margin-left:150px;">
+        <div style="display:flex;margin:5px;margin-left:43%;">
           <i-avatar size="large" shape="square" :src="tempFilePath || avatarUrl" @click="handleChooseImage">头</i-avatar>
         </div>
         <i-input v-model="name" title="昵称" right mode="wrapped" placeholder="名称" maxlength="12" @change="handleNameChange"/>
-        <i-input v-model="introduction" title="简介" right mode="wrapped" placeholder="简介" maxlength="99" @change="handleIntroductionChange"/>
+        <i-input v-model="introduction" type="textarea" right high title="简介" mode="wrapped" placeholder="简介" maxlength="99" @change="handleIntroductionChange"/>
       </i-panel>
     </div>
-    <div style="margin-top:25px;">
+
+    <div style="margin:20px;">
+      <p class="font" style="font-size:15px;line-height:2;color:#a3a4a4">提示：</p>
+      <p
+        class="font"
+        style="font-size:11px;line-height:2;color:#a3a4a4"
+      >一个自然年可修改5次，头像及简介不允许涉及政治敏感与色情，违者直接封号处理。</p>
+    </div>
+
+    <div style="margin-top:25px;position:absolute;bottom:0;width:100%">
       <i-button type="primary" shape="circle" @click="handleModify">确认</i-button>
     </div>
   </div>

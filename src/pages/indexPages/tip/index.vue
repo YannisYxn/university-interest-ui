@@ -2,10 +2,12 @@
   <div>
     <div
       v-if="tempFilePath === ''"
-      style="border: 1px #b6b6b6 solid;border-radius: 5px;text-align:center;margin:10px;"
+      style="border: 1px #b6b6b6 solid;border-radius: 5px;text-align:center;margin:10px;height:120px;"
       @click="handleChooseImage"
     >
-      <i-icon color="#b6b6b6" size="25" type="add" />
+      <div style="margin-top:30px;">
+       <i-icon color="#b6b6b6" size="60" type="add" />
+      </div>
     </div>
     <div v-else style="text-align:center;margin:10px;width:240px;">
       <!-- <img :src="tempFilePath" style="max-width:100%;max-height:100%;" /> -->
@@ -17,7 +19,8 @@
       <p
         class="font"
         style="font-size:11px;line-height:2;color:#a3a4a4"
-      >1. 感谢您维护校趣环境，谢谢。举报截图由人工审核。恶意举报者，将被封号处理。</p>
+      >1. 请点击此处+，选择相册里的举报截图后，按发送截图按键完成举报，感谢您维护并净化校趣环境，举报截图由人工审核。
+      无故及恶意举报ta人者，会被封号处理。</p>
       <p
         class="font"
         style="font-size:11px;line-height:2;color:#a3a4a4"

@@ -109,7 +109,7 @@
             />
           </view>
         </i-cell>
-        <i-cell title="分享链接">
+        <i-cell title="分享校趣">
           <view slot="icon">
             <i-avatar
               size="small"
