@@ -12,18 +12,19 @@
               {{ userDetail.universityCampusName }}
             </p>
             <span style="font-size:11px;color:white;">{{ userDetail.createTime }}(加入)</span>
+            <br />
+            <i-icon
+              v-if="userId !== selfUserId"
+              type="add"
+              size="25"
+              color="white"
+              style="line-height:2;"
+              @click="() => isAdd = true"
+            />
           </i-col>
           <i-col span="9">
             <p style="fong-size:10px;color:white;">ID:</p>
             <p style="fong-size:10px;color:white;">{{ userId }}</p>
-            <i-icon
-              v-if="userId !== selfUserId"
-              type="add"
-              size="17"
-              color="red"
-              style="margin-left:5px;vertical-align:center;"
-              @click="() => isAdd = true"
-            />
             <p style="font-size:12px;color:white;line-height:25px;">积分:{{ userDetail.credit }}</p>
             <br />
             <i-tag class="i-tags" type="border" color="green">校内登录{{ userDetail.inCampusCount }}次</i-tag>
@@ -64,7 +65,7 @@
           <i-icon
             type="add"
             size="15"
-            color="red"
+            color="#67ddd3"
             style="margin-left:5px;vertical-align:center;"
             @click="handleOperatePost(post.userId,post.id)"
           />

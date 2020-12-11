@@ -11,15 +11,16 @@
             <p style="font-size:10px;color:white;line-height:25px;">{{ groupDetail.memberCount }}个组员</p>
           </i-col>
           <i-col span="9">
+            <span style="font-size:10px;color:white;">创建者：{{ groupDetail.createUser }}</span>
+            <p style="font-size:10px;color:white;line-height:25px;">{{ groupDetail.createTime }}(建组)</p>
+            <br />
             <i-icon
               type="add"
               size="25"
-              color="red"
-              style="float:right;"
+              color="white"
+              style="float:center;"
               @click="() => interestGroupVisible = true"
             />
-            <span style="font-size:10px;color:white;">创建者：{{ groupDetail.createUser }}</span>
-            <p style="font-size:10px;color:white;line-height:25px;">{{ groupDetail.createTime }}(建组)</p>
           </i-col>
         </i-row>
       </div>
@@ -44,7 +45,7 @@
           <i-icon
             type="add"
             size="15"
-            color="red"
+            color="#67ddd3"
             style="margin-left:5px;vertical-align:center;"
             @click="handleOperatePost(post.userId,post.id)"
           />

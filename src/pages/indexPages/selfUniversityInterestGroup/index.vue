@@ -12,7 +12,9 @@
           <i-avatar :src="group.logo"></i-avatar>
         </view>
         <view slot="badge">
-          <i-badge :count="group.postCount" overflow-count="100" style="margin-right:10px;" />
+          <!-- <i-badge :count="group.postCount" overflow-count="100" style="margin-right:10px;" /> -->
+          <i-icon size="25" type="barrage_fill" color="#67ddd3"/>
+          <span style="color:#67ddd3;">{{ group.postCount }}</span>
         </view>
         <view slot="footer">
           <i-icon

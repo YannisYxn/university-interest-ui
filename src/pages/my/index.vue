@@ -207,7 +207,7 @@ export default {
               if(resp.data.isCheckUniversity === 0){
                 //首次登录校趣，输入校区，授权信息，并完善个人信息
                 wx.showToast({
-                  title: "请完成在校认证/输入商家邀请码再进入校趣",
+                  title: "首次登录，请在本人的大学校园内登陆校趣完成在校认证 或 输入邀请码 ",
                   icon: "none",
                   success: () => {
                     setTimeout(() => {

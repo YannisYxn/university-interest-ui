@@ -11,15 +11,16 @@
             <p style="font-size:10px;color:white;line-height:25px;">{{ groupDetail.memberCount }}个组员</p>
           </i-col>
           <i-col span="9">
+            <span style="font-size:10px;color:white;">创建者：{{ groupDetail.createUser }}</span>
+            <p style="font-size:10px;color:white;line-height:25px;">{{ groupDetail.createTime }}(建组)</p>
+            <br />
             <i-icon
               type="add"
               size="25"
-              color="red"
-              style="float:right;"
+              color="white"
+              style="float:center;"
               @click="() => interestGroupVisible = true"
             />
-            <span style="font-size:10px;color:white;">创建者：{{ groupDetail.createUser }}</span>
-            <p style="font-size:10px;color:white;line-height:25px;">{{ groupDetail.createTime }}(建组)</p>
           </i-col>
         </i-row>
       </div>
@@ -52,7 +53,7 @@
             <i-icon
               type="add"
               size="15"
-              color="red"
+              color="#67ddd3"
               style="margin-left:5px;vertical-align:center;"
               @click="handleOperatePost(post.userId,post.id)"
             />
@@ -100,12 +101,12 @@
           <view slot="badge">
             <div style="margin-top:4%;">
               <span
-                style="color:#9d9d9d;font-size:11px;"
-              >{{ member.universityCampusName + " " }} {{ " " + member.createTime}}(加入)</span>
+                style="color:#9d9d9d;font-size:11px;margin-left:10px;"
+              >{{ member.universityCampusName + " "}} <br /> {{ " " + member.createTime}}(加入)</span>
             </div>
           </view>
           <view slot="footer">
-            <i-icon color="red" size="20" type="add" @click="handleOperateMember(member.id)"/>
+            <i-icon color="#67ddd3" size="20" type="add" @click="handleOperateMember(member.id)"/>
           </view>
         </i-cell>
       </i-cell-group>

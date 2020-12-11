@@ -52,7 +52,7 @@
           <view slot="footer">
             <i-icon
               type="add"
-              color="red"
+              color="#67ddd3"
               size="15"
               @click="handleOperate(comment.userId,comment.id)"
             />

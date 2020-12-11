@@ -72,7 +72,11 @@
               color="#67ddd3"
               @click="showToast(msg)"
             />
-            <i-badge v-else :count="group.postCount" overflow-count="100" style="margin-right:10px;" />
+            <!-- <i-badge v-else :count="group.postCount" overflow-count="100" style="margin-right:10px;" /> -->
+            <div v-else style="margin-right:10px;">
+              <i-icon size="25" type="barrage_fill" color="#67ddd3"/>
+              <span style="color:#67ddd3;">{{ group.postCount }}</span>
+            </div>
           </view>
           <view slot="footer">
             <i-icon

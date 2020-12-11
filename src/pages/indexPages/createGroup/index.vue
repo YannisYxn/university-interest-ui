@@ -11,6 +11,11 @@
           placeholder="请在这里输入,本校内名称唯一"
           @change="handleNameChange"
         />
+        <div style="margin:10px;">
+          <p class="font" style="font-size:11px;">
+            兴趣组名称最好有关键词呦，以便同兴趣的小伙伴搜索加入
+          </p>
+        </div>
         <i-input
           v-model="introduction"
           title="兴趣组介绍"
