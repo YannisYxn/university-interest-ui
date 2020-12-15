@@ -190,9 +190,9 @@
     <mp-dialog
       title="欢迎首次进入校趣"
       :show="visible1"
-      :buttons="[{text: '取消'}]"
+      :buttons="[{text: '取消'},{text: '校区反馈'}]"
       @buttontap="handleClose1"
-      @confirm="handleClose1"
+      @confirm="() => visible1 = false"
     >
       <p style="font-size:15px;line-height:20px;margin:0 20px;">您是厦门大学思明校区的学生吗？不是的话，请在本校校区时登录校趣。谢谢。</p>
       <p style="font-size:10px;">提示：冒用ta人校区，被举报，会封号。</p>
@@ -228,12 +228,38 @@
       />
     </mp-dialog>
     <mp-dialog
+      title="校区反馈"
+      :show="visibleUniversityRequire"
+      :buttons="[{text: '取消'}]"
+      @buttontap="() => visibleUniversityRequire = false"
+      @confirm="handleUniversityRequire"
+    >
+      <i-input
+        v-model="requireUniversityName"
+        maxlength="10"
+        placeholder="学校名字"
+        @change="handleUniveristyNameChange"
+      />
+      <i-input
+        v-model="requireUniveristyCampusName"
+        maxlength="10"
+        placeholder="校区名字"
+        @change="handleUniveristyCampusNameChange"
+      />
+    </mp-dialog>
+    <mp-dialog
       title="是否订阅校趣消息"
       :show="visibleMessage"
       :buttons="[{text: '取消'}]"
       @buttontap="() => visibleMessage = false"
       @confirm="handleSubscriptions"
     >
+    </mp-dialog>
+    <mp-dialog
+      title="账号已注销"
+      :show="visibleLogout"
+    >
+      <span>此账号已注销，不可再次登录校趣，不可进行任何操作</span>
     </mp-dialog>
   </div>
 </template>
@@ -248,6 +274,8 @@ export default {
       visible3: false,
       visible4: false,
       visibleMessage: false,
+      visibleUniversityRequire: false,
+      visibleLogout: false,
       universityCampusName: "", //输入高校名称
       userInfo: { //用户信息
         userId: "",
@@ -258,7 +286,8 @@ export default {
         introduction: "",
         universityId: undefined,  //认证学校id
         universityName: "",
-        universityCampusId: undefined //认证校区id
+        universityCampusId: undefined, //认证校区id
+        status: undefined
       },
       latitude: undefined, //纬度，范围为 -90~90，负数表示南纬
       longitude: undefined,  //经度，范围为 -180~180，负数表示西经
@@ -278,14 +307,18 @@ export default {
       barTitle: "我创建及加入的兴趣组",
       invitationCode: "",
       shareUserId: undefined,
-      isChecked: false
+      isChecked: false,
+      requireUniversityName: "",
+      requireUniveristyCampusName: ""
     };
   },
   onShow() {
     if(this.searchKey){
       this.handleClearSearch();
     }
-    if(this.userInfo.isCheckUniversity === 0){
+    if(this.userInfo.status == -3){
+      this.visibleLogout = true;
+    }else if(this.userInfo.isCheckUniversity === 0){
       //首次登录校趣，输入校区，授权信息，并完善个人信息
       this.handleOnUniversity();
     }else if(this.userInfo.userId){
@@ -318,17 +351,22 @@ export default {
               that.userInfo.universityName = resp.data.universityName;
               that.userInfo.universityCampusId = resp.data.universityCampusId;
               that.userInfo.isCheckUniversity = resp.data.isCheckUniversity;
-              if(resp.data.isCheckUniversity === 0){
-                //首次登录校趣，输入校区，授权信息，并完善个人信息
-                // that.visible4 = true;
-                that.handleOnUniversity();
+              that.userInfo.status = resp.data.status;
+              if(resp.data.status == -3){
+                that.visibleLogout = true;
               }else{
-                //不是首次登录，获取兴趣组列表
-                that.getGroupList();
-                that.handleLoginLocation();
-                that.isChecked = true;
+                if(resp.data.isCheckUniversity === 0){
+                  //首次登录校趣，输入校区，授权信息，并完善个人信息
+                  // that.visible4 = true;
+                  that.handleOnUniversity();
+                }else{
+                  //不是首次登录，获取兴趣组列表
+                  that.getGroupList();
+                  that.handleLoginLocation();
+                  that.isChecked = true;
+                }
+                that.updateBadge();
               }
-              that.updateBadge();
             }else{
               wx.showToast({
                 title: resp.msg,
@@ -408,8 +446,14 @@ export default {
         url: "../indexPages/manageInterestGroup/main?groupId=" + groupId + "&userId=" + this.userInfo.userId
       });
     },
-    handleClose1() {
-      this.visible1 = false;
+    handleClose1(e) {
+      if(e.target.index == 0){
+        // 点击取消
+        this.visible1 = false;
+      }else{
+        // 校区反馈
+        this.visibleUniversityRequire = true;
+      }
     },
     // handleClose2() {
     //   this.visible2 = false;
@@ -770,7 +814,41 @@ export default {
         current: url, // 当前显示图片的http链接
         urls: [url] // 需要预览的图片http链接列表
       });
-    }
+    },
+    handleUniversityRequire() {
+      if(this.requireUniversityName === ""){
+        wx.showToast({
+          title: "学校名字不可为空",
+          icon: "none"
+        });
+      }else{
+        this.visibleUniversityRequire = false;
+        this.$wxhttp.post({
+          url: "/manage/require",
+          data: {
+            content: "学校反馈：学校名字[" + this.requireUniversityName + "]  校区名字[" + this.requireUniveristyCampusName + "]",
+            userId: this.userInfo.userId
+          }
+        }).then(resp => {
+          if(resp.code === 0){
+            wx.showToast({
+              title: "提交诉求成功"
+            });
+          }else{
+            wx.showToast({
+              title: resp.msg,
+              icon: "none"
+            });
+          }
+        })
+      }
+    },
+    handleUniveristyNameChange(event) {
+      this.requireUniversityName = event.mp.detail.detail.value;
+    },
+    handleUniveristyCampusNameChange(event) {
+      this.requireUniveristyCampusName = event.mp.detail.detail.value;
+    },
   },
 
   created() {

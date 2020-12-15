@@ -5,6 +5,8 @@
       </i-cell>
       <i-cell title="升学" @click="handleOnUniversity">
       </i-cell>
+      <i-cell title="注销" @click="() => visibleForLogout = true">
+      </i-cell>
     </i-cell-group>
 
     <mp-dialog
@@ -21,6 +23,15 @@
         disabled
       />
     </mp-dialog>
+    <mp-dialog
+      title="确认注销？"
+      :show="visibleForLogout"
+      :buttons="[{text: '取消'}]"
+      @buttontap="() => visibleForLogout = false"
+      @confirm="handleLogout"
+    >
+      <span>若确认注销个人所有数据将被清空，此微信号以后不能再登录校趣</span>
+    </mp-dialog>
   </div>
 </template>
 
@@ -31,6 +42,7 @@ export default {
   data() {
     return {
       visibleForUniversity: false,
+      visibleForLogout: false,
       universityCampusName: "",
       userId: undefined,
       latitude: undefined,
@@ -143,6 +155,30 @@ export default {
           icon: "none"
         });
       }
+    },
+    handleLogout() {
+      //处理注销
+      this.$wxhttp.post({
+        url: "/user/logout?userId=" + this.userId
+      }).then(resp => {
+        if(resp.code == 0){
+          wx.showToast({
+            title: "注销成功",
+            success: () => {
+              setTimeout(() => {
+                wx.reLaunch({
+                  url: "../../index/main"
+                });
+              },1500)
+            }
+          })
+        }else{
+          wx.showToast({
+            title: resp.msg,
+            icon: "none"
+          });
+        }
+      })
     }
   }
 }

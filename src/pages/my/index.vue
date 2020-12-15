@@ -217,6 +217,19 @@ export default {
                     },1500);
                   }
                 });
+              }else if(resp.data.status == -3) {
+                // 注销
+                wx.showToast({
+                  title: "账号已注销",
+                  icon: "none",
+                  success: () => {
+                    setTimeout(() => {
+                      wx.switchTab({
+                        url: "../index/main"
+                      });
+                    },1500);
+                  }
+                });
               }else{
                 //不是首次登录，获取兴趣组列表
                 that.getUserInfo();
