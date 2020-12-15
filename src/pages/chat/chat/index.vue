@@ -38,7 +38,7 @@
     <div v-if="visible" style="position:fixed;bottom:0;width:100%;height:100px;background-color:white;">
       <i-row>
         <i-col span="18">
-          <i-input :value="msg" @change="handleMsgChange" i-class="chat" placeholder="请输入消息..." :maxlength="33" chat style="background-color:#ececec;"/>
+          <i-input :value="msg" @change="handleMsgChange" cursorSpacing="24" i-class="chat" placeholder="请输入消息..." :maxlength="33" chat style="background-color:#ececec;"/>
         </i-col>
         <i-col span="6">
           <i-button @click="sendEvent" size="small" type="primary" shape="circle">发送</i-button>
@@ -125,6 +125,7 @@ export default {
     this.userId = getQuery.getQuery().userId;
     this.chatUserId = getQuery.getQuery().chatUserId;
     this.msg = "";
+    this.visible = false;
     if(this.chatUserId == 0){
       this.$wxhttp.get({
         url: "/message/getSystemMsgList?userId=" + this.userId
@@ -242,14 +243,16 @@ export default {
     },
     // 滚动到页面底部
     pageScrollToBottom() {
-      let that = this;
-      wx.createSelectorQuery().select('#chatPage').boundingClientRect(function (rect) {
-        let top = 68 * that.chatMessageList.length;
-        wx.pageScrollTo({
-          scrollTop: top,
-          duration: 0
-        })
-      }).exec()
+      if (this.chatUserId !== 0) {
+        let that = this;
+        wx.createSelectorQuery().select('#chatPage').boundingClientRect(function (rect) {
+          let top = 68 * that.chatMessageList.length;
+          wx.pageScrollTo({
+            scrollTop: top,
+            duration: 0
+          })
+        }).exec()
+      }
     },
     // 断线重连
     reconnect() {

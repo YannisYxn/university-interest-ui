@@ -7,7 +7,9 @@
         @click="handleChat(0)"
       >
         <view slot="icon">
-          <i-avatar :src="avatar" style="margin-right:10px;" />
+          <i-badge dot>
+            <i-avatar :src="avatar" style="margin-right:10px;" />
+          </i-badge>
         </view>
       </i-comment-cell>
       <i-comment-cell
@@ -20,10 +22,10 @@
         @click="handleChat(item.userId)"
       >
         <view slot="icon">
-          <i-avatar :src="item.userPhoto" style="margin-right:10px;" />
-        </view>
-        <view slot="badge">
-          <i-badge v-if="item.unReadCount !== 0" dot />
+          <i-badge v-if="item.unReadCount !== 0" dot>
+            <i-avatar :src="item.userPhoto" style="margin-right:10px;" />
+          </i-badge>
+          <i-avatar v-else :src="item.userPhoto" style="margin-right:10px;" />
         </view>
       </i-comment-cell>
       <i-comment-cell
@@ -40,8 +42,8 @@
           <i-avatar :src="item.fromUserPhoto" style="margin-right:10px;" />
         </view>
         <view slot="footer">
-          <i-button size="small" type="primary" shape="circle" @click="handleOK(item.id)">OK</i-button>
-          <i-button size="small" type="error" shape="circle" @click="handleNO(item.id)">NO</i-button>
+          <i-button size="small" type="primary" shape="circle" @click="handleOK(item.id)">接受</i-button>
+          <i-button size="small" type="error" shape="circle" @click="handleNO(item.id)">拒绝</i-button>
         </view>
       </i-comment-cell>
     </i-cell-group>

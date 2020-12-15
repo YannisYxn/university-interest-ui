@@ -41,10 +41,12 @@
         <i-comment-cell
           v-for="comment in post.commentDetailDTOList"
           :key="comment.id"
+          :userId="comment.userId"
           :title="comment.userName"
           :label="comment.universityCampusName"
           :time="comment.createTime"
           :content="comment.content"
+          @clickTitle="handlePersonalPage"
         >
           <view slot="icon">
             <i-avatar :src="comment.userPhoto" style="margin-right:10px;" />
@@ -284,7 +286,6 @@ export default {
     },
     handlePersonalPage(e) {
       // console.log(e.mp.detail)
-      console.log(e.mp.detail)
       wx.navigateTo({
         url: "../../myPages/post/main?userId=" + e.mp.detail + "&selfUserId=" + this.userId
       });
