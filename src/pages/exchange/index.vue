@@ -56,67 +56,38 @@ export default {
     }
   },
   onShow() {
-    var that = this;
-    wx.login({
-      success(res) {
-        if (res.code) {
-          //发起网络请求
-          that.$wxhttp.post({
-            url: "/user/login",
-            data: {
-              code: res.code
-            }
-          }).then(resp => {
-            if(resp.code === 0){
-              that.userId = resp.data.id;
-              if(resp.data.isCheckUniversity === 0){
-                //首次登录校趣，输入校区，授权信息，并完善个人信息
-                wx.showToast({
-                  title: "首次登录，请在本人的大学校园内登陆校趣完成在校认证 或 输入邀请码 ",
-                  icon: "none",
-                  success: () => {
-                    setTimeout(() => {
-                      wx.switchTab({
-                        url: "../index/main"
-                      });
-                    },1500);
-                  }
-                });
-              }else if(resp.data.status == -3) {
-                // 注销
-                wx.showToast({
-                  title: "账号已注销",
-                  icon: "none",
-                  success: () => {
-                    setTimeout(() => {
-                      wx.switchTab({
-                        url: "../index/main"
-                      });
-                    },1500);
-                  }
-                });
-              }else{
-                //不是首次登录，获取兑换券列表
-                that.getTicketList();
-                that.updateBadge();
-              }
-            }else{
-              wx.showToast({
-                title: resp.msg,
-                icon: 'none'
-              })
-            }
-            
-          });
-        } else {
-          console.log("登录失败！" + res.errMsg);
-          wx.showToast({
-            title: "登录失败",
-            icon: 'none'
-          });
+    this.userId = this.globalData.userId;
+    if(this.globalData.isCheckUniversity === 0){
+      //首次登录校趣，输入校区，授权信息，并完善个人信息
+      wx.showToast({
+        title: "首次登录，请在本人的大学校园内登陆校趣完成在校认证 或 输入邀请码 ",
+        icon: "none",
+        success: () => {
+          setTimeout(() => {
+            wx.switchTab({
+              url: "../index/main"
+            });
+          },1500);
         }
-      }
-    });
+      });
+    }else if(this.globalData.status == -3) {
+      // 注销
+      wx.showToast({
+        title: "账号已注销",
+        icon: "none",
+        success: () => {
+          setTimeout(() => {
+            wx.switchTab({
+              url: "../index/main"
+            });
+          },1500);
+        }
+      });
+    }else{
+      //不是首次登录，获取兑换券列表
+      this.getTicketList();
+      this.updateBadge();
+    }
   },
   methods: {
     updateBadge() {
@@ -125,9 +96,12 @@ export default {
       }).then(resp2 => {
         if(resp2.code == 0){
           if(resp2.data !== 0){
-            wx.setTabBarBadge({
-              index: 1,
-              text: String(resp2.data)
+            wx.showTabBarRedDot({
+              index: 1
+            });
+          }else{
+            wx.hideTabBarRedDot({
+              index: 1
             });
           }
         }
@@ -156,8 +130,15 @@ export default {
       })
     },
     handleExchange(ticketId) {
-      this.ticketId = ticketId;
-      this.visible = true;
+      if(this.globalData.isPerfectInfo == 0){
+        wx.showToast({
+          title: "请先在[我的]页面完善头像昵称",
+          icon: "none"
+        });
+      }else{
+        this.ticketId = ticketId;
+        this.visible = true;
+      }
     },
     doExchange() {
       this.visible = false;

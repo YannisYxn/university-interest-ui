@@ -208,30 +208,37 @@ export default {
       })
     },
     handleComment() {
-      this.$wxhttp.post({
-        url: "/comment",
-        data: {
-          content: this.comment,
-          groupId: this.post.groupId,
-          latitude: this.latitude,
-          longitude: this.longitude,
-          postId: this.postId,
-          userId: this.userId
-        }
-      }).then(resp => {
-        if(resp.code === 0){
-          this.comment = "";
-          wx.showToast({
-            title: "发表成功"
-          });
-          this.getCommentList();
-        }else{
-          wx.showToast({
-            title: resp.msg,
-            icon: "none"
-          });
-        }
-      })
+      if(this.globalData.isPerfectInfo == 0){
+        wx.showToast({
+          title: "请先在[我的]页面完善头像昵称",
+          icon: "none"
+        });
+      }else{
+        this.$wxhttp.post({
+          url: "/comment",
+          data: {
+            content: this.comment,
+            groupId: this.post.groupId,
+            latitude: this.latitude,
+            longitude: this.longitude,
+            postId: this.postId,
+            userId: this.userId
+          }
+        }).then(resp => {
+          if(resp.code === 0){
+            this.comment = "";
+            wx.showToast({
+              title: "发表成功"
+            });
+            this.getCommentList();
+          }else{
+            wx.showToast({
+              title: resp.msg,
+              icon: "none"
+            });
+          }
+        });
+      }
     },
     handleCommentChange(event){
       this.comment = event.mp.detail.detail.value;

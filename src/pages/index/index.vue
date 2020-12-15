@@ -352,6 +352,13 @@ export default {
               that.userInfo.universityCampusId = resp.data.universityCampusId;
               that.userInfo.isCheckUniversity = resp.data.isCheckUniversity;
               that.userInfo.status = resp.data.status;
+              that.globalData.userId = resp.data.id;
+              that.globalData.universityId = resp.data.universityId;
+              that.globalData.universityName = resp.data.universityName;
+              that.globalData.universityCampusId = resp.data.universityCampusId;
+              that.globalData.isCheckUniversity = resp.data.isCheckUniversity;
+              that.globalData.status = resp.data.status;
+              that.globalData.isPerfectInfo = resp.data.isPerfectInfo;  //是否完善信息
               if(resp.data.status == -3){
                 that.visibleLogout = true;
               }else{
@@ -397,9 +404,12 @@ export default {
       }).then(resp2 => {
         if(resp2.code == 0){
           if(resp2.data !== 0){
-            wx.setTabBarBadge({
-              index: 1,
-              text: String(resp2.data)
+            wx.showTabBarRedDot({
+              index: 1
+            });
+          }else{
+            wx.hideTabBarRedDot({
+              index: 1
             });
           }
         }
@@ -414,7 +424,14 @@ export default {
       if(this.userInfo.isCheckUniversity === 0){
         //未确认过学校不可创建兴趣组
         wx.showToast({
-          title: '未认证学校不可创建兴趣组'
+          title: '未认证学校不可创建兴趣组',
+          icon: "none"
+        });
+      }else if(this.globalData.isPerfectInfo == 0) {
+        //未完善信息不可创建
+        wx.showToast({
+          title: "请先在[我的]页面完善头像昵称",
+          icon: "none"
         });
       }else{
         //确认过学校跳转创建兴趣组页面

@@ -90,6 +90,7 @@ export default {
                   wx.showToast({
                     title: "更改成功"
                   });
+                  that.globalData.isPerfectInfo = 1;
                   wx.navigateBack({
                     delta: 1
                   });

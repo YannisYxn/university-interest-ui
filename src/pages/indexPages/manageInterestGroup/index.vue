@@ -309,9 +309,16 @@ export default {
       });
     },
     handlePost() {
-      wx.navigateTo({
-        url: "../createPost/main?groupId=" + this.groupId + "&userId=" + this.userId
-      });
+      if(this.globalData.isPerfectInfo == 0) {
+        wx.showToast({
+          title: "请先在[我的]页面完善头像昵称",
+          icon: "none"
+        });
+      }else{
+        wx.navigateTo({
+          url: "../createPost/main?groupId=" + this.groupId + "&userId=" + this.userId
+        });
+      }
     },
     handleTabChange(detail) {
       this.current = detail.target.key;

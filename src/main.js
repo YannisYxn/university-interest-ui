@@ -6,6 +6,8 @@ import moment from 'moment';
 Vue.prototype.$wxhttp = WXrequest
 Vue.prototype.$moment = moment;
 
+Vue.prototype.globalData = {};
+
 Vue.config.productionTip = false
 App.mpType = 'app'
 
