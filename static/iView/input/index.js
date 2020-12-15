@@ -52,6 +52,10 @@ Component({
         confirmType: {
             type: String,   //拉起键盘后右下角按钮文字
             value: 'done'
+        },
+        cursorSpacing: {
+            type: Number,   //指定光标与键盘的距离
+            value: 0
         }
     },
 

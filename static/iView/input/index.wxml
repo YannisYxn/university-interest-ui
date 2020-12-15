@@ -22,6 +22,7 @@
         placeholder="{{ placeholder }}"
         maxlength="{{ maxlength }}"
         confirm-type="{{ confirmType }}"
+        cursor-spacing="{{ cursorSpacing }}"
         class="i-input-input i-cell-bd {{ right ? 'i-input-input-right' : '' }}"
         placeholder-class="i-input-placeholder"
         bindconfirm="handleConfirm"

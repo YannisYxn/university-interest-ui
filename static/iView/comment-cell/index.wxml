@@ -1,5 +1,5 @@
 <view bindtap="handleTap" class="i-class i-cell {{ isLastCell ? 'i-cell-last' : '' }} {{ isLink ? 'i-cell-access' : '' }}">
-    <view class="i-cell-icon">
+    <view class="i-cell-icon" bindtap="clickTitle" data-userid="{{ userId }}">
         <slot name="icon"></slot>
     </view>
     <view class="i-cell-badge">
