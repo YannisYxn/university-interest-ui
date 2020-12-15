@@ -7,9 +7,10 @@
         @click="handleChat(0)"
       >
         <view slot="icon">
-          <i-badge dot>
+          <i-badge v-if="systemUnreadCount !== 0" dot>
             <i-avatar :src="avatar" style="margin-right:10px;" />
           </i-badge>
+          <i-avatar v-else :src="avatar" style="margin-right:10px;" />
         </view>
       </i-comment-cell>
       <i-comment-cell
@@ -60,7 +61,8 @@ export default {
       messageList: [],
       sayHelloList: [],
       latestMessage: "",
-      avatar: avatar
+      avatar: avatar,
+      systemUnreadCount: 0
     };
   },
   onShareAppMessage(object){
@@ -114,7 +116,7 @@ export default {
                 //不是首次登录，获取兑换券列表
                 that.getMessageList();
                 that.getLatestMessage();
-                that.timer = setInterval(that.getMessageList, 10000);
+                that.timer = setInterval(that.getMessageList, 50000);
                 that.updateBadge();
               }
             }else{
@@ -159,6 +161,7 @@ export default {
         url: "/message/getYouXinList?userId=" + this.userId 
       }).then(resp => {
         if(resp.code === 0){
+          this.systemUnreadCount = resp.data.systemUnreadCount;
           this.messageList = resp.data.latestChatRecord.map(item => {
             return {
               ...item,

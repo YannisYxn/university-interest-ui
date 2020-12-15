@@ -8,7 +8,7 @@
               <p style="font-size:20px;line-height:30px;color:white;">{{ ticket.money }}元</p>
               <p style="font-size:15px;line-height:25px;color:white;">{{ ticket.sellerName }}</p>
               <p style="font-size:10px;line-height:20px;color:white;">{{ ticket.description }}</p>
-              <p style="font-size:10px;line-height:15px;color:white;">有效日期：{{ ticket.deadline }}前</p>
+              <p v-if="ticket.type == 1" style="font-size:10px;line-height:15px;color:white;">有效日期：{{ ticket.deadline }}前</p>
             </i-col>
             <i-col span="9">
               <p style="font-size:15px;line-height15px;color:white;">{{ ticket.needCreditNum }}积分</p>
