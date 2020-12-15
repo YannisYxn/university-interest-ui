@@ -80,12 +80,42 @@ export default {
     this.name = "";
     this.introduction = "";
     this.tempFilePath = "";
+    // var that = this;
+    // wx.getLocation({
+    //   type: 'gcj02',
+    //   success (res) {
+    //     that.latitude = res.latitude
+    //     that.longitude = res.longitude
+    //   }
+    // });
+    // 查找是否授权地理位置，未授权则要求用户授权地理位置
     var that = this;
-    wx.getLocation({
-      type: 'gcj02',
-      success (res) {
-        that.latitude = res.latitude
-        that.longitude = res.longitude
+    wx.getSetting({
+      success(res) {
+        if (!res.authSetting['scope.userLocation']) {
+          wx.authorize({
+            scope: 'scope.userLocation',
+            success () {
+              // 用户已经同意小程序使用定位功能，后续调用 wx.getLocation 接口不会弹窗询问
+              wx.getLocation({
+                type: 'gcj02',
+                success (res) {
+                  that.latitude = res.latitude;
+                  that.longitude = res.longitude;
+                }
+              });
+            }
+          })
+        }else{
+          // 用户已经同意小程序使用定位功能，后续调用 wx.getLocation 接口不会弹窗询问
+          wx.getLocation({
+            type: 'gcj02',
+            success (res) {
+              that.latitude = res.latitude;
+              that.longitude = res.longitude;
+            }
+          });
+        }
       }
     });
   },
