@@ -74,9 +74,9 @@
 </template>
 
 <script>
-import getQuery from "../../utils/getPage";
-import girl from "../../../static/images/girl.png";
-import boy from "../../../static/images/boy.png";
+import getQuery from "../../../utils/getPage";
+import girl from "../../../../static/images/girl.png";
+import boy from "../../../../static/images/boy.png";
 
 export default {
   data() {

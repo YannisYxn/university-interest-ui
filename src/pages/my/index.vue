@@ -366,7 +366,7 @@ export default {
     },
     handleModify() {
       wx.navigateTo({
-        url: "../modify/main?userId=" + this.userId
+        url: "../myPages/modify/main?userId=" + this.userId
       });
     },
     handleProfit(type) {

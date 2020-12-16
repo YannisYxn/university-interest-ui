@@ -3,8 +3,6 @@
     "pages/index/main",
     "pages/exchange/main",
     "pages/my/main",
-    "pages/modify/main",
-    "pages/logs/main",
     "pages/messageBox/main"
   ],
   "subPackages": [
@@ -27,7 +25,8 @@
         "helloSetting/main",
         "shareProfit/main",
         "groupProfit/main",
-        "postProfit/main"
+        "postProfit/main",
+        "modify/main"
       ]
     },
     {
