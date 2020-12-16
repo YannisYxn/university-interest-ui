@@ -71,18 +71,23 @@
     <div style="height:50px" />
 
     <div style="position:fixed;bottom:0;margin-bottom:15px;width:100%">
-      <i-input
-        v-model="comment"
-        placeholder="评论,限40字"
-        :maxlength="40"
-        type="textarea"
-        mode="wrapped"
-        cursorSpacing="20"
-        confirmType="send"
-        @confirm="handleComment"
-        comment
-        @change="handleCommentChange"
-      />
+      <i-row>
+        <i-col :span="18">
+          <i-input
+            v-model="comment"
+            placeholder="评论,限40字"
+            :maxlength="40"
+            type="textarea"
+            mode="wrapped"
+            cursorSpacing="60"
+            comment
+            @change="handleCommentChange"
+          />
+        </i-col>
+        <i-col :span="6">
+          <i-button type="primary" shape="circle" @click="handleComment">发送</i-button>
+        </i-col>
+      </i-row>
     </div>
 
     <!-- 评论用户操作列表 -->
