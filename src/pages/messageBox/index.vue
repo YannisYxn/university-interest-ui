@@ -138,14 +138,14 @@ export default {
           this.messageList = resp.data.latestChatRecord.map(item => {
             return {
               ...item,
-              createTime: this.$moment(item.createTime).format("YYYY-MM-DD HH:mm:SS"),
+              createTime: this.$moment(item.createTime).format("YYYY-MM-DD HH:mm"),
               distance: item.distance.toFixed(2)
             }
           });
           this.sayHelloList = resp.data.sayHelloList.map(item => {
             return {
               ...item,
-              createTime: this.$moment.unix(item.createTime).format("YYYY-MM-DD HH:mm:SS"),
+              createTime: this.$moment.unix(item.createTime).format("YYYY-MM-DD HH:mm"),
               distance: item.distance.toFixed(2)
             }
           })

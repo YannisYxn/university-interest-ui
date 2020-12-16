@@ -677,7 +677,7 @@ export default {
             this.postList = resp.data.postList.map(item => {
               return {
                 ...item,
-                createTime: this.$moment.unix(item.createTime).format("YYYY-MM-DD HH:mm:SS")
+                createTime: this.$moment.unix(item.createTime).format("YYYY-MM-DD HH:mm")
               }
             });
           }else{

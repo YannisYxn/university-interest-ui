@@ -79,7 +79,7 @@
         <view slot="footer">
           <div style="text-align:center;margin-top:10px;">
             <i-row>
-              <i-col span="24">
+              <i-col span="12">
                 <div @click="handleComment(post.id)">
                   <i-icon size="30" type="message" />
                   <span
@@ -88,10 +88,11 @@
                   >{{ post.commentCount }}</span>
                 </div>
               </i-col>
-              <!-- <i-col span="12">
-                <i-icon size="30" type="dislike" />
-                <span style="font-size=50px;">5566</span>
-              </i-col>-->
+              <i-col span="12">
+                <span>发于: <br />
+                  <span style="color:#14d0b6;" @click="handleRouterGroup(post.groupId)">{{ post.groupName }}</span>
+                </span>
+              </i-col>
             </i-row>
           </div>
         </view>
@@ -252,7 +253,7 @@ export default {
           this.postList = resp.data.map(item => {
             return {
               ...item,
-              createTime: this.$moment.unix(item.createTime).format("YYYY-MM-DD HH:mm:SS")
+              createTime: this.$moment.unix(item.createTime).format("YYYY-MM-DD HH:mm")
             }
           });
         }else{
@@ -411,6 +412,12 @@ export default {
       wx.previewImage({
         current: url, // 当前显示图片的http链接
         urls: [url] // 需要预览的图片http链接列表
+      });
+    },
+    handleRouterGroup(groupId) {
+      // 跳转兴趣组
+      wx.navigateTo({
+        url: "../../indexPages/interestGroup/main?userId=" + this.globalData.userId + "&groupId=" + groupId
       });
     }
   }

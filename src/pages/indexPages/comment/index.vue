@@ -119,7 +119,8 @@ export default {
       currentOperatedCommentId: undefined,
       currentOperatedCommentUserId: undefined,
       latitude: undefined,
-      longitude: undefined
+      longitude: undefined,
+      isJoin: undefined,  //浏览者是否加入了该兴趣组
     }
   },
   onShareAppMessage(object){
@@ -165,17 +166,18 @@ export default {
     });
     //获取兴趣组
     this.$wxhttp.get({
-      url: "/post/getPostById?postId=" + this.postId
+      url: "/post/getPostById?postId=" + this.postId + "&userId=" + this.userId
     }).then(resp => {
       if(resp.code === 0){
         this.post = resp.data;
-        this.post.createTime = this.$moment.unix(this.post.createTime).format("YYYY-MM-DD HH:mm:SS");
+        this.post.createTime = this.$moment.unix(this.post.createTime).format("YYYY-MM-DD HH:mm");
         this.post.commentDetailDTOList = resp.data.commentDetailDTOList.map(item => {
           return {
             ...item,
-            createTime: this.$moment.unix(item.createTime).format("YYYY-MM-DD HH:mm:SS")
+            createTime: this.$moment.unix(item.createTime).format("YYYY-MM-DD HH:mm")
           }
         });
+        this.isJoin = resp.data.isJoin;
       }else{
         wx.showToast({
           title: resp.msg,
@@ -196,7 +198,7 @@ export default {
           this.post.commentDetailDTOList = resp.data.map(item => {
             return {
               ...item,
-              createTime: this.$moment.unix(item.createTime).format("YYYY-MM-DD HH:mm:SS")
+              createTime: this.$moment.unix(item.createTime).format("YYYY-MM-DD HH:mm")
             }
           });
         }else{
@@ -211,6 +213,11 @@ export default {
       if(this.globalData.isPerfectInfo == 0){
         wx.showToast({
           title: "请先在[我的]页面完善头像昵称",
+          icon: "none"
+        });
+      }else if(this.isJoin == 0){
+        wx.showToast({
+          title: "请先点击此兴趣组主页右上角的[+]，加入此组",
           icon: "none"
         });
       }else{
