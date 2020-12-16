@@ -31,6 +31,14 @@
       </div>
     </div>
 
+    <i-button
+      v-if="groupDetail.isJoin === 1 && groupDetail.status === 0"
+      type="primary"
+      shape="circle"
+      style="margin-top:15px;"
+      @click="handlePost"
+    >发帖</i-button>
+
     <div v-for="post in postList" :key="post.id" style="margin-top:15px;">
       <i-card
         post
@@ -82,14 +90,6 @@
       <i-load-more v-if="postList.length === 0" tip="该兴趣组当前无帖子" :loading="false" />
       <i-load-more v-else :loading="false" />
     </div>
-
-    <i-button
-      v-if="groupDetail.isJoin === 1 && groupDetail.status === 0"
-      type="primary"
-      shape="circle"
-      style="position:fixed;bottom:0;right:0;"
-      @click="handlePost"
-    >发帖</i-button>
 
     <!-- 兴趣组操作列表 -->
     <i-action-sheet

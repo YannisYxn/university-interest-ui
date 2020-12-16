@@ -39,6 +39,13 @@
     </div>
 
     <div v-if="current === 'post'">
+      <i-button
+        v-if="groupDetail.status === 0"
+        type="primary"
+        shape="circle"
+        style="margin-top:15px;"
+        @click="handlePost"
+      >发帖</i-button>
       <div v-for="post in postList" :key="post.id" style="margin-top:15px;">
         <i-card
           post
@@ -116,14 +123,6 @@
         <i-load-more v-else :loading="false" />
       </div>
     </div>
-
-    <i-button
-      v-if="groupDetail.status === 0"
-      type="primary"
-      shape="circle"
-      style="position:fixed;bottom:0;right:0;"
-      @click="handlePost"
-    >发帖</i-button>
 
     <!-- 兴趣组操作列表 -->
     <i-action-sheet

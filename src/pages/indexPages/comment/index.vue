@@ -68,11 +68,16 @@
       <i-load-more v-else :loading="false" />
     </div>
 
-    <div style="position:fixed;bottom:0;width:100%">
+    <div style="height:50px" />
+
+    <div style="position:fixed;bottom:0;margin-bottom:15px;width:100%">
       <i-input
         v-model="comment"
-        placeholder="评论"
-        :maxlength="99"
+        placeholder="评论,限40字"
+        :maxlength="40"
+        type="textarea"
+        mode="wrapped"
+        cursorSpacing="20"
         confirmType="send"
         @confirm="handleComment"
         comment

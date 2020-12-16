@@ -1,14 +1,31 @@
 <template>
   <div>
     <div v-for="ticket in ticketList" :key="ticket.id" style="margin-top:20px;width:100%;text-align:center;">
-      <exchange-card>
+      <exchange-card v-if="ticket.type == 1">
         <view slot="content">
           <i-row>
             <i-col span="15">
               <p style="font-size:20px;line-height:30px;color:white;">{{ ticket.money }}元</p>
               <p style="font-size:15px;line-height:25px;color:white;">{{ ticket.sellerName }}</p>
               <p style="font-size:10px;line-height:20px;color:white;">{{ ticket.description }}</p>
-              <p v-if="ticket.type == 1" style="font-size:10px;line-height:15px;color:white;">有效日期：{{ ticket.deadline }}前</p>
+              <p style="font-size:10px;line-height:15px;color:white;">有效日期：{{ ticket.deadline }}前</p>
+            </i-col>
+            <i-col span="9">
+              <p style="font-size:15px;line-height15px;color:white;">{{ ticket.needCreditNum }}积分</p>
+              <i-button type="exchange" shape="circle" @click="handleExchange(ticket.id)">立即兑换</i-button>
+              <p style="font-size:10px;line-height:15px;color:white;">总共：{{ ticket.totalNum }}张</p>
+              <p style="font-size:10px;line-height:15px;color:white;">剩余：{{ ticket.remainingNum }}张</p>
+            </i-col>
+          </i-row>
+        </view>
+      </exchange-card>
+      <exchange-card v-else group>
+        <view slot="content">
+          <i-row>
+            <i-col span="15">
+              <p style="font-size:20px;line-height:30px;color:white;">{{ ticket.money }}元</p>
+              <p style="font-size:15px;line-height:25px;color:white;">{{ ticket.sellerName }}</p>
+              <p style="font-size:10px;line-height:20px;color:white;">{{ ticket.description }}</p>
             </i-col>
             <i-col span="9">
               <p style="font-size:15px;line-height15px;color:white;">{{ ticket.needCreditNum }}积分</p>

@@ -1,5 +1,5 @@
 {
-  "navigationBarTitleText": "诉 求",
+  "navigationBarTitleText": "反 馈",
   "usingComponents": {
     "i-button": "../../../../static/iView/button/index",
     "i-input": "../../../../static/iView/input/index",

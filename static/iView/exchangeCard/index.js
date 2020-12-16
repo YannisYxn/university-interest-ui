@@ -21,6 +21,10 @@ Component({
       extra: {
           type: String,
           value: ''
+      },
+      group: {
+          type: Boolean,
+          value: false
       }
   }
 });

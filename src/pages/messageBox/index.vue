@@ -3,7 +3,7 @@
     <i-notice-bar icon="systemprompt" loop ref="noticeBar">{{ latestMessage }}</i-notice-bar>
     <i-cell-group>
       <i-comment-cell
-        title="官方通知"
+        title="消息通知"
         @click="handleChat(0)"
       >
         <view slot="icon">

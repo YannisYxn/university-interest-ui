@@ -132,7 +132,7 @@ export default {
       }).then(resp => {
         if(resp.code == 0){
           wx.setNavigationBarTitle({
-            title: "官方通知"
+            title: "消息通知"
           });
           this.chatMessageList = resp.data.map(item => {
             return {
