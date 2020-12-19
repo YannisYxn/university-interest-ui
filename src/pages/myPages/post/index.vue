@@ -4,6 +4,8 @@
       <div style="margin:0 10px;">
         <i-row>
           <i-col span="6">
+            <i-avatar style="float:right;margin-right:45px;" size="mini" v-if="userDetail.sex == 1" :src="boy" />
+            <i-avatar style="float:right;margin-right:45px;" size="mini" v-else-if="userDetail.sex == 2" :src="girl" />
             <i-avatar size="avatar" :src="userDetail.photo" @click="handlePreview(userDetail.photo)"/>
           </i-col>
           <i-col span="9">
@@ -161,11 +163,15 @@
 
 <script>
 import getQuery from '../../../utils/getPage';
+import boy from "../../../../static/images/boy.png";
+import girl from "../../../../static/images/girl.png";
 
 export default {
   data() {
     return {
       isAdd: false,
+      boy: boy,
+      girl: girl,
       addAction: [
         {
           name: "回到陌生/拉黑"

@@ -5,10 +5,13 @@
         <div v-for="(item,index) in chatMessageList" :key="item">
           <i-chat-cell
             v-if="item.fromUserId == chatUserId"
-            :title="item.content"
+            :title="item.type == 0 ? item.content : ''"
             :label="item.createTime"
             style="float:left;min-width:55%;text-align:left;"
           >
+            <view v-if="item.type == 1" slot="img">
+              <image :src="item.content" mode="widthFix" style="max-width:100%;" @click="handlePreview(item.content)"/>
+            </view>
             <view slot="icon">
               <i-avatar :src="chatInfo.toUserPhoto" @click="handleUserInfo()"/>
             </view>
@@ -19,15 +22,18 @@
           </i-chat-cell>
           <i-chat-cell
             v-else
-            :title="item.content"
+            :title="item.type == 0 ? item.content : ''"
             :label="item.createTime"
             style="float:right;min-width:55%;text-align:right;"
           >
+            <view v-if="item.type == 1" slot="img">
+              <image :src="item.content" mode="widthFix" style="max-width:100%;" @click="handlePreview(item.content)"/>
+            </view>
             <view slot="self" style="float:right;">
               <i-avatar :src="chatInfo.fromUserPhoto" />
             </view>
             <view slot="last">
-              <div v-if="index == (chatMessageList.length-1)" style="height:100px;width:100%;">
+              <div v-if="index == (chatMessageList.length-1)" style="height:135px;width:100%;">
               </div>
             </view>
           </i-chat-cell>
@@ -35,7 +41,7 @@
       </i-cell-group>
     </div>
 
-    <div v-if="visible" style="position:fixed;bottom:0;width:100%;height:100px;background-color:white;">
+    <div v-if="visible" style="position:fixed;bottom:0;width:100%;height:135px;background-color:white;">
       <i-row>
         <i-col span="18">
           <!-- <i-input :value="msg" @change="handleMsgChange" cursorSpacing="24" i-class="chat" placeholder="请输入消息..." :maxlength="33" chat style="background-color:#ececec;"/> -->
@@ -67,6 +73,7 @@
               size="small"
               shape="square"
               src="../../../static/images/photo.png"
+              @click="handleChooseImage"
             />
           </i-col>
         </i-row>
@@ -124,7 +131,9 @@ export default {
       avatar: avatar,
       credit: 5,
       visibleCredit: false,
-      visible: false
+      visible: false,
+      unLoad: false,
+      uploadFilePath: ""
     }
   },
   onShareAppMessage(object){
@@ -139,6 +148,7 @@ export default {
     this.chatUserId = getQuery.getQuery().chatUserId;
     this.msg = "";
     this.visible = false;
+    this.unLoad = false;
     if(this.chatUserId == 0){
       this.$wxhttp.get({
         url: "/message/getSystemMsgList?userId=" + this.userId
@@ -155,7 +165,7 @@ export default {
             }
           });
           this.chatInfo.toUserPhoto = this.avatar;
-          this.pageScrollToBottom();
+          // this.pageScrollToBottom();
           this.readNotificationMsg();
         }
       })
@@ -171,6 +181,7 @@ export default {
     }
   },
   onUnload: function() {
+    this.unLoad = true;
     wx.closeSocket();
     this.userId = "";
     this.chatUserId = "";
@@ -237,17 +248,20 @@ export default {
       wx.onSocketClose((res) => {
         console.log('WebSocket 已关闭！');
         that.socketOpen = false;
-        this.reconnect()
+        if(!this.unLoad){
+          this.reconnect()
+        }
       })
     },
     setMessage(res) {
+      console.log("setMessage")
       let that = this;
       var item = JSON.parse(res);
       item.createTime = that.$moment(item.createTime).format("YYYY-MM-DD HH:mm");
       let chatMessageList = that.chatMessageList;
       chatMessageList.push(item);
       that.chatMessageList = chatMessageList;
-
+      console.log(chatMessageList)
       // this.setChatMessageList(chatMessageList);
       that.pageScrollToBottom();
       
@@ -257,16 +271,14 @@ export default {
     },
     // 滚动到页面底部
     pageScrollToBottom() {
-      if (this.chatUserId !== 0) {
-        let that = this;
-        wx.createSelectorQuery().select('#chatPage').boundingClientRect(function (rect) {
-          let top = 68 * that.chatMessageList.length;
-          wx.pageScrollTo({
-            scrollTop: top,
-            duration: 0
-          })
-        }).exec()
-      }
+      let that = this;
+      wx.createSelectorQuery().select('#chatPage').boundingClientRect(function (rect) {
+        let top = 68 * that.chatMessageList.length;
+        wx.pageScrollTo({
+          scrollTop: top,
+          duration: 0
+        })
+      }).exec()
     },
     // 断线重连
     reconnect() {
@@ -302,7 +314,7 @@ export default {
 
       if (this.socketOpen) {
         wx.sendSocketMessage({
-          data: JSON.stringify({ 'message': msg, 'receiveId': this.chatUserId+'', 'roomId': this.roomId,'type':'0' }),
+          data: JSON.stringify({ 'message': msg, 'receiveId': this.chatUserId+'', 'roomId': this.roomId,'type':0 }),
           success(res) {
             console.log("发送 " + msg + " 成功")
             that.msg = "";
@@ -341,6 +353,7 @@ export default {
     },
     handleUserInfo() {
       // 跳转个人主页
+      this.unLoad = true;
       wx.closeSocket();
       wx.navigateTo({
         url: "../../myPages/post/main?userId=" + this.chatUserId + "&selfUserId=" + this.userId
@@ -416,6 +429,9 @@ export default {
         sizeType: ['compressed'], //压缩图
         sourceType: ['album','camera'], //指定来源，相册和相机都可
         success(res) {
+          wx.showLoading({
+            title: "加载中"
+          });
           //上传
           wx.uploadFile({
             url: that.$wxhttp.host + "/image/uploadMessageImg",
@@ -424,12 +440,31 @@ export default {
             header: { "Content-Type": "multipart/form-data" },
             success(res2) {
               that.uploadFilePath = that.$wxhttp.hostForFile + String(JSON.parse(res2.data).data);
-              wx.hideLoading();
+              // 发送图片
+              if(that.socketOpen){
+                wx.sendSocketMessage({
+                  data: JSON.stringify({ 'message': that.uploadFilePath, 'receiveId': that.chatUserId+'', 'roomId': that.roomId,'type':1 }),
+                  success(res3) { 
+                    console.log("发送 图片 成功")
+                  }
+                });
+              }else{
+                wx.showToast({
+                  title: "链接异常,请重试",
+                  icon: "none"
+                });
+              }
             }
           });
         }
       })
     },
+    handlePreview(url) {
+      wx.previewImage({
+        current: url, // 当前显示图片的http链接
+        urls: [url] // 需要预览的图片http链接列表
+      });
+    }
   }
 }
 </script>
