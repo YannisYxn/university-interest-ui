@@ -10,13 +10,13 @@
             style="float:left;min-width:55%;text-align:left;"
           >
             <view v-if="item.type == 1" slot="img">
-              <image :src="item.content" mode="widthFix" style="max-width:100%;" @click="handlePreview(item.content)"/>
+              <image :src="item.content" mode="widthFix" style="width:100%;" @click="handlePreview(item.content)"/>
             </view>
             <view slot="icon">
               <i-avatar :src="chatInfo.toUserPhoto" @click="handleUserInfo()"/>
             </view>
             <view slot="last">
-              <div v-if="index == (chatMessageList.length-1)" style="height:100px;width:100%;">
+              <div v-if="index == (chatMessageList.length-1)" style="height:130px;width:100%;">
               </div>
             </view>
           </i-chat-cell>
@@ -27,13 +27,13 @@
             style="float:right;min-width:55%;text-align:right;"
           >
             <view v-if="item.type == 1" slot="img">
-              <image :src="item.content" mode="widthFix" style="max-width:100%;" @click="handlePreview(item.content)"/>
+              <image :src="item.content" mode="widthFix" style="width:100%;" @click="handlePreview(item.content)"/>
             </view>
             <view slot="self" style="float:right;">
               <i-avatar :src="chatInfo.fromUserPhoto" />
             </view>
             <view slot="last">
-              <div v-if="index == (chatMessageList.length-1)" style="height:135px;width:100%;">
+              <div v-if="index == (chatMessageList.length-1)" style="height:130px;width:100%;">
               </div>
             </view>
           </i-chat-cell>
@@ -231,6 +231,7 @@ export default {
       let that = this
       wx.onSocketMessage((res) => {
         // 数据处理
+        console.log("onSocket")
         this.setMessage(res.data)
         // var item = JSON.parse(res)
         // item.createTime = that.$moment(item.createTime).format("YYYY-MM-DD HH:mm:SS")
@@ -240,6 +241,7 @@ export default {
       })
       wx.onSocketOpen(() => {
         console.log('WebSocket连接打开')
+        that.socketOpen = true;
       })
       wx.onSocketError((res) => {
         console.log('WebSocket连接打开失败')
@@ -261,7 +263,6 @@ export default {
       let chatMessageList = that.chatMessageList;
       chatMessageList.push(item);
       that.chatMessageList = chatMessageList;
-      console.log(chatMessageList)
       // this.setChatMessageList(chatMessageList);
       that.pageScrollToBottom();
       
@@ -273,7 +274,8 @@ export default {
     pageScrollToBottom() {
       let that = this;
       wx.createSelectorQuery().select('#chatPage').boundingClientRect(function (rect) {
-        let top = 68 * that.chatMessageList.length;
+        let top = 500 * that.chatMessageList.length;
+        // let top = rect.length;
         wx.pageScrollTo({
           scrollTop: top,
           duration: 0
@@ -314,7 +316,7 @@ export default {
 
       if (this.socketOpen) {
         wx.sendSocketMessage({
-          data: JSON.stringify({ 'message': msg, 'receiveId': this.chatUserId+'', 'roomId': this.roomId,'type':0 }),
+          data: JSON.stringify({ 'message': msg, 'receiveId': this.chatUserId+'', 'roomId': this.roomId,'type':'0' }),
           success(res) {
             console.log("发送 " + msg + " 成功")
             that.msg = "";
@@ -443,9 +445,10 @@ export default {
               // 发送图片
               if(that.socketOpen){
                 wx.sendSocketMessage({
-                  data: JSON.stringify({ 'message': that.uploadFilePath, 'receiveId': that.chatUserId+'', 'roomId': that.roomId,'type':1 }),
+                  data: JSON.stringify({ 'message': that.uploadFilePath, 'receiveId': that.chatUserId+'', 'roomId': that.roomId,'type':'1' }),
                   success(res3) { 
-                    console.log("发送 图片 成功")
+                    console.log("发送 图片 成功");
+
                   }
                 });
               }else{

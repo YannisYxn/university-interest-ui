@@ -4,8 +4,8 @@
     </view>
     <view class="i-cell-bd">
         <view wx:if="{{ title }}" class="i-cell-text">{{ title }}</view>
-        <view wx:if="{{ label }}" class="i-cell-desc">{{ label }}</view>
         <slot name="img"></slot>
+        <view wx:if="{{ label }}" class="i-cell-desc">{{ label }}</view>
         <slot></slot>
     </view>
     <view class="i-cell-badge">

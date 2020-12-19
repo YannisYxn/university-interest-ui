@@ -20,7 +20,7 @@
         :title="item.userName"
         :label="item.userUniversityCampus"
         :time="item.distance + 'km ' + item.createTime"
-        :content="item.content"
+        :content="item.messageType ==  0 ? item.content : (item.messageType == 1 ? '[图片]' : '[赠送积分]')"
         @click="handleChat(item.userId)"
       >
         <view slot="icon">
