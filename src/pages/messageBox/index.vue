@@ -1,17 +1,18 @@
 <template>
   <div style="background-color:#f3f4f5;">
-    <i-notice-bar color="#14d0b6" icon="systemprompt" loop ref="noticeBar">{{ latestMessage }}</i-notice-bar>
+    <!-- <i-notice-bar color="#14d0b6" icon="systemprompt" loop ref="noticeBar">{{ latestMessage }}</i-notice-bar> -->
     <i-cell-group>
       <i-comment-cell
+        title="消息通知"
         @click="handleChat(0)"
       >
         <view slot="icon">
           <i-badge v-if="systemUnreadCount !== 0" dot>
-            <!-- <i-avatar :src="avatar" style="margin-right:10px;" /> -->
-            <span style="font-size:15px;margin:5px;">消息通知</span>
+            <i-avatar :src="avatar" style="margin-right:10px;" />
+            <!-- <span style="font-size:15px;margin:5px;">消息通知</span> -->
           </i-badge>
-          <!-- <i-avatar v-else :src="avatar" style="margin-right:10px;" /> -->
-          <span v-else style="font-size:15px;margin:5px;">消息通知</span>
+          <i-avatar v-else :src="avatar" style="margin-right:10px;" />
+          <!-- <span v-else style="font-size:15px;margin:5px;">消息通知</span> -->
         </view>
       </i-comment-cell>
       <i-comment-cell
@@ -104,7 +105,7 @@ export default {
     }else{
       //不是首次登录，获取兑换券列表
       this.getMessageList();
-      this.getLatestMessage();
+      // this.getLatestMessage();
       this.timer = setInterval(this.getMessageList, 50000);
       this.updateBadge();
     }
