@@ -71,7 +71,7 @@
           />
         </view>
         <view slot="content">
-          <span style="font-size:inherit;line-height:1.5;">{{ post.content }}</span>
+          <span style="font-size:inherit;line-height:1.5;" v-html="post.content">{{  }}</span>
           <div v-if="post.img" style="display:flex;width:240px;text-align:center;">
             <image :src="post.img" mode="widthFix" style="max-width:100%;" @click="handlePreview(post.img)"/>
           </div>

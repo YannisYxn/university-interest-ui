@@ -175,7 +175,15 @@ export default {
                 }else{
                   wx.showToast({
                     title: resp.msg,
-                    icon: 'none'
+                    icon: 'none',
+                    success: () => {
+                      setTimeout(() => {
+                        wx.showToast({
+                          title: "在校园边缘的时候，建组操作建议在室外宽阔的地方",
+                          icon: "none"
+                        });
+                      }, 1500);
+                    }
                   });
                 }
               })

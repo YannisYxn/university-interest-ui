@@ -5,6 +5,8 @@
         <i-row>
           <i-col span="6">
             <i-icon type="brush" style="float:right" size="20" color="white" @click="handleModify" />
+            <i-avatar style="float:right;margin-right:35px;" size="mini" v-if="sex == 1" src="../../../static/images/boy.png" />
+            <i-avatar style="float:right;margin-right:35px;" size="mini" v-else-if="sex == 2" src="../../../static/images/girl.png" />
             <i-avatar size="avatar" :src="photo" @click="handlePreview(photo)"/>
           </i-col>
           <i-col span="9">

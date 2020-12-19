@@ -38,7 +38,20 @@
     <div v-if="visible" style="position:fixed;bottom:0;width:100%;height:100px;background-color:white;">
       <i-row>
         <i-col span="18">
-          <i-input :value="msg" @change="handleMsgChange" cursorSpacing="24" i-class="chat" placeholder="请输入消息..." :maxlength="33" chat style="background-color:#ececec;"/>
+          <!-- <i-input :value="msg" @change="handleMsgChange" cursorSpacing="24" i-class="chat" placeholder="请输入消息..." :maxlength="33" chat style="background-color:#ececec;"/> -->
+          <i-input
+            :value="msg"
+            i-class="chat"
+            chat
+            placeholder="请输入消息..."
+            :maxlength="50"
+            type="textarea"
+            mode="wrapped"
+            cursorSpacing="60"
+            comment
+            @change="handleMsgChange"
+            style="background-color:#ececec;"
+          />
         </i-col>
         <i-col span="6">
           <i-button @click="sendEvent" size="small" type="primary" shape="circle">发送</i-button>
@@ -137,6 +150,7 @@ export default {
           this.chatMessageList = resp.data.map(item => {
             return {
               ...item,
+              content: item.content.replace(/<br>/gm, " "),
               createTime: this.$moment.unix(item.createTime).format("YYYY-MM-DD HH:mm")
             }
           });
@@ -314,6 +328,9 @@ export default {
     judge_last_3(){
       //判断最后三条是否为自己所发
       var messageList = this.chatMessageList;
+      if(messageList.length < 3){
+        return false
+      }
       if(messageList[messageList.length-1].fromUserId == this.userId && 
       messageList[messageList.length-2].fromUserId == this.userId &&
       messageList[messageList.length-3].fromUserId == this.userId){

@@ -30,7 +30,7 @@
       <i-card
         @click="handleToCityUniversity"
         title="同城高校兴趣组"
-        thumb="../../../static/images/tongcheng.png"
+        thumb="../../../static/images/tongcheng.jpg"
       >
         <view slot="footer">更多兴趣小组 都在这里</view>
       </i-card>
@@ -103,7 +103,7 @@
         @clickTitle="handlePersonalPage"
       >
         <view slot="content">
-          <span style="font-size:large;line-height:1.5;">{{ post.content }}</span>
+          <span style="font-size:inherit;line-height:1.5;" v-html="post.content">{{  }}</span>
           <div v-if="post.img" style="display:flex;width:240px;text-align:center;">
             <image :src="post.img" mode="widthFix" style="max-width:100%;" @click="handlePreview(post.img)"/>
           </div>
@@ -605,8 +605,16 @@ export default {
           this.visible4 = true; //确认校区
         }else if(resp.code === 4){
           //不在学校范围内
-          this.visible4 = false;
-          this.visible3 = true;
+          wx.showToast({
+            title: "在校园边缘的时候，首次登录建议在室外宽阔的地方",
+            icon: "none",
+            success: () => {
+              setTimeout(() => {
+                this.visible4 = false;
+                this.visible3 = true;
+              }, 1000);
+            }
+          });
         }else{
           wx.showToast({
             title: resp.msg,

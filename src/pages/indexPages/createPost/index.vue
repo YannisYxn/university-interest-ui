@@ -8,7 +8,7 @@
           mode="wrapped"
           type="textarea"
           maxlength="99"
-          placeholder="请输入你想说的...限99字"
+          placeholder="限99字，敬请文明用语，污言秽语被举报，封号处理。"
           @change="handleContentChange"
         />
         <div
@@ -184,7 +184,7 @@ export default {
           that.$wxhttp.post({
             url: "/post",
             data: {
-              content: that.content,
+              content: that.content.replace(/(\r\n|\n|\r)/gm, "<br>"),
               latitude: that.latitude,
               longitude: that.longitude,
               groupId: that.groupId,
@@ -210,7 +210,7 @@ export default {
           this.$wxhttp.post({
             url: "/post",
             data: {
-              content: this.content,
+              content: this.content.replace(/(\r\n|\n|\r)/gm, "<br>"),
               latitude: this.latitude,
               longitude: this.longitude,
               groupId: this.groupId,
@@ -228,7 +228,15 @@ export default {
             }else{
               wx.showToast({
                 title: resp.msg,
-                icon: "none"
+                icon: "none",
+                success: () => {
+                  setTimeout(() => {
+                    wx.showToast({
+                      title: "在校园边缘的时候，发帖操作建议在室外宽阔的地方",
+                      icon: "none"
+                    });
+                  }, 1500);
+                }
               });
             }
           });
