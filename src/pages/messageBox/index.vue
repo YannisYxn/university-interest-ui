@@ -76,7 +76,18 @@ export default {
   },
   onShow() {
     this.userId = this.globalData.userId;
-    if(this.globalData.isCheckUniversity === 0){
+    if(this.globalData.userType == 3){
+      //商家
+      wx.showToast({
+        title: "商家无法进行其他操作",
+        icon: "none"
+      });
+      setTimeout(() => {
+        wx.navigateTo({
+          url: "../indexPages/merchant/main"
+        });
+      }, 1500);
+    }else if(this.globalData.isCheckUniversity === 0){
       //首次登录校趣，输入校区，授权信息，并完善个人信息
       wx.showToast({
         title: "首次登录，请在本人的大学校园内登陆校趣完成在校认证 或 输入邀请码 ",

@@ -183,10 +183,6 @@
       <span style="font-size:15px;line-height:20px;margin:0 20px;">输入邀请码：</span>
       <i-input :value="invitationCode" mode="wrapped" maxlength="10" placeholder="请在这里输入" @change="handleInvitationCodeChange"/>
     </mp-dialog>
-    <!-- <i-modal title="欢迎首次进入校趣" :visible="visible1" @ok="handleClose1" @cancel="handleClose1">
-      <p style="font-size:15px;line-height:20px;margin:0 20px;">您是厦门大学思明校区的学生吗？不是的话，请在本校校区时登录校趣。谢谢。</p>
-      <p style="font-size:10px;">提示：冒用ta人校区，被举报，会封号。</p>
-    </i-modal> -->
     <mp-dialog
       title="欢迎首次进入校趣"
       :show="visible1"
@@ -197,21 +193,6 @@
       <p style="font-size:15px;line-height:20px;margin:0 20px;">您是厦门大学思明校区的学生吗？不是的话，请在本校校区时登录校趣。谢谢。</p>
       <p style="font-size:10px;">提示：冒用ta人校区，被举报，会封号。</p>
     </mp-dialog>
-    <!-- <i-modal
-      title="请输入就读高校"
-      :visible="visible4"
-      @ok="handleOnUniversity"
-      @cancel="handleClose4"
-      openType="getUserInfo"
-      @getUserInfo="getUserInfo"
-    >
-      <i-input
-        v-model="university"
-        maxlength="10"
-        placeholder="学校名称"
-        @change="handleUniversityChange"
-      />
-    </i-modal> -->
     <mp-dialog
       title="请确认校区"
       :show="visible4"
@@ -316,7 +297,12 @@ export default {
     if(this.searchKey){
       this.handleClearSearch();
     }
-    if(this.userInfo.status == -3){
+    if(this.globalData.userType == 3){
+      //商家
+      wx.navigateTo({
+        url: "../indexPages/merchant/main"
+      });
+    }else if(this.userInfo.status == -3){
       this.visibleLogout = true;
     }else if(this.userInfo.isCheckUniversity === 0){
       //首次登录校趣，输入校区，授权信息，并完善个人信息
@@ -359,7 +345,12 @@ export default {
               that.globalData.isCheckUniversity = resp.data.isCheckUniversity;
               that.globalData.status = resp.data.status;
               that.globalData.isPerfectInfo = resp.data.isPerfectInfo;  //是否完善信息
-              if(resp.data.status == -3){
+              that.globalData.userType = resp.data.type;
+              if(resp.data.type == 3){
+                wx.navigateTo({
+                  url: "../indexPages/merchant/main"
+                });
+              }else if(resp.data.status == -3){
                 that.visibleLogout = true;
               }else{
                 if(resp.data.isCheckUniversity === 0){
@@ -495,6 +486,7 @@ export default {
         }).then(resp => {
           if(resp.code == 0){
             this.isChecked = true;
+            this.globalData.isCheckUniversity = 1;
             var that = this;
             wx.getUserInfo({
               success(res) {
@@ -603,6 +595,7 @@ export default {
           this.userInfo.universityId = resp.data.universityId;
           this.userInfo.universityName = resp.data.universityName;
           this.userInfo.universityCampusId = resp.data.universityCampusId;
+          this.globalData.userType = 1;
           this.visible4 = true; //确认校区
         }else if(resp.code === 4){
           //不在学校范围内
@@ -637,6 +630,7 @@ export default {
         }
       }).then(resp => {
         if(resp.code === 0){
+          this.globalData.isPerfectInfo = 1;
           this.getGroupList();
         }else{
           wx.showToast({
@@ -726,6 +720,7 @@ export default {
           }
         }).then(resp => {
           if(resp.code === 0){
+            this.globalData.userType = resp.data;
             // 完善商家信息
             wx.getUserInfo({
               success(res) {
@@ -737,6 +732,9 @@ export default {
                 };
                 that.uploadUserInfoFirstTime();
               }
+            });
+            wx.navigateTo({
+              url: "../indexPages/merchant/main"
             });
           }else{
             wx.showToast({

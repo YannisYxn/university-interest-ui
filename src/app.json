@@ -40,7 +40,9 @@
         "manageInterestGroup/main",
         "comment/main",
         "tip/main",
-        "modifyGroup/main"
+        "modifyGroup/main",
+        "merchant/main",
+        "merchantUniversity/main"
       ]
     }
   ],

@@ -164,6 +164,8 @@ export default {
     this.msg = "";
     this.visible = false;
     this.unLoad = false;
+    this.chatMessageList = [];
+    this.chatInfo.chatMessageList = [];
     if(this.chatUserId == 0){
       this.$wxhttp.get({
         url: "/message/getSystemMsgList?userId=" + this.userId
