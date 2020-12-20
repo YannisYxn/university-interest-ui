@@ -487,6 +487,7 @@ export default {
       });
     },
     getUserInfo(detail) {
+      this.globalData.isCheckUniversity = 1;
       this.visible4 = false;
       if(this.userInfo.universityName){
         this.$wxhttp.post({

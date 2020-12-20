@@ -6,8 +6,8 @@
           <i-col span="6">
             <i-icon type="brush" style="float:right" size="20" color="white" @click="handleModify" />
             <i-avatar size="avatar" :src="photo" @click="handlePreview(photo)"/>
-            <i-avatar style="float:right;" size="mini" v-if="sex == 1" src="../../../static/images/boy.png" />
-            <i-avatar style="float:right;" size="mini" v-else-if="sex == 2" src="../../../static/images/girl.png" />
+            <i-avatar style="position:absolute;top:77px;left:22%;" size="mini" v-if="sex == 1" src="../../../static/images/boy.png" />
+            <i-avatar style="position:absolute;top:77px;left:22%;" size="mini" v-else-if="sex == 2" src="../../../static/images/girl.png" />
           </i-col>
           <i-col span="9">
             <p style="fong-size:15px;color:white;">{{ name }}</p>

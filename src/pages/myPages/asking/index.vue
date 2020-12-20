@@ -6,7 +6,7 @@
         style="height:200px;"
         type="textarea"
         mode="wrapped"
-        placeholder="请写出要说的反馈，我们会在一个工作日内回复你，限99字"
+        placeholder="请写出要说的反馈，我们会在一个工作日内回复您，限99字，谢谢"
         asking
         maxlength="99"
         @change="handleContentChange"

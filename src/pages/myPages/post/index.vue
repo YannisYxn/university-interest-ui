@@ -5,8 +5,8 @@
         <i-row>
           <i-col span="6">
             <i-avatar size="avatar" :src="userDetail.photo" @click="handlePreview(userDetail.photo)"/>
-            <i-avatar style="float:right;" size="mini" v-if="userDetail.sex == 1" :src="boy" />
-            <i-avatar style="float:right;" size="mini" v-else-if="userDetail.sex == 2" :src="girl" />
+            <i-avatar style="position:absolute;top:55px;left:21%;" size="mini" v-if="userDetail.sex == 1" :src="boy" />
+            <i-avatar style="position:absolute;top:55px;left:21%;" size="mini" v-else-if="userDetail.sex == 2" :src="girl" />
           </i-col>
           <i-col span="9">
             <p style="fong-size:15px;color:white;">{{ userDetail.name }}</p>

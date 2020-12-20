@@ -5,35 +5,35 @@
         <div v-for="(item,index) in chatMessageList" :key="item">
           <i-chat-cell
             v-if="item.fromUserId == chatUserId"
-            :title="item.type == 0 ? item.content : ''"
+            :title="item.type == 0 || chatUserId == 0 ? item.content : ''"
             :label="item.createTime"
             style="float:left;min-width:55%;text-align:left;"
           >
-            <view v-if="item.type == 1" slot="img">
+            <view v-if="item.type == 1 && chatUserId !== 0" slot="img">
               <image :src="item.content" mode="widthFix" style="width:100%;" @click="handlePreview(item.content)"/>
             </view>
             <view slot="icon">
               <i-avatar :src="chatInfo.toUserPhoto" @click="handleUserInfo()"/>
             </view>
             <view slot="last">
-              <div v-if="index == (chatMessageList.length-1)" style="height:130px;width:100%;">
+              <div v-if="index == (chatMessageList.length-1)" style="height:100px;width:100%;">
               </div>
             </view>
           </i-chat-cell>
           <i-chat-cell
             v-else
-            :title="item.type == 0 ? item.content : ''"
+            :title="item.type == 0 || chatUserId == 0 ? item.content : ''"
             :label="item.createTime"
             style="float:right;min-width:55%;text-align:right;"
           >
-            <view v-if="item.type == 1" slot="img">
+            <view v-if="item.type == 1 && chatUserId !== 0" slot="img">
               <image :src="item.content" mode="widthFix" style="width:100%;" @click="handlePreview(item.content)"/>
             </view>
             <view slot="self" style="float:right;">
               <i-avatar :src="chatInfo.fromUserPhoto" />
             </view>
             <view slot="last">
-              <div v-if="index == (chatMessageList.length-1)" style="height:130px;width:100%;">
+              <div v-if="index == (chatMessageList.length-1)" style="height:100px;width:100%;">
               </div>
             </view>
           </i-chat-cell>
@@ -41,9 +41,9 @@
       </i-cell-group>
     </div>
 
-    <div v-if="visible" style="position:fixed;bottom:0;width:100%;height:135px;background-color:white;">
+    <div v-if="visible" style="position:fixed;bottom:0;width:100%;height:100px;background-color:white;">
       <i-row>
-        <i-col span="18">
+        <i-col span="15">
           <!-- <i-input :value="msg" @change="handleMsgChange" cursorSpacing="24" i-class="chat" placeholder="请输入消息..." :maxlength="33" chat style="background-color:#ececec;"/> -->
           <i-input
             :value="msg"
@@ -59,11 +59,26 @@
             style="background-color:#ececec;"
           />
         </i-col>
-        <i-col span="6">
+        <i-col span="8" offset="1">
           <i-button @click="sendEvent" size="small" type="primary" shape="circle">发送</i-button>
+          <div style="margin-right:10px;">
+            <i-row>
+              <i-col span="12" style="text-align:center;">
+                <span style="color:#12d2c2;" @click="() => visibleCredit = true">送分</span>
+              </i-col>
+              <i-col span="12" style="text-align:center;">
+                <i-avatar
+                  size="small"
+                  shape="square"
+                  src="../../../static/images/photo.png"
+                  @click="handleChooseImage"
+                />
+              </i-col>
+            </i-row>
+          </div>
         </i-col>
       </i-row>
-      <div>
+      <!-- <div>
         <i-row>
           <i-col span="12" style="text-align:center;">
             <span style="color:#12d2c2;" @click="() => visibleCredit = true">送分</span>
@@ -77,7 +92,7 @@
             />
           </i-col>
         </i-row>
-      </div>
+      </div> -->
       <!-- <i-button type="primary" long="true" @click="() => visibleCredit = true">送分</i-button> -->
     </div>
 
@@ -320,15 +335,6 @@ export default {
           success(res) {
             console.log("发送 " + msg + " 成功")
             that.msg = "";
-            // that.chatInfo.chatMessageList.push({
-            //   content: msg,
-            //   createTime: that.$moment(new Date().getTime()).format("YYYY-MM-DD HH:mm:SS"),
-            //   fromUserId: that.userId,
-            //   id: null,
-            //   toUserId: that.chatUserId,
-            //   type: 1
-            // });
-            // that.pageScrollToBottom();
           }
         });
       } else {
@@ -355,11 +361,18 @@ export default {
     },
     handleUserInfo() {
       // 跳转个人主页
-      this.unLoad = true;
-      wx.closeSocket();
-      wx.navigateTo({
-        url: "../../myPages/post/main?userId=" + this.chatUserId + "&selfUserId=" + this.userId
-      });
+      if(this.chatUserId == 0){
+        wx.showToast({
+          title: "官方消息无个人主页哟",
+          icon: "none"
+        });
+      }else{
+        this.unLoad = true;
+        wx.closeSocket();
+        wx.navigateTo({
+          url: "../../myPages/post/main?userId=" + this.chatUserId + "&selfUserId=" + this.userId
+        });
+      }
     },
     handleCreditChange(event) {
       this.credit = event.mp.detail.detail.value;
@@ -388,6 +401,21 @@ export default {
         }).then(resp => {
           if(resp.code == 0){
             this.visibleCredit = false;
+            // 发送赠送积分的消息
+            if (this.socketOpen) {
+              wx.sendSocketMessage({
+                data: JSON.stringify({ 'message': '赠出' + this.credit + '积分', 'receiveId': this.chatUserId+'', 'roomId': this.roomId,'type':'0' }),
+                success(res) {
+                  console.log("发送 积分 成功")
+                }
+              });
+            } else {
+              wx.showToast({
+                title: '链接已断,重新链接',
+                icon: 'none',
+                mask: true,
+              });
+            }
             wx.showToast({
               title: "赠送成功"
             });

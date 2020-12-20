@@ -56,13 +56,17 @@
       <i-load-more v-else :loading="false" />
     </div>
 
-    <div style="margin-left: 15px; margin-right: 15px">
-      <span style="font-size: 11px; line-height: 2; color: #8b8b8b"
+    <div style="margin-left: 15px; margin-right: 10px">
+      <span style="font-size: 11px; line-height: 2; "
         >提示：</span
       >
       <br />
-      <span style="font-size: 11px; line-height: 2; color: #8b8b8b"
+      <span style="font-size: 11px; line-height: 2; "
         >收益每周一结算，通过微信支付到账。收益分配期限，自首次登陆校趣之日起三年。</span
+      >
+      <br />
+      <span style="font-size: 11px; line-height: 2; "
+        >由于微信支付派发最低限是1元，上周合计低于1元的收益不给予发放，不累计到下周收益，请知晓理解；欢迎有空的时候，多来校趣，赢取更大的收益，谢谢；</span
       >
     </div>
   </div>
