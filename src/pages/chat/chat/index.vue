@@ -16,7 +16,7 @@
               <i-avatar :src="chatInfo.toUserPhoto" @click="handleUserInfo()"/>
             </view>
             <view slot="last">
-              <div v-if="index == (chatMessageList.length-1)" style="height:100px;width:100%;">
+              <div v-if="index == (chatMessageList.length-1)" style="height:110px;width:100%;">
               </div>
             </view>
           </i-chat-cell>
@@ -33,7 +33,7 @@
               <i-avatar :src="chatInfo.fromUserPhoto" />
             </view>
             <view slot="last">
-              <div v-if="index == (chatMessageList.length-1)" style="height:100px;width:100%;">
+              <div v-if="index == (chatMessageList.length-1)" style="height:110px;width:100%;">
               </div>
             </view>
           </i-chat-cell>
@@ -41,20 +41,19 @@
       </i-cell-group>
     </div>
 
-    <div v-if="visible" style="position:fixed;bottom:0;width:100%;height:100px;background-color:white;">
+    <div v-if="visible" style="position:fixed;bottom:0;width:100%;height:110px;background-color:white;">
       <i-row>
         <i-col span="15">
           <!-- <i-input :value="msg" @change="handleMsgChange" cursorSpacing="24" i-class="chat" placeholder="请输入消息..." :maxlength="33" chat style="background-color:#ececec;"/> -->
           <i-input
             :value="msg"
             i-class="chat"
-            chat
             placeholder="请输入消息..."
             :maxlength="50"
             type="textarea"
             mode="wrapped"
-            cursorSpacing="60"
-            comment
+            cursorSpacing="70"
+            chat
             @change="handleMsgChange"
             style="background-color:#ececec;"
           />
@@ -64,15 +63,15 @@
           <div style="margin-right:10px;">
             <i-row>
               <i-col span="12" style="text-align:center;">
-                <span style="color:#12d2c2;" @click="() => visibleCredit = true">送分</span>
-              </i-col>
-              <i-col span="12" style="text-align:center;">
                 <i-avatar
                   size="small"
                   shape="square"
                   src="../../../static/images/photo.png"
                   @click="handleChooseImage"
                 />
+              </i-col>
+              <i-col span="12" style="text-align:center;">
+                <span style="color:#12d2c2;" @click="() => visibleCredit = true">送分</span>
               </i-col>
             </i-row>
           </div>
@@ -121,6 +120,10 @@
         maxlength="5"
         @change="handleCreditChange"
       />
+      <br />
+      <div style="text-align:center;">
+        <span>点击上方，可自行填写赠送积分</span>
+      </div>
     </mp-dialog>
   </div>
 </template>
@@ -184,6 +187,11 @@ export default {
           this.chatInfo.toUserPhoto = this.avatar;
           // this.pageScrollToBottom();
           this.readNotificationMsg();
+        }else{
+          wx.showToast({
+            title: resp.msg,
+            icon: "none"
+          });
         }
       })
     }else{
@@ -456,6 +464,15 @@ export default {
     },
     handleChooseImage() {
       var that = this;
+
+      if(that.judge_last_3()){
+        wx.showToast({
+          title: "未收到回复前最多发送3条消息",
+          icon: "none"
+        });
+        return;
+      }
+
       wx.chooseImage({
         count: 1, //最多上传1张照片
         sizeType: ['compressed'], //压缩图
@@ -490,7 +507,7 @@ export default {
             }
           });
         }
-      })
+      });
     },
     handlePreview(url) {
       wx.previewImage({

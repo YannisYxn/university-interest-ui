@@ -20,6 +20,10 @@ Component({
             type: Boolean,
             value: false
         },
+        chat: {
+            type: Boolean,
+            value: false
+        },
         placeholder: {
             type: String,
             value: ''

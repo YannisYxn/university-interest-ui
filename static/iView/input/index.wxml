@@ -7,7 +7,7 @@
         value="{{ value }}"
         placeholder="{{ placeholder }}"
         maxlength="{{ maxlength }}"
-        class="i-input-input i-cell-bd {{ right ? 'i-input-input-right' : '' }} {{ asking ? 'i-input-textarea' : '' }} {{ high ? 'i-input-high' : '' }} {{ comment ? 'i-comment-high' : ''}}"
+        class="i-input-input i-cell-bd {{ right ? 'i-input-input-right' : '' }} {{ asking ? 'i-input-textarea' : '' }} {{ high ? 'i-input-high' : '' }} {{chat ? 'i-chat-high' : ''}} {{ comment ? 'i-comment-high' : ''}}"
         placeholder-class="i-input-placeholder"
         cursor-spacing="{{ cursorSpacing }}"
         bindinput="handleInputChange"
