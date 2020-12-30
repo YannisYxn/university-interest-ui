@@ -25,6 +25,10 @@ Component({
       group: {
           type: Boolean,
           value: false
-      }
+      },
+      background: {
+        type: String,
+        value: ''
+      },
   }
 });

@@ -1,37 +1,47 @@
 <template>
   <div>
-    <div v-for="ticket in ticketList" :key="ticket.id" style="margin-top:20px;width:100%;text-align:center;">
-      <exchange-card v-if="ticket.type == 1">
+    <div v-for="ticket in ticketList" :key="ticket.id" style="margin-top:20px;width:100%;">
+      <exchange-card v-if="ticket.type == 1" :background="normalExchange">
         <view slot="content">
           <i-row>
             <i-col span="15">
-              <p style="font-size:20px;line-height:30px;color:white;">{{ ticket.money }}元</p>
-              <p style="font-size:15px;line-height:25px;color:white;">{{ ticket.sellerName }}</p>
-              <p style="font-size:10px;line-height:20px;color:white;">{{ ticket.description }}</p>
-              <p style="font-size:10px;line-height:15px;color:white;">有效日期：{{ ticket.deadline }}前</p>
+              <div style="border-right: solid white 1px;padding:6px;">
+                <p style="font-size:25px;line-height:30px;color:white;">{{ ticket.money }}元</p>
+                <p style="font-size:20px;line-height:25px;color:white;">{{ ticket.sellerName }}</p>
+                <p style="font-size:10px;line-height:20px;color:white;">{{ ticket.description }}</p>
+                <p style="font-size:10px;line-height:15px;color:white;">有效日期：{{ ticket.deadline }}前</p>
+              </div>
             </i-col>
             <i-col span="9">
-              <p style="font-size:15px;line-height15px;color:white;">{{ ticket.needCreditNum }}积分</p>
-              <i-button type="exchange" shape="circle" @click="handleExchange(ticket.id)">立即兑换</i-button>
-              <p style="font-size:10px;line-height:15px;color:white;">总共：{{ ticket.totalNum }}张</p>
-              <p style="font-size:10px;line-height:15px;color:white;">剩余：{{ ticket.remainingNum }}张</p>
+              <div style="text-align:center;">
+                <p style="font-size:18px;line-height15px;color:white;float:right;margin:10px;">{{ ticket.needCreditNum }}积分</p>
+                <!-- <i-button type="exchange" shape="circle" @click="handleExchange(ticket.id)">立即兑换</i-button> -->
+                <!-- <p style="font-size:10px;line-height:15px;color:white;">总共：{{ ticket.totalNum }}张</p> -->
+                <img style="width:70px;height:30px;margin:5px" src="../../../static/images/normal_exchange_button.png" alt="" @click="handleExchange(ticket.id)"/>
+                <p style="font-size:10px;line-height:15px;color:white;">剩余：{{ ticket.remainingNum }}张</p>
+              </div>
             </i-col>
           </i-row>
         </view>
       </exchange-card>
-      <exchange-card v-else group>
+      <exchange-card v-else group :background="groupExchange">
         <view slot="content">
           <i-row>
             <i-col span="15">
-              <p style="font-size:20px;line-height:30px;color:white;">{{ ticket.money }}元</p>
-              <p style="font-size:15px;line-height:25px;color:white;">{{ ticket.sellerName }}</p>
-              <p style="font-size:10px;line-height:20px;color:white;">{{ ticket.description }}</p>
+              <div style="border-right: solid white 1px;padding:6px;">
+                <p style="font-size:25px;line-height:30px;color:white;">{{ ticket.money }}元</p>
+                <p style="font-size:20px;line-height:25px;color:white;">{{ ticket.sellerName }}</p>
+                <p style="font-size:10px;line-height:20px;color:white;">{{ ticket.description }}</p>
+              </div>
             </i-col>
             <i-col span="9">
-              <p style="font-size:15px;line-height15px;color:white;">{{ ticket.needCreditNum }}积分</p>
-              <i-button type="exchange" shape="circle" @click="handleExchange(ticket.id)">立即兑换</i-button>
-              <p style="font-size:10px;line-height:15px;color:white;">总共：{{ ticket.totalNum }}张</p>
-              <p style="font-size:10px;line-height:15px;color:white;">剩余：{{ ticket.remainingNum }}张</p>
+              <div style="text-align:center">
+                <p style="font-size:18px;line-height15px;color:white;float:right;margin:10px;">{{ ticket.needCreditNum }}积分</p>
+                <!-- <i-button type="exchange" shape="circle" @click="handleExchange(ticket.id)">立即兑换</i-button> -->
+                <!-- <p style="font-size:10px;line-height:15px;color:white;">总共：{{ ticket.totalNum }}张</p> -->
+                <img style="width:70px;height:30px;margin:5px" src="../../../static/images/group_exchange_button.png" alt="" @click="handleExchange(ticket.id)"/>
+                <p style="font-size:10px;line-height:15px;color:white;">剩余：{{ ticket.remainingNum }}张</p>
+              </div>
             </i-col>
           </i-row>
         </view>
@@ -60,13 +70,18 @@
 </template>
 
 <script>
+import normalExchange from "../../../static/images/normal_exchange.png";
+import groupExchange from "../../../static/images/group_exchange.png";
+
 export default {
   data() {
     return {
       userId: undefined,
       ticketList: [],
       visible: false,
-      ticketId: undefined
+      ticketId: undefined,
+      normalExchange: normalExchange,
+      groupExchange: groupExchange
     }
   },
   onShareAppMessage(object){
