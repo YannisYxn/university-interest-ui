@@ -1,5 +1,8 @@
 <template>
   <div style="min-height:100%;" id="chatPage">
+    <div v-if="chatUserId == 0" style="margin: 15px;font-size: 11px;color: gray;">
+      <span>消息通知，仅保留最近3天的；<br />打招呼选择，在 [我的] -> [设置] 里面；<br />收益列表，积分动态，兑换记录，分享记录，发帖被评论等，请在 [我的] 里面查看</span>
+    </div>
     <div>
       <i-cell-group>
         <div v-for="(item,index) in chatMessageList" :key="item">
@@ -119,6 +122,7 @@
         v-model="credit"
         maxlength="5"
         @change="handleCreditChange"
+        credit
       />
       <br />
       <div style="text-align:center;">
@@ -281,16 +285,18 @@ export default {
       })
     },
     setMessage(res) {
-      console.log("setMessage")
       let that = this;
       var item = JSON.parse(res);
-      item.createTime = that.$moment(item.createTime).format("YYYY-MM-DD HH:mm");
-      let chatMessageList = that.chatMessageList;
-      chatMessageList.push(item);
-      that.chatMessageList = chatMessageList;
-      // this.setChatMessageList(chatMessageList);
-      that.pageScrollToBottom();
-      
+      if(item.fromUserId == this.userId){
+        return
+      }else{
+        item.createTime = that.$moment(item.createTime).format("YYYY-MM-DD HH:mm");
+        let chatMessageList = that.chatMessageList;
+        chatMessageList.push(item);
+        that.chatMessageList = chatMessageList;
+        // this.setChatMessageList(chatMessageList);
+        that.pageScrollToBottom();
+      }
     },
     setChatMessageList(chatMessageList) {
       this.chatMessageList = chatMessageList;
@@ -344,6 +350,18 @@ export default {
           data: JSON.stringify({ 'message': msg, 'receiveId': this.chatUserId+'', 'roomId': this.roomId,'type':'0' }),
           success(res) {
             console.log("发送 " + msg + " 成功")
+            var item = {
+              content: that.msg,
+              createTime: that.$moment().locale('zh-cn').format("YYYY-MM-DD HH:mm"),
+              fromUserId: that.userId,
+              photo: that.chatInfo.fromUserPhoto,
+              toUserId: that.chatUserId,
+              type: 0
+            }
+            let chatMessageList = that.chatMessageList;
+            chatMessageList.push(item);
+            that.chatMessageList = chatMessageList;
+            that.pageScrollToBottom();
             that.msg = "";
           }
         });
@@ -417,6 +435,18 @@ export default {
                 data: JSON.stringify({ 'message': '赠出' + this.credit + '积分', 'receiveId': this.chatUserId+'', 'roomId': this.roomId,'type':'0' }),
                 success(res) {
                   console.log("发送 积分 成功")
+                  var item = {
+                    content: '赠出' + this.credit + '积分',
+                    createTime: that.$moment().locale('zh-cn').format("YYYY-MM-DD HH:mm"),
+                    fromUserId: that.userId,
+                    photo: that.chatInfo.fromUserPhoto,
+                    toUserId: that.chatUserId,
+                    type: 0
+                  }
+                  let chatMessageList = that.chatMessageList;
+                  chatMessageList.push(item);
+                  that.chatMessageList = chatMessageList;
+                  that.pageScrollToBottom();
                 }
               });
             } else {
@@ -495,7 +525,18 @@ export default {
                   data: JSON.stringify({ 'message': that.uploadFilePath, 'receiveId': that.chatUserId+'', 'roomId': that.roomId,'type':'1' }),
                   success(res3) { 
                     console.log("发送 图片 成功");
-
+                    var item = {
+                      content: that.uploadFilePath,
+                      createTime: that.$moment().locale('zh-cn').format("YYYY-MM-DD HH:mm"),
+                      fromUserId: that.userId,
+                      photo: that.chatInfo.fromUserPhoto,
+                      toUserId: that.chatUserId,
+                      type: 1
+                    }
+                    let chatMessageList = that.chatMessageList;
+                    chatMessageList.push(item);
+                    that.chatMessageList = chatMessageList;
+                    that.pageScrollToBottom();
                   }
                 });
               }else{

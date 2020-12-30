@@ -60,7 +60,10 @@ Component({
         cursorSpacing: {
             type: Number,   //指定光标与键盘的距离
             value: 0
-        }
+        },
+        credit: {
+            type: Boolean   //兴趣组介绍高度
+        },
     },
 
     methods: {

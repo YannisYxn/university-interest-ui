@@ -51,6 +51,10 @@
       @confirm="doExchange"
     >
       <span>是否确认兑换?</span>
+      <br />
+      <div style="text-align:center;">
+        <span>兑换后，请在兑换记录里面查看兑换码</span>
+      </div>
     </mp-dialog>
   </div>
 </template>

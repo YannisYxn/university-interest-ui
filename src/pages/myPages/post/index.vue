@@ -343,7 +343,7 @@ export default {
         //举报帖子
         var that = this;
         wx.navigateTo({
-          url: "../tip/main?type=3&userId=" + that.userId + 
+          url: "../../indexPages/tip/main?type=3&userId=" + that.userId + 
           "&relatedId=" + that.currentOperatedPostId + 
           "&reportedUserId=" + that.currentOperatedPostUserId
         });

@@ -21,6 +21,10 @@ Component({
         title: {
             type: String
         },
+        // deadline
+        deadline: {
+            type: String
+        },
         // 标题下方的描述信息
         label: {
             type: String

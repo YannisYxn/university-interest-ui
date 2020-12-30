@@ -806,8 +806,8 @@ export default {
         withSubscriptions: true,
         success(res) {
           if (!res.subscriptionsSetting['mainSwitch'] || 
-            !res.subscriptionsSetting['QMyzhlEEfg40tA6TL1v5OXVKVMp1WwZ6lW2xHwItNLM'] ||
-            res.subscriptionsSetting['QMyzhlEEfg40tA6TL1v5OXVKVMp1WwZ6lW2xHwItNLM'] !== 'accept') {
+            !res.subscriptionsSetting['QMyzhlEEfg40tA6TL1v5OR4WQrYa1gXy8YHGwCgVhHM'] ||
+            res.subscriptionsSetting['QMyzhlEEfg40tA6TL1v5OR4WQrYa1gXy8YHGwCgVhHM'] !== 'accept') {
               that.visibleMessage = true;
           }
         }

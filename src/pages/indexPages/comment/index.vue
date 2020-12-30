@@ -75,7 +75,7 @@
         <i-col :span="18">
           <i-input
             v-model="comment"
-            placeholder="限40字，敬请文明用语，污言秽语被举报，封号处理。"
+            placeholder="限40字，敬请文明用语，污言秽语及不良信息、商业信息被举报，封号处理"
             :maxlength="40"
             type="textarea"
             mode="wrapped"

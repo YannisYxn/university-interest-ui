@@ -4,12 +4,13 @@
     </view>
     <view class="i-cell-bd">
         <view wx:if="{{ title }}" class="i-cell-text">{{ title }}</view>
+        <view wx:if="{{ deadline }}" class="i-cell-text">{{ deadline }}</view>
         <view wx:if="{{ label }}" class="i-cell-desc">{{ label }}</view>
         <slot></slot>
     </view>
-    <view class="i-cell-badge">
+    <!-- <view class="i-cell-badge">
         <slot name="badge"></slot>
-    </view>
+    </view> -->
     <view class="i-cell-ft">
         <block wx:if="{{value}}">{{ value }}</block>
         <block wx:else>

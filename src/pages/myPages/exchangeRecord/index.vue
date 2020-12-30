@@ -7,6 +7,7 @@
           :key="record.id"
           style="margin-top:5px;font-size:10px;"
           :title="record.ticketName"
+          :deadline="' 有效期:' + record.deadline + '前'"
           :label="record.createTime"
           :value="'兑换码：' + record.code"
           @click="handleClip(record.code)"
@@ -46,7 +47,8 @@ export default {
         this.records = resp.data.map(item => {
           return {
             ...item,
-            createTime: this.$moment.unix(item.createTime).format("YYYY-MM-DD HH:mm")
+            createTime: this.$moment.unix(item.createTime).format("YYYY-MM-DD HH:mm"),
+            deadline: this.$moment.unix(item.deadline).format("YYYY-MM-DD")
           }
         });
       }else{

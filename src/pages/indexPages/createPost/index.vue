@@ -8,7 +8,7 @@
           mode="wrapped"
           type="textarea"
           maxlength="99"
-          placeholder="限99字，敬请文明用语，污言秽语被举报，封号处理。"
+          placeholder="限99字，敬请文明用语，污言秽语及不良信息、商业信息被举报，封号处理"
           @change="handleContentChange"
         />
         <div
