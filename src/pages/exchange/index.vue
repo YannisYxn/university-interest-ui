@@ -14,7 +14,7 @@
             </i-col>
             <i-col span="9">
               <div style="text-align:center;">
-                <p style="font-size:18px;line-height15px;color:white;float:right;margin:10px;">{{ ticket.needCreditNum }}积分</p>
+                <p style="font-size:18px;line-height15px;color:white;margin:10px;">{{ ticket.needCreditNum }}积分</p>
                 <!-- <i-button type="exchange" shape="circle" @click="handleExchange(ticket.id)">立即兑换</i-button> -->
                 <!-- <p style="font-size:10px;line-height:15px;color:white;">总共：{{ ticket.totalNum }}张</p> -->
                 <img style="width:70px;height:30px;margin:5px" src="../../../static/images/normal_exchange_button.png" alt="" @click="handleExchange(ticket.id)"/>
@@ -36,7 +36,7 @@
             </i-col>
             <i-col span="9">
               <div style="text-align:center">
-                <p style="font-size:18px;line-height15px;color:white;float:right;margin:10px;">{{ ticket.needCreditNum }}积分</p>
+                <p style="font-size:18px;line-height15px;color:white;margin:10px;">{{ ticket.needCreditNum }}积分</p>
                 <!-- <i-button type="exchange" shape="circle" @click="handleExchange(ticket.id)">立即兑换</i-button> -->
                 <!-- <p style="font-size:10px;line-height:15px;color:white;">总共：{{ ticket.totalNum }}张</p> -->
                 <img style="width:70px;height:30px;margin:5px" src="../../../static/images/group_exchange_button.png" alt="" @click="handleExchange(ticket.id)"/>
