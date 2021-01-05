@@ -13,7 +13,7 @@
           :label="record.createTime"
           :add="record.changeNum > 0"
           :minus="record.changeNum < 0"
-          :value="record.changeNum"
+          :value="record.changeNum > 0 ? '+' + record.changeNum : record.changeNum"
         ></i-cell>
       </i-cell-group>
     </div>

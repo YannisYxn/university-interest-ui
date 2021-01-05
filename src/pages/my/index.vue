@@ -23,7 +23,7 @@
             <br />
             <i-tag class="i-tags" type="border" color="green">校内登录{{ inCampusCount }}次</i-tag>
             <br />
-            <i-tag class="i-tags" type="border" color="red">校外登录{{ outCampusCount }}次</i-tag>
+            <i-tag class="i-tags" type="border" color="black">校外登录{{ outCampusCount }}次</i-tag>
           </i-col>
         </i-row>
       </div>

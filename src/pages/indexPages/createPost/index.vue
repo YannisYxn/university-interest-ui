@@ -11,8 +11,9 @@
           placeholder="限99字，敬请文明用语，污言秽语及不良信息、商业信息被举报，封号处理"
           @change="handleContentChange"
         />
+        <span v-if="isFill" style="color:red;margin:10px;font-size:12px;">字数已达到限制！</span>
         <div
-          v-if="tempFilePath === ''"
+          v-if="uploadFilePath === ''"
           style="border: 1px #b6b6b6 solid;border-radius: 5px;text-align:center;margin:10px;"
           @click="handleChooseImage"
         >
@@ -20,7 +21,7 @@
         </div>
         <div v-else style="text-align:center;margin:10px;">
           <!-- <img :src="tempFilePath" style="max-width:100%;max-height:100%;" /> -->
-          <image :src="uploadFilePath" mode="widthFix" style="max-width:100%;"/>
+          <image :src="uploadFilePath" mode="widthFix" style="max-width:100%;" @click="handleChooseImage"/>
         </div>
       </i-panel>
     </div>
@@ -39,6 +40,18 @@
     <div style="position:fixed;bottom:0;width:100%;">
       <i-button style="margin:10px;width:100%" shape="circle" type="primary" @click="handlePostPosition">发布</i-button>
     </div>
+
+    <mp-dialog
+      title="是否保留编辑"
+      :show="visibleKeep"
+      :buttons="[{text: '取消'}]"
+      @buttontap="handleClean"
+      @confirm="() => visibleKeep = false"
+    >
+      <div style="text-align:center;">
+        <span>存在已编辑内容，是否保留？</span>
+      </div>
+    </mp-dialog>
   </div>
 </template>
 
@@ -54,7 +67,9 @@ export default {
       uploadFilePath: "",
       latitude: undefined,
       longitude: undefined,
-      mode: ""  //跳转模式
+      mode: "",  //跳转模式
+      isFill: false,
+      visibleKeep: false
     }
   },
   onShareAppMessage(object){
@@ -68,9 +83,10 @@ export default {
     this.groupId = getQuery.getQuery().groupId;
     this.userId = getQuery.getQuery().userId;
 
-    this.content = "";
-    this.tempFilePath = "";
-    this.uploadFilePath = "";
+    if(this.content || this.uploadFilePath){
+      this.visibleKeep = true;
+    }
+    
     // 查找是否授权地理位置，未授权则要求用户授权地理位置
     var that = this;
     wx.getSetting({
@@ -103,6 +119,13 @@ export default {
     });
   },
   methods: {
+    handleClean() {
+      //清除编辑内容
+      this.content = "";
+      this.tempFilePath = "";
+      this.uploadFilePath = "";
+      this.visibleKeep = false;
+    },
     handleChooseImage() {
       var that = this;
       var content = that.content;
@@ -136,8 +159,17 @@ export default {
       });
       wx.hideLoading();
     },
+    onUnload() {
+      // 页面返回，确认是否保持编辑
+
+    },
     handleContentChange(event) {
       this.content = event.mp.detail.detail.value;
+      if(this.content.length == 99){
+        this.isFill = true;
+      }else{
+        this.isFill = false
+      }
     },
     handlePostPosition() {
       // 查找是否授权地理位置，未授权则要求用户授权地理位置

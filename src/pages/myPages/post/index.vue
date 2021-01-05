@@ -30,7 +30,7 @@
             <p style="font-size:12px;color:white;line-height:25px;">积分:{{ userDetail.credit }}</p>
             <br />
             <i-tag class="i-tags" type="border" color="green">校内登录{{ userDetail.inCampusCount }}次</i-tag>
-            <i-tag class="i-tags" type="border" color="red">校外登录{{ userDetail.outCampusCount }}次</i-tag>
+            <i-tag class="i-tags" type="border" color="black">校外登录{{ userDetail.outCampusCount }}次</i-tag>
           </i-col>
         </i-row>
       </div>

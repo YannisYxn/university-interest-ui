@@ -74,8 +74,10 @@
             />
             <!-- <i-badge v-else :count="group.postCount" overflow-count="100" style="margin-right:10px;" /> -->
             <div v-else style="margin-right:10px;">
-              <i-icon size="25" type="barrage_fill" color="#67ddd3"/>
-              <span style="color:#67ddd3;">{{ group.postCount }}</span>
+              <div style="width:50px;">
+                <i-icon size="25" type="barrage_fill" color="#67ddd3"/>
+                <span style="color:#67ddd3;float:right;">{{ group.postCount > 999 ? '999+' : group.postCount }}</span>
+              </div>
             </div>
           </view>
           <view slot="footer">
@@ -816,7 +818,7 @@ export default {
     handleSubscriptions() {
       var that = this;
       wx.requestSubscribeMessage({
-        tmplIds: ['QMyzhlEEfg40tA6TL1v5OXVKVMp1WwZ6lW2xHwItNLM'],
+        tmplIds: ['QMyzhlEEfg40tA6TL1v5OR4WQrYa1gXy8YHGwCgVhHM'],
         success(res) {
           that.visibleMessage = false;
           wx.showToast({

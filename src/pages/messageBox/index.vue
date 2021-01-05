@@ -34,7 +34,7 @@
       <i-comment-cell
         v-for="item in sayHelloList"
         :key="item"
-        :userId="item.userId"
+        :userId="item.fromUserId"
         :title="item.fromUserName"
         :label="item.fromUserUniversityCampusIdName"
         :time="item.distance + 'km ' + item.createTime"
@@ -218,7 +218,6 @@ export default {
       });
     },
     handlePersonalPage(e) {
-      // console.log(e.mp.detail)
       wx.navigateTo({
         url: "../myPages/post/main?userId=" + e.mp.detail + "&selfUserId=" + this.userId
       });

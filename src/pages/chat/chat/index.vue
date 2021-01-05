@@ -10,7 +10,9 @@
             v-if="item.fromUserId == chatUserId"
             :title="item.type == 0 || chatUserId == 0 ? item.content : ''"
             :label="item.createTime"
+            :green="item.type == 41"
             style="float:left;min-width:55%;text-align:left;"
+            @click="handleClickItem(item.type, item.relatedId)"
           >
             <view v-if="item.type == 1 && chatUserId !== 0" slot="img">
               <image :src="item.content" mode="widthFix" style="width:100%;" @click="handlePreview(item.content)"/>
@@ -391,7 +393,7 @@ export default {
       // 跳转个人主页
       if(this.chatUserId == 0){
         wx.showToast({
-          title: "官方消息无个人主页哟",
+          title: "消息通知无个人主页呦",
           icon: "none"
         });
       }else{
@@ -406,6 +408,7 @@ export default {
       this.credit = event.mp.detail.detail.value;
     },
     handleCredit() {
+      let that = this;
       // 赠送积分
       var regPos = /^\d+/;
       if(!regPos.test(this.credit)){
@@ -432,11 +435,11 @@ export default {
             // 发送赠送积分的消息
             if (this.socketOpen) {
               wx.sendSocketMessage({
-                data: JSON.stringify({ 'message': '赠出' + this.credit + '积分', 'receiveId': this.chatUserId+'', 'roomId': this.roomId,'type':'0' }),
+                data: JSON.stringify({ 'message': '我赠出' + this.credit + '积分，已飞到你积分动态', 'receiveId': this.chatUserId+'', 'roomId': this.roomId,'type':'0' }),
                 success(res) {
                   console.log("发送 积分 成功")
                   var item = {
-                    content: '赠出' + this.credit + '积分',
+                    content: '我赠出' + that.credit + '积分，已飞到你积分动态',
                     createTime: that.$moment().locale('zh-cn').format("YYYY-MM-DD HH:mm"),
                     fromUserId: that.userId,
                     photo: that.chatInfo.fromUserPhoto,
@@ -555,6 +558,18 @@ export default {
         current: url, // 当前显示图片的http链接
         urls: [url] // 需要预览的图片http链接列表
       });
+    },
+    handleClickItem(type, relatedId) {
+      //点击消息
+
+      //有关帖子的消息跳转到该帖子
+      if(type > 20 && type < 30){
+        this.unLoad = true;
+        wx.closeSocket();
+        wx.navigateTo({
+          url: "../../indexPages/comment/main?userId=" + this.userId + "&postId=" + relatedId
+        });
+      }
     }
   }
 }

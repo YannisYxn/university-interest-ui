@@ -6,15 +6,15 @@
           <i-row>
             <i-col span="15">
               <div style="border-right: solid white 1px;padding:6px;">
-                <p style="font-size:25px;line-height:30px;color:white;">{{ ticket.money }}元</p>
+                <p style="font-size:25px;line-height:30px;color:white;font-weight:bold;">{{ ticket.money }}元</p>
                 <p style="font-size:20px;line-height:25px;color:white;">{{ ticket.sellerName }}</p>
                 <p style="font-size:10px;line-height:20px;color:white;">{{ ticket.description }}</p>
-                <p style="font-size:10px;line-height:15px;color:white;">有效日期：{{ ticket.deadline }}前</p>
+                <p style="font-size:10px;line-height:15px;color:white;">使用有效日期：兑换时间{{ ticket.deadline }}前</p>
               </div>
             </i-col>
             <i-col span="9">
               <div style="text-align:center;">
-                <p style="font-size:18px;line-height15px;color:white;margin:10px;">{{ ticket.needCreditNum }}积分</p>
+                <p style="font-size:18px;line-height15px;color:white;margin:10px;font-weight:bold;">{{ ticket.needCreditNum }}积分</p>
                 <!-- <i-button type="exchange" shape="circle" @click="handleExchange(ticket.id)">立即兑换</i-button> -->
                 <!-- <p style="font-size:10px;line-height:15px;color:white;">总共：{{ ticket.totalNum }}张</p> -->
                 <img style="width:70px;height:30px;margin:5px" src="../../../static/images/normal_exchange_button.png" alt="" @click="handleExchange(ticket.id)"/>
@@ -29,14 +29,14 @@
           <i-row>
             <i-col span="15">
               <div style="border-right: solid white 1px;padding:6px;">
-                <p style="font-size:25px;line-height:30px;color:white;">{{ ticket.money }}元</p>
+                <p style="font-size:25px;line-height:30px;color:white;font-weight:bold;">{{ ticket.money }}元</p>
                 <p style="font-size:20px;line-height:25px;color:white;">{{ ticket.sellerName }}</p>
-                <p style="font-size:10px;line-height:20px;color:white;">{{ ticket.description }}</p>
+                <p style="font-size:10px;line-height:20px;color:white;" v-html="ticket.description">{{  }}</p>
               </div>
             </i-col>
             <i-col span="9">
               <div style="text-align:center">
-                <p style="font-size:18px;line-height15px;color:white;margin:10px;">{{ ticket.needCreditNum }}积分</p>
+                <p style="font-size:18px;line-height15px;color:white;margin:10px;font-weight:bold;">{{ ticket.needCreditNum }}积分</p>
                 <!-- <i-button type="exchange" shape="circle" @click="handleExchange(ticket.id)">立即兑换</i-button> -->
                 <!-- <p style="font-size:10px;line-height:15px;color:white;">总共：{{ ticket.totalNum }}张</p> -->
                 <img style="width:70px;height:30px;margin:5px" src="../../../static/images/group_exchange_button.png" alt="" @click="handleExchange(ticket.id)"/>
@@ -60,10 +60,10 @@
       @buttontap="() => visible = false"
       @confirm="doExchange"
     >
-      <span>是否确认兑换?</span>
+      <span>是否确认兑换?兑换后</span>
       <br />
       <div style="text-align:center;">
-        <span>兑换后，请在兑换记录里面查看兑换码</span>
+        <span>请在兑换记录里面查看兑换码</span>
       </div>
     </mp-dialog>
   </div>
