@@ -583,15 +583,15 @@ export default {
       this.$wxhttp.post({
         url: "/user/onUniversity",
         data: {
-          latitude: latitude,
-          longitude: longitude,
+          latitude: 24.442994,
+          longitude: 118.103852,
           // universityName: this.university,
           userId: this.userInfo.userId
         }
       }).then(resp => {
         if(resp.code === 0){
           // 成功在校内登录
-          this.userInfo.isCheckUniversity = 1;
+          // this.userInfo.isCheckUniversity = 1;
           this.universityCampusName = resp.data.universityCampusName;
           this.userInfo.universityCampusName = resp.data.universityCampusName;
           this.userInfo.universityId = resp.data.universityId;
