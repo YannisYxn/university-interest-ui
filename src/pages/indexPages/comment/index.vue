@@ -221,7 +221,8 @@ export default {
             icon: "none"
           });
         }
-      })
+      });
+      this.handleReadComment();
     },
     handleComment() {
       if(this.globalData.isPerfectInfo == 0){
