@@ -83,7 +83,10 @@
             <i-row>
               <i-col span="12">
                 <div @click="handleComment(post.id)">
-                  <i-icon size="30" type="message" />
+                  <i-badge v-if="post.userId == selfUserId && post.newComment" dot>
+                    <i-icon size="30" type="message" />
+                  </i-badge>
+                  <i-icon v-else size="30" type="message" />
                   <span
                     v-if="post.commentCount"
                     style="font-size:15px;vertical-align:middle;"

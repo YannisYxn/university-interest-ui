@@ -70,7 +70,7 @@
 
     <div style="height:50px" />
 
-    <div style="position:fixed;bottom:0;margin-bottom:15px;width:100%">
+    <div style="position:fixed;bottom:0;margin-bottom:15px;width:100%;z-index:999;">
       <i-row>
         <i-col :span="18">
           <i-input
@@ -188,6 +188,10 @@ export default {
           }
         });
         this.isJoin = resp.data.isJoin;
+        // 如果是本人，已读评论
+        if(resp.data.userId == this.userId){
+          this.handleReadComment();
+        }
       }else{
         wx.showToast({
           title: resp.msg,
@@ -320,6 +324,12 @@ export default {
         urls: [url] // 需要预览的图片http链接列表
       });
     },
+    handleReadComment() {
+      // 当发帖人是自己时，已读所有帖子评论
+      this.$wxhttp.post({
+        url: "/post/readComment?postId=" + this.postId
+      });
+    }
   }
 }
 </script>
