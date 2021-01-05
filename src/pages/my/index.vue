@@ -305,7 +305,7 @@ export default {
     // console.log(object)
     return {
       title: "校趣",
-      path: "../index/main?shareUserId=" + this.userId
+      path: "/pages/index/main?shareUserId=" + this.userId
     }
   },
   methods: {
