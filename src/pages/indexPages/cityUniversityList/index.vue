@@ -20,7 +20,8 @@ import getQuery from '../../../utils/getPage';
 export default {
   data() {
     return {
-      universityList: []
+      universityList: [],
+      userId: undefined
     }
   },
   onShareAppMessage(object){
@@ -31,6 +32,7 @@ export default {
     }
   },
   mounted() {
+    this.userId = getQuery.getQuery().userId;
     this.$wxhttp.get({
       url: "/university/listUniversityByCity?userId=" + getQuery.getQuery().userId
     }).then(resp => {
