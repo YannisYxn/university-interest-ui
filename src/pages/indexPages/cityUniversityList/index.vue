@@ -40,7 +40,8 @@ export default {
         this.universityList = resp.data;
       }else{
         wx.showToast({
-          title: resp.msg
+          title: resp.msg,
+          duration: 3000
         });
       }
     })

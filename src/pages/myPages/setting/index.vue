@@ -109,13 +109,15 @@ export default {
         if(resp.code === 3){
           //学校不存在
           wx.showToast({
-            title: '学校不存在'
+            title: '学校不存在',
+            duration: 3000
           });
         }else if(resp.code === 4){
           //不在学校范围内
           wx.showToast({
             title: "未在学校范围内",
-            icon: "none"
+            icon: "none",
+            duration: 3000
           });
         }else if(resp.code === 0){
           // 成功在校内登录
@@ -139,20 +141,23 @@ export default {
         }).then(resp => {
           if(resp.code == 0){
             wx.showToast({
-              title: "升序操作成功"
+              title: "升序操作成功",
+              duration: 3000
             });
             this.getUserInfo();
           }else{
             wx.showToast({
               title: resp.msg,
-              icon: "none"
+              icon: "none",
+              duration: 3000
             });
           }
         });
       }else{
         wx.showToast({
           title: "地理位置异常",
-          icon: "none"
+          icon: "none",
+          duration: 3000
         });
       }
     },
@@ -164,18 +169,20 @@ export default {
         if(resp.code == 0){
           wx.showToast({
             title: "注销成功",
+            duration: 3000,
             success: () => {
               setTimeout(() => {
                 wx.reLaunch({
                   url: "../../index/main"
                 });
-              },1500)
+              },3000)
             }
           })
         }else{
           wx.showToast({
             title: resp.msg,
-            icon: "none"
+            icon: "none",
+            duration: 3000
           });
         }
       })

@@ -42,7 +42,8 @@ export default {
       if(this.content === ""){
         wx.showToast({
           title: "诉求内容不可为空",
-          icon: "none"
+          icon: "none",
+          duration: 3000
         });
       }else{
         this.$wxhttp.post({
@@ -55,7 +56,8 @@ export default {
           if(resp.code === 0){
             wx.showToast({
               title: "校趣已经收到您的反馈，会及时处理，谢谢",
-              icon: "none"
+              icon: "none",
+              duration: 3000
             });
             setTimeout(() => {
               wx.navigateBack({
@@ -65,7 +67,8 @@ export default {
           }else{
             wx.showToast({
               title: resp.msg,
-              icon: "none"
+              icon: "none",
+              duration: 3000
             });
           }
         })

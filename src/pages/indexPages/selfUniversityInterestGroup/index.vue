@@ -70,7 +70,8 @@ export default {
       }else{
         wx.showToast({
           title: resp.msg,
-          icon: 'none'
+          icon: 'none',
+          duration: 3000
         });
       }
     })

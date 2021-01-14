@@ -249,7 +249,8 @@ export default {
         }else{
           wx.showToast({
             title: resp.msg,
-            icon: "none"
+            icon: "none",
+            duration: 3000
           });
         }
       });
@@ -268,7 +269,8 @@ export default {
         }else{
           wx.showToast({
             title: resp.msg,
-            icon: "none"
+            icon: "none",
+            duration: 3000
           });
         }
       })
@@ -303,7 +305,8 @@ export default {
         }else{
           wx.showToast({
             title: resp.msg,
-            icon: "none"
+            icon: "none",
+            duration: 3000
           });
         }
       });
@@ -332,13 +335,15 @@ export default {
         }).then(resp => {
           if(resp.code === 0){
             wx.showToast({
-              title: "删除成功"
+              title: "删除成功",
+              duration: 3000
             });
             this.getPostList();
           }else{
             wx.showToast({
               title: resp.msg,
-              icon: "none"
+              icon: "none",
+              duration: 3000
             })
           }
         })
@@ -364,12 +369,14 @@ export default {
           }).then(resp => {
             if(resp.code == 0){
               wx.showToast({
-                title: "操作成功"
+                title: "操作成功",
+                duration: 3000
               });
             }else{
               wx.showToast({
                 title: resp.msg,
-                icon: "none"
+                icon: "none",
+                duration: 3000
               });
             }
           });
@@ -401,13 +408,15 @@ export default {
       }).then(resp => {
         if(resp.code == 0) {
           wx.showToast({
-            title: "发送成功"
+            title: "发送成功",
+            duration: 3000
           });
           this.visibleFriend = false;
         }else{
           wx.showToast({
             title: resp.msg,
-            icon: "none"
+            icon: "none",
+            duration: 3000
           });
         }
       });

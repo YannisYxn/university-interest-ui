@@ -195,7 +195,8 @@ export default {
       //商家
       wx.showToast({
         title: "商家无法进行其他操作",
-        icon: "none"
+        icon: "none",
+        duration: 3000
       });
       setTimeout(() => {
         wx.navigateTo({
@@ -207,12 +208,13 @@ export default {
       wx.showToast({
         title: "首次登录，请在本人的大学校园内登陆校趣完成在校认证 或 输入邀请码 ",
         icon: "none",
+        duration: 3000,
         success: () => {
           setTimeout(() => {
             wx.switchTab({
               url: "../index/main"
             });
-          },1500);
+          },3000);
         }
       });
     }else if(this.globalData.status == -3) {
@@ -220,12 +222,13 @@ export default {
       wx.showToast({
         title: "账号已注销",
         icon: "none",
+        duration: 3000,
         success: () => {
           setTimeout(() => {
             wx.switchTab({
               url: "../index/main"
             });
-          },1500);
+          },3000);
         }
       });
     }else{
@@ -234,72 +237,6 @@ export default {
       this.getLastWeekMoney();
       this.updateBadge();
     }
-
-    // var that = this;
-    // wx.showLoading({
-    //   title: "加载中"
-    // });
-    // wx.login({
-    //   success(res) {
-    //     if (res.code) {
-    //       //发起网络请求
-    //       that.$wxhttp.post({
-    //         url: "/user/login",
-    //         data: {
-    //           code: res.code
-    //         }
-    //       }).then(resp => {
-    //         if(resp.code === 0){
-    //           that.userId = resp.data.id;
-    //           if(resp.data.isCheckUniversity === 0){
-    //             //首次登录校趣，输入校区，授权信息，并完善个人信息
-    //             wx.showToast({
-    //               title: "首次登录，请在本人的大学校园内登陆校趣完成在校认证 或 输入邀请码 ",
-    //               icon: "none",
-    //               success: () => {
-    //                 setTimeout(() => {
-    //                   wx.switchTab({
-    //                     url: "../index/main"
-    //                   });
-    //                 },1500);
-    //               }
-    //             });
-    //           }else if(resp.data.status == -3) {
-    //             // 注销
-    //             wx.showToast({
-    //               title: "账号已注销",
-    //               icon: "none",
-    //               success: () => {
-    //                 setTimeout(() => {
-    //                   wx.switchTab({
-    //                     url: "../index/main"
-    //                   });
-    //                 },1500);
-    //               }
-    //             });
-    //           }else{
-    //             //不是首次登录，获取兴趣组列表
-    //             that.getUserInfo();
-    //             that.getLastWeekMoney();
-    //             that.updateBadge();
-    //           }
-    //         }else{
-    //           wx.showToast({
-    //             title: resp.msg,
-    //             icon: 'none'
-    //           })
-    //         }
-            
-    //       });
-    //     } else {
-    //       console.log("登录失败！" + res.errMsg);
-    //       wx.showToast({
-    //         title: "登录失败",
-    //         icon: 'none'
-    //       });
-    //     }
-    //   }
-    // });
   },
   onShareAppMessage(object){
     // console.log(object)

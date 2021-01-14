@@ -85,7 +85,8 @@ export default {
             }).then(resp => {
               if(resp.code === 0){
                 wx.showToast({
-                  title: "举报成功"
+                  title: "举报成功",
+                  duration: 3000
                 });
                 wx.navigateBack({
                   delta: 1
@@ -93,7 +94,8 @@ export default {
               }else{
                 wx.showToast({
                   title: resp.msg,
-                  icon: "none"
+                  icon: "none",
+                  duration: 3000
                 });
               }
             })
@@ -102,7 +104,8 @@ export default {
       }else{
         wx.showToast({
           title: "举报图片不可为空",
-          icon: "none"
+          icon: "none",
+          duration: 3000
         });
       }
     }

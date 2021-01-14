@@ -187,7 +187,8 @@ export default {
         }else{
           wx.showToast({
             title: resp.msg,
-            icon: "none"
+            icon: "none",
+            duration: 3000
           });
         }
       });
@@ -244,7 +245,8 @@ export default {
         }else{
           wx.showToast({
             title: resp.msg,
-            icon: "none"
+            icon: "none",
+            duration: 3000
           })
         }
       });
@@ -259,7 +261,8 @@ export default {
       if(this.globalData.isPerfectInfo == 0) {
         wx.showToast({
           title: "请先在[我的]页面完善头像昵称",
-          icon: "none"
+          icon: "none",
+          duration: 3000
         });
       }else{
         wx.navigateTo({
@@ -279,16 +282,18 @@ export default {
             wx.showToast({
               title: "加入成功",
               icon: "success",
+              duration: 3000,
               success: () => {
                 setTimeout(() => {
                   this.getGroupInfo();
-                }, 1000)
+                }, 3000)
               }
             });
           }else{
             wx.showToast({
               title: resp.msg,
-              icon: "none"
+              icon: "none",
+              duration: 3000
             });
           }
         });
@@ -303,16 +308,18 @@ export default {
             wx.showToast({
               title: "退出成功",
               icon: "success",
+              duration: 3000,
               success: () => {
                 setTimeout(() => {
                   this.getGroupInfo();
-                }, 1000)
+                }, 3000)
               }
             });
           }else{
             wx.showToast({
               title: resp.msg,
-              icon: "none"
+              icon: "none",
+              duration: 3000
             });
           }
         });
@@ -333,16 +340,18 @@ export default {
             wx.showToast({
               title: "冻结成功",
               icon: "success",
+              duration: 3000,
               success: () => {
                 setTimeout(() => {
                   this.getGroupInfo();
-                }, 1000)
+                }, 3000)
               }
             });
           }else{
             wx.showToast({
               title: resp.msg,
-              icon: "none"
+              icon: "none",
+              duration: 3000
             });
           }
         });
@@ -357,16 +366,18 @@ export default {
             wx.showToast({
               title: "解冻成功",
               icon: "success",
+              duration: 3000,
               success: () => {
                 setTimeout(() => {
                   this.getGroupInfo();
-                }, 1000)
+                }, 3000)
               }
             });
           }else{
             wx.showToast({
               title: resp.msg,
-              icon: "none"
+              icon: "none",
+              duration: 3000
             });
           }
         });
@@ -380,18 +391,20 @@ export default {
             wx.showToast({
               title: "解散成功",
               icon: "success",
+              duration: 3000,
               success: () => {
                 setTimeout(() => {
                   wx.switchTab({
                     url: "../index/main"
                   });
-                }, 1000)
+                }, 3000)
               }
             });
           }else{
             wx.showToast({
               title: resp.msg,
-              icon: "none"
+              icon: "none",
+              duration: 3000
             });
           }
         });
@@ -420,16 +433,18 @@ export default {
           if(resp.code === 0){
             wx.showToast({
               title: "删除成功",
+              duration: 3000,
               success: () => {
                 setTimeout(() => {
                   this.getPostList();
-                }, 1000)
+                }, 3000)
               }
             });
           }else{
             wx.showToast({
               title: resp.msg,
-              icon: "none"
+              icon: "none",
+              duration: 3000
             })
           }
         })

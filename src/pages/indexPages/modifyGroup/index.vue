@@ -123,7 +123,8 @@ export default {
                 if(resp.code === 0){
                   wx.showToast({
                     title: "修改成功",
-                    icon: "success"
+                    icon: "success",
+                    duration: 3000
                   });
                   wx.navigateTo({
                     url: "../manageInterestGroup/main?userId=" + that.userId + "&groupId=" + that.groupId
@@ -131,7 +132,8 @@ export default {
                 }else{
                   wx.showToast({
                     title: resp.msg,
-                    icon: "none"
+                    icon: "none",
+                    duration: 3000
                   });
                 }
               });
@@ -151,7 +153,8 @@ export default {
             if(resp.code === 0){
               wx.showToast({
                 title: "修改成功",
-                icon: "success"
+                icon: "success",
+                duration: 3000
               });
               wx.navigateTo({
                 url: "../manageInterestGroup/main?userId=" + this.userId + "&groupId=" + this.groupId
@@ -159,7 +162,8 @@ export default {
             }else{
               wx.showToast({
                 title: resp.msg,
-                icon: "none"
+                icon: "none",
+                duration: 3000
               });
             }
           });
@@ -167,7 +171,8 @@ export default {
       }else{
         wx.showToast({
           title: '请完善名称、简介与Logo',
-          icon: 'none'
+          icon: 'none',
+          duration: 3000
         });
       }
     },

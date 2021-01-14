@@ -1,7 +1,7 @@
 <template>
   <div style="min-height:100%;" id="chatPage">
     <div v-if="chatUserId == 0" style="margin: 15px;font-size: 11px;color: gray;">
-      <span>消息通知，仅保留最近3天的；<br />打招呼选择，在 [我的] -> [设置] 里面；<br />收益列表，积分动态，兑换记录，分享记录，发帖被评论等，请在 [我的] 里面查看</span>
+      <span>消息通知，仅保留最近20条的；<br />打招呼选择，在 [我的] -> [设置] 里面；<br />收益列表，积分动态，兑换记录，分享记录，发帖被评论等，请在 [我的] 里面查看</span>
     </div>
     <div>
       <i-cell-group>
@@ -196,7 +196,8 @@ export default {
         }else{
           wx.showToast({
             title: resp.msg,
-            icon: "none"
+            icon: "none",
+            duration: 3000
           });
         }
       })
@@ -240,7 +241,8 @@ export default {
         }else{
           wx.showToast({
             title: resp.msg,
-            icon: "none"
+            icon: "none",
+            duration: 3000
           });
         }
       })
@@ -337,12 +339,14 @@ export default {
           title: '信息不能为空',
           icon: 'none',
           mask: true,
+          duration: 3000
         });
         return;
       }else if(that.judge_last_3()){
         wx.showToast({
           title: "未收到回复前最多发送3条消息",
-          icon: "none"
+          icon: "none",
+          duration: 3000
         });
         return;
       }
@@ -372,6 +376,7 @@ export default {
           title: '链接已断,重新链接',
           icon: 'none',
           mask: true,
+          duration: 3000
         });
       }
     },
@@ -394,7 +399,8 @@ export default {
       if(this.chatUserId == 0){
         wx.showToast({
           title: "消息通知无个人主页呦",
-          icon: "none"
+          icon: "none",
+          duration: 3000
         });
       }else{
         this.unLoad = true;
@@ -414,12 +420,14 @@ export default {
       if(!regPos.test(this.credit)){
         wx.showToast({
           title: "请输入数字",
-          icon: "none"
+          icon: "none",
+          duration: 3000
         });
       }else if(this.credit == '0'){
         wx.showToast({
           title: "请输入非负数",
-          icon: "none"
+          icon: "none",
+          duration: 3000
         });
       }else{
         this.$wxhttp.post({
@@ -457,15 +465,18 @@ export default {
                 title: '链接已断,重新链接',
                 icon: 'none',
                 mask: true,
+                duration: 3000
               });
             }
             wx.showToast({
-              title: "赠送成功"
+              title: "赠送成功",
+              duration: 3000
             });
           }else{
             wx.showToast({
               title: resp.msg,
-              icon: "none"
+              icon: "none",
+              duration: 3000
             });
           }
         });
@@ -501,7 +512,8 @@ export default {
       if(that.judge_last_3()){
         wx.showToast({
           title: "未收到回复前最多发送3条消息",
-          icon: "none"
+          icon: "none",
+          duration: 3000
         });
         return;
       }
@@ -545,7 +557,8 @@ export default {
               }else{
                 wx.showToast({
                   title: "链接异常,请重试",
-                  icon: "none"
+                  icon: "none",
+                  duration: 3000
                 });
               }
             }

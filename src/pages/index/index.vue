@@ -137,42 +137,6 @@
       <i-load-more v-else :loading="false" />
     </div>
 
-    <!-- 弹窗列表 -->
-    <!-- <i-modal title="提示" :visible="visible2" @ok="handleUserInfo" @cancel="handleClose2">
-      <p style="font-size:15px;line-height:20px;margin:0 20px;">请简单完善个人资料后，再建组，发帖，回复等操作。谢谢。</p>
-      <div style="display:flex;align-items:center;margin-left:20px;">
-        性别：
-        <i-radio-group :current="userInfo.gender" @change="handleGenderChange">
-          <i-radio v-for="item in gender" :key="item.id" :value="item.id" :label="item.name"></i-radio>
-        </i-radio-group>
-      </div>
-      <div style="display:flex;align-items:center;margin-left:20px;">
-        昵称：
-        <i-input v-model="userInfo.nickName" mode="wrapped" placeholder="原微信昵称" />
-      </div>
-      <div style="display:flex;align-items:center;margin-left:20px;">
-        简介：
-        <div style="width:82%">
-          <i-input
-            v-model="userInfo.introduction"
-            type="textarea"
-            mode="wrapped"
-            placeholder="限25个字"
-            maxlength="25"
-          />
-        </div>
-      </div>
-      <div style="display:flex;align-items:center;margin-left:20px;">
-        <i-avatar :src="userInfo.avatarUrl">头</i-avatar>
-        <span style="line-height:20px;">（可修改,上传不雅头像,会被封号）</span>
-      </div>
-    </i-modal> -->
-    <!-- <i-modal title="提示" :visible="visible3" @ok="handleClose3" @cancel="handleClose3">
-      <p style="font-size:15px;line-height:20px;margin:0 20px;">请您在本校地理范围登录校趣！</p>
-      <p style="font-size:15px;line-height:20px;margin:0 20px;">或</p>
-      <span style="font-size:15px;line-height:20px;margin:0 20px;">输入邀请码：</span>
-      <i-input v-model="invitationCode" mode="wrapped" placeholder="请在这里输入" @change="handleInvitationCodeChange"/>
-    </i-modal> -->
     <mp-dialog
       title="提示"
       :show="visible3"
@@ -184,6 +148,8 @@
       <p style="font-size:15px;line-height:20px;margin:0 20px;">或</p>
       <span style="font-size:15px;line-height:20px;margin:0 20px;">输入邀请码：</span>
       <i-input :value="invitationCode" mode="wrapped" maxlength="10" placeholder="请在这里输入" @change="handleInvitationCodeChange"/>
+      <br />
+      <p style="font-size:10px;line-height:20px;margin:0 20px;color:blue" @click="() => visibleUniversityRequire = true">校区反馈</p>
     </mp-dialog>
     <mp-dialog
       title="欢迎首次进入校趣"
@@ -370,7 +336,8 @@ export default {
             }else{
               wx.showToast({
                 title: resp.msg,
-                icon: 'none'
+                icon: 'none',
+                duration: 3000
               });
             }
           });
@@ -378,7 +345,8 @@ export default {
           console.log("登录失败！" + res.errMsg);
           wx.showToast({
             title: "登录失败",
-            icon: 'none'
+            icon: 'none',
+            duration: 3000
           });
         }
       }
@@ -418,13 +386,15 @@ export default {
         //未确认过学校不可创建兴趣组
         wx.showToast({
           title: '未认证学校不可创建兴趣组',
-          icon: "none"
+          icon: "none",
+          duration: 3000
         });
       }else if(this.globalData.isPerfectInfo == 0) {
         //未完善信息不可创建
         wx.showToast({
           title: "请先在[我的]页面完善头像昵称",
-          icon: "none"
+          icon: "none",
+          duration: 3000
         });
       }else{
         //确认过学校跳转创建兴趣组页面
@@ -476,11 +446,27 @@ export default {
       this.visible4 = false;
       wx.showToast({
         title: "请在本学校范围时登录",
-        icon: "none"
+        icon: "none",
+        duration: 3000,
+        success: () => {
+          setTimeout(() => {
+            var that = this;
+            wx.getUserInfo({
+              success(res) {
+                that.userInfo = {
+                  ...that.userInfo,
+                  avatarUrl: res.userInfo.avatarUrl,
+                  gender: res.userInfo.gender,
+                  nickName: res.userInfo.nickName
+                };
+                that.uploadUserInfoFirstTime();
+              }
+            });
+          }, 3000)
+        }
       });
     },
     getUserInfo(detail) {
-      this.globalData.isCheckUniversity = 1;
       this.visible4 = false;
       if(this.userInfo.universityName){
         this.$wxhttp.post({
@@ -505,8 +491,22 @@ export default {
           }else{
             wx.showToast({
               title: resp.msg,
-              icon: "none"
+              icon: "none",
+              duration: 3000
             });
+          }
+        });
+      }else{
+        var that = this;
+        wx.getUserInfo({
+          success(res) {
+            that.userInfo = {
+              ...that.userInfo,
+              avatarUrl: res.userInfo.avatarUrl,
+              gender: res.userInfo.gender,
+              nickName: res.userInfo.nickName
+            };
+            that.uploadUserInfoFirstTime();
           }
         });
       }
@@ -541,42 +541,6 @@ export default {
         }
       });
     },
-    handleGenderChange(current) {
-      this.userInfo.gender = current.target.value;
-    },
-    handleUserInfo() {
-      //完善个人信息
-      if(this.userInfo.gender === undefined){
-        wx.showToast({
-          title: "性别不可为空"
-        });
-      }else if(this.userInfo.nickName === ""){
-        wx.showToast({
-          title: "昵称不可为空"
-        });
-      }else if(this.userInfo.avatarUrl === ""){
-        wx.showToast({
-          title: "请上传头像"
-        });
-      }else{
-        this.$wxhttp.post({
-          url: "/user/firstUploadUserInfo",
-          data: {
-            id: this.userInfo.userId,
-            name: this.userInfo.nickName,
-            photo: this.userInfo.avatarUrl,
-            sex: this.userInfo.gender,
-            description: this.userInfo.introduction
-          }
-        }).then(resp => {
-          if(resp.code !== 0){
-            wx.showToast({
-              title: resp.msg
-            });
-          }
-        })
-      }
-    },
     isOnUniversity(latitude,longitude) {
       // 判断当前位置是否处于校内
       var that = this;
@@ -604,17 +568,19 @@ export default {
           wx.showToast({
             title: "在校园边缘的时候，首次登录建议在室外宽阔的地方",
             icon: "none",
+            duration: 3000,
             success: () => {
               setTimeout(() => {
                 this.visible4 = false;
                 this.visible3 = true;
-              }, 1000);
+              }, 3000);
             }
           });
         }else{
           wx.showToast({
             title: resp.msg,
-            icon: "none"
+            icon: "none",
+            duration: 3000
           });
         }
       });
@@ -637,7 +603,8 @@ export default {
         }else{
           wx.showToast({
             title: resp.msg,
-            icon: "none"
+            icon: "none",
+            duration: 3000
           });
         }
       });
@@ -666,7 +633,8 @@ export default {
         //未输入搜索内容
         wx.showToast({
           title: '搜索内容为空',
-          icon: 'none'
+          icon: 'none',
+          duration: 3000
         });
       }else{
         this.$wxhttp.post({
@@ -688,7 +656,8 @@ export default {
           }else{
             wx.showToast({
               title: resp.msg,
-              icon: 'none'
+              icon: 'none',
+              duration: 3000
             })
           }
         });
@@ -708,7 +677,8 @@ export default {
     showToast(msg) {
       wx.showToast({
         title: msg,
-        icon: "none"
+        icon: "none",
+        duration: 3000
       });
     },
     handleInvitationCode() {
@@ -741,7 +711,8 @@ export default {
           }else{
             wx.showToast({
               title: resp.msg,
-              icon: "none"
+              icon: "none",
+              duration: 3000
             });
           }
         });
@@ -790,7 +761,8 @@ export default {
         if(resp.code != 0){
           wx.showToast({
             title: resp,msg,
-            icon: "none"
+            icon: "none",
+            duration: 3000
           });
         }
       });
@@ -822,7 +794,8 @@ export default {
         success(res) {
           that.visibleMessage = false;
           wx.showToast({
-            title: "订阅成功"
+            title: "订阅成功",
+            duration: 3000
           });
         },
         fail(res) {
@@ -830,7 +803,8 @@ export default {
           that.visibleMessage = false;
           wx.showToast({
             title: "订阅失败",
-            icon: "none"
+            icon: "none",
+            duration: 3000
           });
         }
       });
@@ -845,7 +819,8 @@ export default {
       if(this.requireUniversityName === ""){
         wx.showToast({
           title: "学校名字不可为空",
-          icon: "none"
+          icon: "none",
+          duration: 3000
         });
       }else{
         this.visibleUniversityRequire = false;
@@ -858,12 +833,14 @@ export default {
         }).then(resp => {
           if(resp.code === 0){
             wx.showToast({
-              title: "提交诉求成功"
+              title: "提交诉求成功",
+              duration: 3000
             });
           }else{
             wx.showToast({
               title: resp.msg,
-              icon: "none"
+              icon: "none",
+              duration: 3000
             });
           }
         })

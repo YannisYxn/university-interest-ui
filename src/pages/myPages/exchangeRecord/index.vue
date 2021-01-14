@@ -54,7 +54,8 @@ export default {
       }else{
         wx.showToast({
           title: resp.msg,
-          icon: "none"
+          icon: "none",
+          duration: 3000
         })
       }
     })
@@ -65,13 +66,9 @@ export default {
         data: code,
         success (res) {
           wx.showToast({
-            title: "邀请码已复制"
+            title: "邀请码已复制",
+            duration: 3000
           });
-          // wx.getClipboardData({
-          //   success (res) {
-          //     console.log(res.data) // data
-          //   }
-          // })
         }
       })
     }

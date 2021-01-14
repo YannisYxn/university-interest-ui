@@ -136,7 +136,8 @@ export default {
         //兴趣组名称不能包含空格
         wx.showToast({
           title: "兴趣组名称不能包含空格",
-          icon: "none"
+          icon: "none",
+          duration: 3000
         });
       }else{
         if(this.name!=="" && this.introduction !== "" && this.tempFilePath!==""){
@@ -164,25 +165,27 @@ export default {
                   wx.showToast({
                     title: '创建成功',
                     icon: 'success',
+                    duration: 3000,
                     success: () => {
                       setTimeout(() => {
                         wx.reLaunch({
                           url: "../../index/main"
                         });
-                      },1000)
+                      },3000)
                     }
                   });
                 }else{
                   wx.showToast({
                     title: resp.msg,
                     icon: 'none',
+                    duration: 3000,
                     success: () => {
                       setTimeout(() => {
                         wx.showToast({
                           title: "在校园边缘的时候，建组操作建议在室外宽阔的地方",
                           icon: "none"
                         });
-                      }, 1500);
+                      }, 3000);
                     }
                   });
                 }
@@ -192,7 +195,8 @@ export default {
         }else{
           wx.showToast({
             title: '请完善名称、简介与Logo',
-            icon: 'none'
+            icon: 'none',
+            duration: 3000
           });
         }
       }

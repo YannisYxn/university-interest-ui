@@ -21,6 +21,7 @@
         </div>
         <div v-else style="text-align:center;margin:10px;">
           <!-- <img :src="tempFilePath" style="max-width:100%;max-height:100%;" /> -->
+          <i-icon style="position:absolute;left:88%;" color="red" size="18" type="delete_fill" @click="deleteImage"/>
           <image :src="uploadFilePath" mode="widthFix" style="max-width:100%;" @click="handleChooseImage"/>
         </div>
       </i-panel>
@@ -159,6 +160,10 @@ export default {
       });
       wx.hideLoading();
     },
+    deleteImage() {
+      this.tempFilePath = "";
+      this.uploadFilePath = "";
+    },
     onUnload() {
       // 页面返回，确认是否保持编辑
 
@@ -226,7 +231,8 @@ export default {
           }).then(resp => {
             if(resp.code === 0){
               wx.showToast({
-                title: "发帖成功"
+                title: "发帖成功",
+                duration: 3000
               });
               wx.navigateBack({
                 delta: 1
@@ -234,7 +240,8 @@ export default {
             }else{
               wx.showToast({
                 title: resp.msg,
-                icon: "none"
+                icon: "none",
+                duration: 3000
               });
             }
           });
@@ -252,7 +259,8 @@ export default {
           }).then(resp => {
             if(resp.code === 0){
               wx.showToast({
-                title: "发帖成功"
+                title: "发帖成功",
+                duration: 3000
               });
               wx.navigateBack({
                 delta: 1
@@ -261,13 +269,14 @@ export default {
               wx.showToast({
                 title: resp.msg,
                 icon: "none",
+                duration: 3000,
                 success: () => {
                   setTimeout(() => {
                     wx.showToast({
                       title: "在校园边缘的时候，发帖操作建议在室外宽阔的地方",
                       icon: "none"
                     });
-                  }, 1500);
+                  }, 3000);
                 }
               });
             }
@@ -276,7 +285,8 @@ export default {
       }else{
         wx.showToast({
           title: "内容不可为空",
-          icon: "none"
+          icon: "none",
+          duration: 3000
         });
       }
     }

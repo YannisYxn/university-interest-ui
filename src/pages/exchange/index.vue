@@ -97,7 +97,8 @@ export default {
       //商家
       wx.showToast({
         title: "商家无法进行其他操作",
-        icon: "none"
+        icon: "none",
+        duration: 3000
       });
       setTimeout(() => {
         wx.navigateTo({
@@ -109,12 +110,13 @@ export default {
       wx.showToast({
         title: "首次登录，请在本人的大学校园内登陆校趣完成在校认证 或 输入邀请码 ",
         icon: "none",
+        duration: 3000,
         success: () => {
           setTimeout(() => {
             wx.switchTab({
               url: "../index/main"
             });
-          },1500);
+          },3000);
         }
       });
     }else if(this.globalData.status == -3) {
@@ -122,12 +124,13 @@ export default {
       wx.showToast({
         title: "账号已注销",
         icon: "none",
+        duration: 3000,
         success: () => {
           setTimeout(() => {
             wx.switchTab({
               url: "../index/main"
             });
-          },1500);
+          },3000);
         }
       });
     }else{
@@ -171,7 +174,8 @@ export default {
         }else{
           wx.showToast({
             title: resp.msg,
-            icon: "none"
+            icon: "none",
+            duration: 3000
           });
         }
       })
@@ -180,7 +184,8 @@ export default {
       if(this.globalData.isPerfectInfo == 0){
         wx.showToast({
           title: "请先在[我的]页面完善头像昵称",
-          icon: "none"
+          icon: "none",
+          duration: 3000
         });
       }else{
         this.ticketId = ticketId;
@@ -196,10 +201,11 @@ export default {
         if(resp.code === 0){
           wx.showToast({
             title: "兑换成功",
+            duration: 3000,
             success: () => {
               setTimeout(() => {
                 this.getTicketList();
-              },1000);
+              },3000);
             }
           });
           //更新兑换券列表
@@ -207,10 +213,11 @@ export default {
           wx.showToast({
             title: resp.msg,
             icon: "none",
+            duration: 3000,
             success: () => {
               setTimeout(() => {
                 this.getTicketList();
-              },1000);
+              },3000);
             }
           });
         }

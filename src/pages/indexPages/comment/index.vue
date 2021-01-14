@@ -195,7 +195,8 @@ export default {
       }else{
         wx.showToast({
           title: resp.msg,
-          icon: "none"
+          icon: "none",
+          duration: 3000
         });
         wx.navigateBack({
           delta: 1
@@ -218,7 +219,8 @@ export default {
         }else{
           wx.showToast({
             title: resp.msg,
-            icon: "none"
+            icon: "none",
+            duration: 3000
           });
         }
       });
@@ -228,12 +230,14 @@ export default {
       if(this.globalData.isPerfectInfo == 0){
         wx.showToast({
           title: "请先在[我的]页面完善头像昵称",
-          icon: "none"
+          icon: "none",
+          duration: 3000
         });
       }else if(this.isJoin == 0){
         wx.showToast({
           title: "请先点击此兴趣组主页右上角的[+]，加入此组",
-          icon: "none"
+          icon: "none",
+          duration: 3000
         });
       }else{
         this.$wxhttp.post({
@@ -250,13 +254,15 @@ export default {
           if(resp.code === 0){
             this.comment = "";
             wx.showToast({
-              title: "发表成功"
+              title: "发表成功",
+              duration: 3000
             });
             this.getCommentList();
           }else{
             wx.showToast({
               title: resp.msg,
-              icon: "none"
+              icon: "none",
+              duration: 3000
             });
           }
         });
@@ -293,13 +299,15 @@ export default {
         }).then(resp => {
           if(resp.code === 0){
             wx.showToast({
-              title: "删除成功"
+              title: "删除成功",
+              duration: 3000
             });
             this.getCommentList();
           }else{
             wx.showToast({
               title: resp.msg,
-              icon: "none"
+              icon: "none",
+              duration: 3000
             })
           }
         });

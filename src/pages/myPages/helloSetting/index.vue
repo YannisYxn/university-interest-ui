@@ -64,7 +64,8 @@ export default {
       }else{
         wx.showToast({
           title: "获取同城学校列表错误",
-          icon: "none"
+          icon: "none",
+          duration: 3000
         });
       }
     });
@@ -99,7 +100,8 @@ export default {
         }else{
           wx.showToast({
             title: resp.msg,
-            icon: "none"
+            icon: "none",
+            duration: 3000
           });
         }
       });
@@ -116,12 +118,14 @@ export default {
         }).then(resp => {
           if(resp.code == 0){
             wx.showToast({
-              title: "设置成功"
+              title: "设置成功",
+              duration: 3000
             });
           }else{
             wx.showToast({
               title: resp.msg,
-              icon: "none"
+              icon: "none",
+              duration: 3000
             });
           }
         })
@@ -142,12 +146,14 @@ export default {
         }).then(resp => {
           if(resp.code == 0){
             wx.showToast({
-              title: "设置成功"
+              title: "设置成功",
+              duration: 3000
             });
           }else{
             wx.showToast({
               title: resp.msg,
-              icon: "none"
+              icon: "none",
+              duration: 3000
             });
           }
         });
@@ -176,12 +182,14 @@ export default {
         }).then(resp => {
           if(resp.code == 0){
             wx.showToast({
-              title: "设置成功"
+              title: "设置成功",
+              duration: 3000
             });
           }else{
             wx.showToast({
               title: resp.msg,
-              icon: "none"
+              icon: "none",
+              duration: 3000
             });
           }
         });
@@ -199,12 +207,14 @@ export default {
         }).then(resp => {
           if(resp.code == 0){
             wx.showToast({
-              title: "设置成功"
+              title: "设置成功",
+              duration: 3000
             });
           }else{
             wx.showToast({
               title: resp.msg,
-              icon: "none"
+              icon: "none",
+              duration: 3000
             });
           }
         });
@@ -228,12 +238,14 @@ export default {
         }).then(resp => {
           if(resp.code == 0){
             wx.showToast({
-              title: "设置成功"
+              title: "设置成功",
+              duration: 3000
             });
           }else{
             wx.showToast({
               title: resp.msg,
-              icon: "none"
+              icon: "none",
+              duration: 3000
             });
           }
         });

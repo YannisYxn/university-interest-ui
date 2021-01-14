@@ -115,6 +115,7 @@ export default {
           wx.showToast({
             title: resp.msg,
             icon: "none",
+            duration: 3000
           });
         }
       });
@@ -158,6 +159,7 @@ export default {
                   if (resp.code === 0) {
                     wx.showToast({
                       title: "更改成功",
+                      duration: 3000
                     });
                     that.globalData.isPerfectInfo = 1;
                     wx.navigateBack({
@@ -167,6 +169,7 @@ export default {
                     wx.showToast({
                       title: resp.msg,
                       icon: "none",
+                      duration: 3000
                     });
                   }
                 });
@@ -188,6 +191,7 @@ export default {
               if (resp.code === 0) {
                 wx.showToast({
                   title: "更改成功",
+                  duration: 3000
                 });
                 wx.navigateBack({
                   delta: 1,
@@ -196,6 +200,7 @@ export default {
                 wx.showToast({
                   title: resp.msg,
                   icon: "none",
+                  duration: 3000
                 });
               }
             });
@@ -204,6 +209,7 @@ export default {
         wx.showToast({
           title: "请完善名称、性别、简介与Logo",
           icon: "none",
+          duration: 3000
         });
       }
     },
@@ -225,6 +231,7 @@ export default {
         wx.showToast({
           title: "性别确认后不可修改",
           icon: "none",
+          duration: 3000
         });
       }
     },
