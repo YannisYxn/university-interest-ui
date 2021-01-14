@@ -85,11 +85,16 @@ export default {
             }).then(resp => {
               if(resp.code === 0){
                 wx.showToast({
-                  title: "举报成功",
-                  duration: 3000
-                });
-                wx.navigateBack({
-                  delta: 1
+                  title: "举报成功，感谢您维护校趣环境",
+                  icon: "none",
+                  duration: 3000,
+                  success: () => {
+                    setTimeout(() => {
+                      wx.navigateBack({
+                        delta: 1
+                      });
+                    }, 3000);
+                  }
                 });
               }else{
                 wx.showToast({
