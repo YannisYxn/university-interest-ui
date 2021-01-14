@@ -21,6 +21,9 @@
     "i-tabs": "../../../../static/iView/tabs/index",
     "i-tab": "../../../../static/iView/tab/index",
     "i-action-sheet": "../../../../static/iView/action-sheet/index",
-    "i-load-more": "../../../../static/iView/load-more/index"
+    "i-load-more": "../../../../static/iView/load-more/index",
+    "i-tab-bar": "../../../../static/iView/tab-bar/index",
+    "i-tab-bar-item": "../../../../static/iView/tab-bar-item/index",
+    "exchange-card": "../../../../static/iView/exchangeCard/index"
   }
 }

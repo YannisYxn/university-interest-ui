@@ -176,6 +176,7 @@ export default {
     this.chatMessageList = [];
     this.chatInfo.chatMessageList = [];
     if(this.chatUserId == 0){
+      this.chatInfo.toUserPhoto = this.avatar;
       this.$wxhttp.get({
         url: "/message/getSystemMsgList?userId=" + this.userId
       }).then(resp => {

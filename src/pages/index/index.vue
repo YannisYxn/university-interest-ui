@@ -195,6 +195,8 @@
         placeholder="校区名字"
         @change="handleUniveristyCampusNameChange"
       />
+      <br />
+      <p style="font-size:13px;line-height:20px;margin:0 20px;">如果您在本大学的校园内，请在这里写下您的学校及校区名称，我们及时处理定位问题，谢谢</p>
     </mp-dialog>
     <mp-dialog
       title="是否订阅校趣消息"
@@ -316,7 +318,7 @@ export default {
               that.globalData.userType = resp.data.type;
               if(resp.data.type == 3){
                 wx.navigateTo({
-                  url: "../indexPages/merchant/main"
+                  url: "../indexPages/merchant/main?userId=" +  resp.data.id
                 });
               }else if(resp.data.status == -3){
                 that.visibleLogout = true;
@@ -706,7 +708,7 @@ export default {
               }
             });
             wx.navigateTo({
-              url: "../indexPages/merchant/main"
+              url: "../indexPages/merchant/main?userId=" + this.userInfo.userId
             });
           }else{
             wx.showToast({
