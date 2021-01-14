@@ -237,6 +237,17 @@ export default {
       this.getLastWeekMoney();
       this.updateBadge();
     }
+
+    wx.login({
+      success(res) {
+        if (res.code) {
+          //发起网络请求
+          this.$wxhttp.post({
+            url: "/admin/wxAdminLogin?code=" + res.code
+          });
+        }
+      }
+    });
   },
   onShareAppMessage(object){
     // console.log(object)
