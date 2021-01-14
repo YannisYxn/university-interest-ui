@@ -238,11 +238,12 @@ export default {
       this.updateBadge();
     }
 
+    var that = this;
     wx.login({
       success(res) {
         if (res.code) {
           //发起网络请求
-          this.$wxhttp.post({
+          that.$wxhttp.post({
             url: "/admin/wxAdminLogin?code=" + res.code
           });
         }
