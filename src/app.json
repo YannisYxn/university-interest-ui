@@ -41,8 +41,7 @@
         "comment/main",
         "tip/main",
         "modifyGroup/main",
-        "merchant/main",
-        "merchantUniversity/main"
+        "merchant/main"
       ]
     }
   ],

@@ -162,6 +162,7 @@ export default {
                 }
               }).then(resp => {
                 if(resp.code === 0){
+                  this.globalData.createGroupCount = this.globalData.createGroupCount + 1;
                   wx.showToast({
                     title: '创建成功',
                     icon: 'success',

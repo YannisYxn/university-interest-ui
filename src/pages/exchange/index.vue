@@ -9,7 +9,7 @@
                 <p style="font-size:25px;line-height:30px;color:white;font-weight:bold;">{{ ticket.money }}元</p>
                 <p style="font-size:20px;line-height:25px;color:white;">{{ ticket.sellerName }}</p>
                 <p style="font-size:10px;line-height:20px;color:white;">{{ ticket.description }}</p>
-                <p style="font-size:10px;line-height:15px;color:white;">使用有效日期：兑换时间{{ ticket.deadline }}前</p>
+                <p style="font-size:10px;line-height:15px;color:white;">兑换时间:{{ ticket.deadline }}前</p>
               </div>
             </i-col>
             <i-col span="9">

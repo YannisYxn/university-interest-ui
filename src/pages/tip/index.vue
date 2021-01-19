@@ -104,6 +104,13 @@ export default {
                 });
               }
             })
+          },
+          fail() {
+            wx.showToast({
+              title: "上传图片失败，请重新上传",
+              icon: "none",
+              duration: 3000
+            });
           }
         });
       }else{

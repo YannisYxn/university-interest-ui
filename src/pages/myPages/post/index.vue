@@ -7,13 +7,6 @@
             <i-avatar size="avatar" :src="userDetail.photo" @click="handlePreview(userDetail.photo)"/>
             <i-avatar style="position:absolute;top:55px;left:21%;" size="mini" v-if="userDetail.sex == 1" :src="boy" />
             <i-avatar style="position:absolute;top:55px;left:21%;" size="mini" v-else-if="userDetail.sex == 2" :src="girl" />
-          </i-col>
-          <i-col span="9">
-            <p style="fong-size:15px;color:white;">{{ userDetail.name }}</p>
-            <p style="font-size:12px;color:white;line-height:25px;">
-              {{ userDetail.universityCampusName }}
-            </p>
-            <span style="font-size:11px;color:white;">{{ userDetail.createTime }}(加入)</span>
             <br />
             <i-icon
               v-if="userId !== selfUserId"
@@ -23,6 +16,13 @@
               style="line-height:2;"
               @click="() => isAdd = true"
             />
+          </i-col>
+          <i-col span="9">
+            <p style="fong-size:15px;color:white;">{{ userDetail.name }}</p>
+            <p style="font-size:12px;color:white;line-height:25px;">
+              {{ userDetail.universityCampusName }}
+            </p>
+            <span style="font-size:11px;color:white;">{{ userDetail.createTime }}(加入)</span>
           </i-col>
           <i-col span="9">
             <p style="fong-size:10px;color:white;">ID:</p>

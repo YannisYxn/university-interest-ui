@@ -49,10 +49,11 @@
           high
           title="简介"
           mode="wrapped"
-          placeholder="简介"
-          maxlength="99"
+          placeholder="简介(限25字)"
+          maxlength="25"
           @change="handleIntroductionChange"
         />
+        <span v-if="isFill" style="color:red;margin:10px;font-size:12px;">字数已达到限制！</span>
       </i-panel>
     </div>
 
@@ -89,6 +90,7 @@ export default {
       boy: boy,
       currentSex: undefined,
       originalSex: undefined, //数据库中的性别，判断能不能更改
+      isFill: false,  //字数限制
     };
   },
   onShareAppMessage(object) {
@@ -126,6 +128,11 @@ export default {
     },
     handleIntroductionChange(event) {
       this.introduction = event.mp.detail.detail.value;
+      if(this.introduction.length == 25){
+        this.isFill = true;
+      }else{
+        this.isFill = false;
+      }
     },
     handleModify() {
       if (

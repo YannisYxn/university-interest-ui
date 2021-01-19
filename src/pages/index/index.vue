@@ -34,7 +34,7 @@
       >
         <view slot="footer">更多兴趣小组 都在这里</view>
       </i-card>
-      <i-card @click="handleCreateGroup" title="创建">
+      <i-card v-if="createGroupCount < 2" @click="handleCreateGroup" title="创建">
         <view slot="footer">
           <i-icon type="add" size="25" color="#67ddd3" />
         </view>
@@ -149,7 +149,7 @@
       <span style="font-size:15px;line-height:20px;margin:0 20px;">输入邀请码：</span>
       <i-input :value="invitationCode" mode="wrapped" maxlength="10" placeholder="请在这里输入" @change="handleInvitationCodeChange"/>
       <br />
-      <p style="font-size:10px;line-height:20px;margin:0 20px;color:blue" @click="() => visibleUniversityRequire = true">校区反馈</p>
+      <p style="font-size:15px;line-height:20px;margin:0 20px;color:#14d0b6" @click="() => visibleUniversityRequire = true">校区反馈</p>
     </mp-dialog>
     <mp-dialog
       title="欢迎首次进入校趣"
@@ -260,7 +260,8 @@ export default {
       shareUserId: undefined,
       isChecked: false,
       requireUniversityName: "",
-      requireUniveristyCampusName: ""
+      requireUniveristyCampusName: "",
+      createGroupCount: 0
     };
   },
   onShow() {
@@ -280,6 +281,7 @@ export default {
     }else if(this.userInfo.userId){
       this.getGroupList();
     }
+    this.createGroupCount = this.globalData.createGroupCount;
   },
   onLoad(options) {
     if(getQuery.getQuery().shareUserId){
@@ -308,6 +310,7 @@ export default {
               that.userInfo.universityCampusId = resp.data.universityCampusId;
               that.userInfo.isCheckUniversity = resp.data.isCheckUniversity;
               that.userInfo.status = resp.data.status;
+              that.createGroupCount = resp.data.createGroupCount;
               that.globalData.userId = resp.data.id;
               that.globalData.universityId = resp.data.universityId;
               that.globalData.universityName = resp.data.universityName;
@@ -316,6 +319,7 @@ export default {
               that.globalData.status = resp.data.status;
               that.globalData.isPerfectInfo = resp.data.isPerfectInfo;  //是否完善信息
               that.globalData.userType = resp.data.type;
+              that.globalData.createGroupCount = resp.data.createGroupCount;
               if(resp.data.type == 3){
                 wx.navigateTo({
                   url: "../indexPages/merchant/main?userId=" +  resp.data.id
@@ -442,6 +446,19 @@ export default {
     // },
     handleClose3() {
       this.visible3 = false;
+      // 完善信息
+      var that = this;
+      wx.getUserInfo({
+        success(res) {
+          that.userInfo = {
+            ...that.userInfo,
+            avatarUrl: res.userInfo.avatarUrl,
+            gender: res.userInfo.gender,
+            nickName: res.userInfo.nickName
+          };
+          that.uploadUserInfoFirstTime();
+        }
+      });
     },
     handleClose4() {
       // 确认校区时点否出现提示
@@ -685,6 +702,19 @@ export default {
     },
     handleInvitationCode() {
       this.visible3 = false;
+      // 完善商家信息
+      var that = this;
+      wx.getUserInfo({
+        success(res) {
+          that.userInfo = {
+            ...that.userInfo,
+            avatarUrl: res.userInfo.avatarUrl,
+            gender: res.userInfo.gender,
+            nickName: res.userInfo.nickName
+          };
+          that.uploadUserInfoFirstTime();
+        }
+      });
       if(this.invitationCode !== ""){
         this.$wxhttp.post({
           url: "/user/checkInivitationCode",
@@ -695,18 +725,6 @@ export default {
         }).then(resp => {
           if(resp.code === 0){
             this.globalData.userType = resp.data;
-            // 完善商家信息
-            wx.getUserInfo({
-              success(res) {
-                that.userInfo = {
-                  ...that.userInfo,
-                  avatarUrl: res.userInfo.avatarUrl,
-                  gender: res.userInfo.gender,
-                  nickName: res.userInfo.nickName
-                };
-                that.uploadUserInfoFirstTime();
-              }
-            });
             wx.navigateTo({
               url: "../indexPages/merchant/main?userId=" + this.userInfo.userId
             });

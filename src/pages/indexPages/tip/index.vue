@@ -63,7 +63,7 @@ export default {
       wx.chooseImage({
         count: 1, //最多上传1张照片
         sizeType: ['original','compressed'], //压缩图
-        sourceType: ['album','camera'], //指定来源，相册和相机都可
+        sourceType: ['album'], //指定来源，相册和相机都可
         success(res) {
           that.tempFilePath = res.tempFilePaths[0];
         }
