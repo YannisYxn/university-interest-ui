@@ -799,11 +799,13 @@ export default {
       wx.getSetting({
         withSubscriptions: true,
         success(res) {
-          if (!res.subscriptionsSetting['mainSwitch'] || 
-            !res.subscriptionsSetting['QMyzhlEEfg40tA6TL1v5OR4WQrYa1gXy8YHGwCgVhHM'] ||
-            res.subscriptionsSetting['QMyzhlEEfg40tA6TL1v5OR4WQrYa1gXy8YHGwCgVhHM'] !== 'accept') {
-              that.visibleMessage = true;
-          }
+          // 保持每次都访问一遍
+          that.visibleMessage = true;
+          // if (!res.subscriptionsSetting['mainSwitch'] || 
+          //   !res.subscriptionsSetting['QMyzhlEEfg40tA6TL1v5OR4WQrYa1gXy8YHGwCgVhHM'] ||
+          //   res.subscriptionsSetting['QMyzhlEEfg40tA6TL1v5OR4WQrYa1gXy8YHGwCgVhHM'] !== 'accept') {
+          //     that.visibleMessage = true;
+          // }
         }
       });
     },
