@@ -24,7 +24,7 @@
       <p
         class="font"
         style="font-size:11px;line-height:2;color:#a3a4a4"
-      >2. 一天限举报5次，公开留联系方式的，多数是骗子，欢迎举报。成功举报5个积分/次</p>
+      >2. 一天限举报5次，政治、色情、谩骂、攻击、网贷、拉人头等与兴趣无关的话题及图片，欢迎举报，我们会及时人工处理举报，成功举报奖励5积分/次，感谢您维护校趣环境。</p>
     </div>
     <div style="height:20px;" />
     <div style="position:fixed;bottom:0;width:100%;">

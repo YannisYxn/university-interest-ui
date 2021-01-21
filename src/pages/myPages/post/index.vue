@@ -8,14 +8,16 @@
             <i-avatar style="position:absolute;top:55px;left:21%;" size="mini" v-if="userDetail.sex == 1" :src="boy" />
             <i-avatar style="position:absolute;top:55px;left:21%;" size="mini" v-else-if="userDetail.sex == 2" :src="girl" />
             <br />
-            <i-icon
-              v-if="userId !== selfUserId"
-              type="add"
-              size="25"
-              color="white"
-              style="line-height:2;"
-              @click="() => isAdd = true"
-            />
+            <div style="margin-top:25%;">
+              <i-icon
+                v-if="userId !== selfUserId"
+                type="add"
+                size="35"
+                color="white"
+                style="line-height:2;"
+                @click="() => isAdd = true"
+              />
+            </div>
           </i-col>
           <i-col span="9">
             <p style="fong-size:15px;color:white;">{{ userDetail.name }}</p>

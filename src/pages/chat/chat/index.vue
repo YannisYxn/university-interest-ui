@@ -310,7 +310,7 @@ export default {
     pageScrollToBottom() {
       let that = this;
       wx.createSelectorQuery().select('#chatPage').boundingClientRect(function (rect) {
-        let top = 500 * that.chatMessageList.length;
+        let top = 1000 * that.chatMessageList.length;
         // let top = rect.length;
         wx.pageScrollTo({
           scrollTop: top,
