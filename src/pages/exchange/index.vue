@@ -144,13 +144,26 @@ export default {
       });
     }else{
       //不是首次登录，获取兑换券列表
-      if(this.globalData.stopDay !== 0){
-        this.stopDay = this.globalData.stopDay;
-        this.visible = true;
-      }else{
-        this.getTicketList();
-        this.updateBadge();
-      }
+      this.$wxhttp.get({
+        url: "/user/getUserDetailById?userId=" + this.userId
+      }).then(resp => {
+        if(resp.code === 0){
+          this.stopDay = resp.data.stopDay;
+          if(this.stopDay !== 0){
+            this.globalData.stopDay = stopDay;
+            this.visible = true;
+          }else{
+            this.globalData.stopDay = 0;
+            this.getTicketList();
+            this.updateBadge();
+          }
+        }else{
+          wx.showToast({
+            title: resp.msg,
+            icon: "none"
+          });
+        }
+      });
     }
   },
   methods: {
