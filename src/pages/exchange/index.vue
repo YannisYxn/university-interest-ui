@@ -69,8 +69,8 @@
 
     <mp-dialog
       :title="stopDay === -2 ? '被举报，此号暂停使用' : '严重违规，此号已被封号'"
-      :show="visible"
-      @confirm="() => visible = false"
+      :show="visibleStopDay"
+      @confirm="() => visibleStopDay = false"
     >
     </mp-dialog>
   </div>
@@ -89,7 +89,7 @@ export default {
       ticketId: undefined,
       normalExchange: normalExchange,
       groupExchange: groupExchange,
-      visible: false,
+      visibleStopDay: false,
       stopDay: 0
     }
   },
@@ -150,10 +150,8 @@ export default {
         if(resp.code === 0){
           this.stopDay = resp.data.stopDay;
           if(this.stopDay !== 0){
-            this.globalData.stopDay = stopDay;
-            this.visible = true;
+            this.visibleStopDay = true;
           }else{
-            this.globalData.stopDay = 0;
             this.getTicketList();
             this.updateBadge();
           }

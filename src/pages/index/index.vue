@@ -891,11 +891,8 @@ export default {
       }).then(resp => {
         if(resp.code === 0){
           this.stopDay = resp.data.stopDay;
-          if(stopDay !== 0){
-            this.globalData.stopDay = stopDay;
+          if(this.stopDay !== 0){
             this.visible = true;
-          }else{
-            this.globalData.stopDay = 0;
           }
         }else{
           wx.showToast({

@@ -16,6 +16,7 @@
     "i-radio-group": "../../../static/iView/radio-group/index",
     "i-radio": "../../../static/iView/radio/index",
     "i-notice-bar": "../../../static/iView/notice-bar/index",
-    "i-comment-cell": "../../../static/iView/comment-cell/index"
+    "i-comment-cell": "../../../static/iView/comment-cell/index",
+    "mp-dialog": "../../../static/WeUI/dialog/dialog"
   }
 }

@@ -133,10 +133,8 @@ export default {
         if(resp.code === 0){
           this.stopDay = resp.data.stopDay;
           if(this.stopDay !== 0){
-            this.globalData.stopDay = stopDay;
             this.visible = true;
           }else{
-            this.globalData.stopDay = 0;
             this.getMessageList();
             // this.getLatestMessage();
             this.timer = setInterval(this.getMessageList, 50000);
