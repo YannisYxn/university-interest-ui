@@ -423,7 +423,7 @@ export default {
     handleClickItem4member(memberId) {
       // 回到陌生、拉黑
       this.$wxhttp.post({
-        url: "/user/backToStranger?fromUserId=" + this.userId + "&toUserId=" + currentOperatedMemberId
+        url: "/user/backToStranger?fromUserId=" + this.userId + "&toUserId=" + this.currentOperatedMemberId
       }).then(resp => {
         if(resp.code == 0){
           wx.showToast({
