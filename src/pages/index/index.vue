@@ -800,19 +800,19 @@ export default {
         withSubscriptions: true,
         success(res) {
           // 保持每次都访问一遍
-          that.visibleMessage = true;
-          // if (!res.subscriptionsSetting['mainSwitch'] || 
-          //   !res.subscriptionsSetting['QMyzhlEEfg40tA6TL1v5OR4WQrYa1gXy8YHGwCgVhHM'] ||
-          //   res.subscriptionsSetting['QMyzhlEEfg40tA6TL1v5OR4WQrYa1gXy8YHGwCgVhHM'] !== 'accept') {
-          //     that.visibleMessage = true;
-          // }
+          // that.visibleMessage = true;
+          if (!res.subscriptionsSetting['mainSwitch'] || 
+            !res.subscriptionsSetting['PZ8DIZXPMO62AMyS7N7yth3sHReBcO1FOQHHPChQQVk'] ||
+            res.subscriptionsSetting['PZ8DIZXPMO62AMyS7N7yth3sHReBcO1FOQHHPChQQVk'] !== 'accept') {
+              that.visibleMessage = true;
+          }
         }
       });
     },
     handleSubscriptions() {
       var that = this;
       wx.requestSubscribeMessage({
-        tmplIds: ['QMyzhlEEfg40tA6TL1v5OR4WQrYa1gXy8YHGwCgVhHM'],
+        tmplIds: ['PZ8DIZXPMO62AMyS7N7yth3sHReBcO1FOQHHPChQQVk'],
         success(res) {
           that.visibleMessage = false;
           wx.showToast({
