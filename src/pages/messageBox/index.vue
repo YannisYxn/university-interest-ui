@@ -50,6 +50,13 @@
         </view>
       </i-comment-cell>
     </i-cell-group>
+
+    <mp-dialog
+      :title="stopDay === -2 ? '被举报，此号暂停使用' : '严重违规，此号已被封号'"
+      :show="visible"
+      @confirm="() => visible = false"
+    >
+    </mp-dialog>
   </div>
 </template>
 
@@ -64,7 +71,9 @@ export default {
       sayHelloList: [],
       latestMessage: "",
       avatar: avatar,
-      systemUnreadCount: 0
+      systemUnreadCount: 0,
+      visible: false,
+      stopDay: 0
     };
   },
   onShareAppMessage(object){
@@ -118,10 +127,15 @@ export default {
       });
     }else{
       //不是首次登录，获取兑换券列表
-      this.getMessageList();
-      // this.getLatestMessage();
-      this.timer = setInterval(this.getMessageList, 50000);
-      this.updateBadge();
+      if(this.globalData.stopDay !== 0){
+        this.stopDay = this.globalData.stopDay;
+        this.visible = true;
+      }else{
+        this.getMessageList();
+        // this.getLatestMessage();
+        this.timer = setInterval(this.getMessageList, 50000);
+        this.updateBadge();
+      }
     }
   },
   onHide() {

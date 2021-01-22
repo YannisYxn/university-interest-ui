@@ -66,6 +66,13 @@
         <span>请在兑换记录里面查看兑换码</span>
       </div>
     </mp-dialog>
+
+    <mp-dialog
+      :title="stopDay === -2 ? '被举报，此号暂停使用' : '严重违规，此号已被封号'"
+      :show="visible"
+      @confirm="() => visible = false"
+    >
+    </mp-dialog>
   </div>
 </template>
 
@@ -81,7 +88,9 @@ export default {
       visible: false,
       ticketId: undefined,
       normalExchange: normalExchange,
-      groupExchange: groupExchange
+      groupExchange: groupExchange,
+      visible: false,
+      stopDay: 0
     }
   },
   onShareAppMessage(object){
@@ -135,8 +144,13 @@ export default {
       });
     }else{
       //不是首次登录，获取兑换券列表
-      this.getTicketList();
-      this.updateBadge();
+      if(this.globalData.stopDay !== 0){
+        this.stopDay = this.globalData.stopDay;
+        this.visible = true;
+      }else{
+        this.getTicketList();
+        this.updateBadge();
+      }
     }
   },
   methods: {

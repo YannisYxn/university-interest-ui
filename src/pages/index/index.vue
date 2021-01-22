@@ -212,6 +212,13 @@
     >
       <span>此账号已注销，不可再次登录校趣，不可进行任何操作</span>
     </mp-dialog>
+
+    <mp-dialog
+      :title="stopDay === -2 ? '被举报，此号暂停使用' : '严重违规，此号已被封号'"
+      :show="visible"
+      @confirm="() => visible = false"
+    >
+    </mp-dialog>
   </div>
 </template>
 
@@ -261,7 +268,9 @@ export default {
       isChecked: false,
       requireUniversityName: "",
       requireUniveristyCampusName: "",
-      createGroupCount: 0
+      createGroupCount: 0,
+      stopDay: 0,
+      visible: false
     };
   },
   onShow() {
@@ -333,6 +342,7 @@ export default {
                   that.handleOnUniversity();
                 }else{
                   //不是首次登录，获取兴趣组列表
+                  that.getUserStatus();
                   that.getGroupList();
                   that.handleLoginLocation();
                   that.isChecked = true;
@@ -874,6 +884,27 @@ export default {
     handleUniveristyCampusNameChange(event) {
       this.requireUniveristyCampusName = event.mp.detail.detail.value;
     },
+    getUserStatus() {
+      //获取用户详细信息
+      this.$wxhttp.get({
+        url: "/user/getUserDetailById?userId=" + this.userInfo.userId
+      }).then(resp => {
+        if(resp.code === 0){
+          this.stopDay = resp.data.stopDay;
+          if(stopDay !== 0){
+            this.globalData.stopDay = stopDay;
+            this.visible = true;
+          }else{
+            this.globalData.stopDay = 0;
+          }
+        }else{
+          wx.showToast({
+            title: resp.msg,
+            icon: "none"
+          });
+        }
+      });
+    }
   },
 
   created() {
