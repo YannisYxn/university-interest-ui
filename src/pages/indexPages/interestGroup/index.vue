@@ -35,9 +35,10 @@
       v-if="groupDetail.isJoin === 1 && groupDetail.status === 0"
       type="primary"
       shape="circle"
+      fontsize="large"
       style="margin-top:15px;"
       @click="handlePost"
-    >发帖</i-button>
+    >发&#12288;&#12288;帖</i-button>
 
     <div v-for="post in postList" :key="post.id" style="margin-top:15px;">
       <i-card

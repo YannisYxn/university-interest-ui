@@ -214,7 +214,7 @@
     </mp-dialog>
 
     <mp-dialog
-      :title="stopDay === -2 ? '被举报，此号暂停使用' : '严重违规，此号已被封号'"
+      :title="stopDay === -2 ? '违规被举报，此号暂停使用14天，下次违规封号处理' : '严重违规，此号已被封号'"
       :show="visible"
       @confirm="() => visible = false"
     >

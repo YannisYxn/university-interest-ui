@@ -44,8 +44,9 @@
         type="primary"
         shape="circle"
         style="margin-top:15px;"
+        fontsize="large"
         @click="handlePost"
-      >发帖</i-button>
+      >发&#12288;&#12288;帖</i-button>
       <div v-for="post in postList" :key="post.id" style="margin-top:15px;">
         <i-card
           post
@@ -423,7 +424,12 @@ export default {
     handleClickItem4member(memberId) {
       // 回到陌生、拉黑
       this.$wxhttp.post({
-        url: "/user/backToStranger?fromUserId=" + this.userId + "&toUserId=" + this.currentOperatedMemberId
+        url: "/group/blockGroupMember",
+        data: {
+          groupId: this.groupId,
+          memberId: this.currentOperatedMemberId,
+          userId: this.userId
+        }
       }).then(resp => {
         if(resp.code == 0){
           wx.showToast({

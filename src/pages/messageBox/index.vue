@@ -52,7 +52,7 @@
     </i-cell-group>
 
     <mp-dialog
-      :title="stopDay === -2 ? '被举报，此号暂停使用' : '严重违规，此号已被封号'"
+      :title="stopDay === -2 ? '' : '严重违规，此号已被封号'"
       :show="visible"
       @confirm="() => visible = false"
     >
