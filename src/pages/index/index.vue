@@ -219,6 +219,13 @@
       @confirm="() => visible = false"
     >
     </mp-dialog>
+
+    <mp-dialog
+      title="关注校趣公众号，可以及时获取校趣小程序里面的消息哟"
+      :show="visibleStar"
+      @confirm="() => visibleStar = false"
+    >
+    </mp-dialog>
   </div>
 </template>
 
@@ -234,6 +241,7 @@ export default {
       visibleMessage: false,
       visibleUniversityRequire: false,
       visibleLogout: false,
+      visibleStar: false,
       universityCampusName: "", //输入高校名称
       userInfo: { //用户信息
         userId: "",
@@ -611,6 +619,7 @@ export default {
             icon: "none",
             duration: 3000
           });
+          this.visibleStar = true;
         }
       });
     },
