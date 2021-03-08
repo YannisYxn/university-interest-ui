@@ -372,7 +372,7 @@ export default {
     // setInterval(() => {
     //   this.updateBadge();
     // }, 10000)
-    this.checkSubscriptions();
+    // this.checkSubscriptions();
   },
   methods: {
     updateBadge() {
