@@ -39,7 +39,7 @@
     </div>
     <div style="height:20px;" />
     <div style="position:fixed;bottom:0;width:100%;">
-      <i-button style="margin:10px;width:100%" shape="circle" type="primary" @click="handlePostPosition">发布</i-button>
+      <i-button style="margin:10px;width:100%" shape="circle" type="primary" fontsize="large" @click="handlePostPosition">发&#12288;&#12288;布</i-button>
     </div>
 
     <mp-dialog

@@ -127,28 +127,23 @@
       @iclick="handleClickItem4post"
     />
 
-    <!-- <i-modal :title="userDetail.stopDay === -2 ? '被举报，此号暂停使用' : '严重违规，此号已被封号'" :visible="visible" /> -->
     <mp-dialog
-      :title="stopDay === -2 ? '被举报，此号暂停使用' : '严重违规，此号已被封号'"
+      :title="stopDay === -2 ? '违规被举报，此号暂停使用14天，下次违规封号处理' : '严重违规，此号已被封号'"
       :show="visible"
       @confirm="() => visible = false"
     >
     </mp-dialog>
 
-    <!-- <i-modal
-      title="跟ta打招呼"
-      :visible="visibleFriend"
-      @ok="handleSayHello"
-      @cancel="() => visibleFriend = false"
+    <mp-dialog
+      title="确认回到陌生/拉黑吗？"
+      :show="visibleBlack"
+      :buttons="[{text: '取消'}]"
+      @buttontap="() => visibleBlack = false"
+      @confirm="handleBlack"
     >
-      <i-input
-        v-model="sayHelloContent"
-        type="textarea"
-        maxlength="25"
-        placeholder="打招呼内容"
-        @change="handleContentChange"
-      />
-    </i-modal> -->
+      <span>确认后，无法再添加对方!</span>
+    </mp-dialog>
+
     <mp-dialog
       title="跟ta打招呼(消耗1积分)"
       :show="visibleFriend"
@@ -209,6 +204,7 @@ export default {
       postVisible: false,
       isFriend: false,
       visibleFriend: false,
+      visibleBlack: false,
       sayHelloContent: "你好，可以交个朋友吗？"
     }
   },
@@ -365,23 +361,8 @@ export default {
       this.isAdd = false;
       if(index == 0){
         if(this.addAction[0].name == "回到陌生/拉黑"){
-          // 回到陌生、拉黑
-          this.$wxhttp.post({
-            url: "/user/backToStranger?fromUserId=" + this.selfUserId + "&toUserId=" + this.userId
-          }).then(resp => {
-            if(resp.code == 0){
-              wx.showToast({
-                title: "操作成功",
-                duration: 3000
-              });
-            }else{
-              wx.showToast({
-                title: resp.msg,
-                icon: "none",
-                duration: 3000
-              });
-            }
-          });
+          // 回到陌生、拉黑确认框
+          this.visibleBlack = true;
         }else{
           // 打招呼
           this.visibleFriend = true;
@@ -438,6 +419,33 @@ export default {
       // 跳转兴趣组
       wx.navigateTo({
         url: "../../indexPages/interestGroup/main?userId=" + this.globalData.userId + "&groupId=" + groupId
+      });
+    },
+    handleBlack() {
+      this.visibleBlack = false;
+      // 回到陌生、拉黑
+      this.$wxhttp.post({
+        url: "/user/backToStranger?fromUserId=" + this.selfUserId + "&toUserId=" + this.userId
+      }).then(resp => {
+        if(resp.code == 0){
+          wx.showToast({
+            title: "操作成功",
+            duration: 3000,
+            success: () => {
+              setTimeout(() => {
+                wx.switchTab({
+                  url: "../../messageBox/main"
+                });
+              }, 3000);
+            }
+          });
+        }else{
+          wx.showToast({
+            title: resp.msg,
+            icon: "none",
+            duration: 3000
+          });
+        }
       });
     }
   }

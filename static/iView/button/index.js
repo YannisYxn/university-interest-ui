@@ -16,6 +16,10 @@ Component({
             type: String,
             value: '',
         },
+        fontsize: {
+            type: String,
+            value: '',
+        },
         // circle, square
         shape: {
             type: String,
